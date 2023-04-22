@@ -1,1 +1,1 @@
-# Study-Bubble-Chrome-Ext
+# ThinkLock Project
