@@ -1,0 +1,138 @@
+#header-container {
+  display: flex;
+  flex-direction: row;
+  width: stretch;
+  height: 3rem;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 1rem;
+}
+
+#thinklock-header-logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+#header-right-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+#think-lock-title {
+  font-size: 2em;
+  margin: 0;
+}
+
+#search-bar-container {
+  display: flex;
+  flex-direction: row;
+}
+
+#search-bar {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 3rem;
+  width: 30rem;
+  height: 3rem;
+  color: gray;
+  font-size: 1.25rem;
+}
+
+#search-bar:hover {
+  cursor: pointer;
+}
+
+#search-icon-background {
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#search-icon-background:hover {
+  cursor: pointer;
+  border: 1px solid #ddd;
+}
+
+#search-icon {
+  vertical-align: -webkit-baseline-middle;
+  display: inline-flex;
+}
+
+.mantine-1nmvwx4 {
+  width: 3rem;
+}
+
+#add-think-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2rem;
+  background-color: #fff;
+  width: 3rem;
+  height: 3rem;
+}
+
+#add-think-button {
+  border-radius: 2rem;
+  width: 3rem;
+  height: 3rem;
+}
+
+#add-think-button:hover {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
+#notification-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2rem;
+  background-color: #fff;
+}
+
+#notification-button {
+  border-radius: 2rem;
+  width: 3rem;
+  height: 3rem;
+}
+
+#notification-button:hover {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.mantine-1nn03l {
+  transform: translate(33%, -33%);
+}
+
+#user-profile-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+#user-profile-button-container:hover {
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
+#user-profile {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+}
