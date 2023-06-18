@@ -2,5 +2,5 @@ export class ThinkFolder {
   id: number;
   name: string;
   description: string;
-  color: number;
+  color: string;
 }
