@@ -26,6 +26,16 @@ const dbPromise = (async (): Promise<Database> => {
     )`);
     loggerInstance.success(`Table created: thinkfolder`);
 
+    // Create todo table
+    await db.run(`CREATE TABLE IF NOT EXISTS todo (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        thinksession_id INTEGER,
+        thinkfolder_id INTEGER NOT NULL,
+        description TEXT NOT NULL,
+        FOREIGN KEY (thinkfolder_id) REFERENCES thinkfolder(id)
+    )`);
+    loggerInstance.success(`Table created: todo`);
+
     return db;
   } catch (error) {
     loggerInstance.error(`Error opening database: ${error}`);
