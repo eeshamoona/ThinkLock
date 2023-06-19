@@ -1,6 +1,11 @@
 import React from "react";
 import { ActionIcon, Menu } from "@mantine/core";
-import { BoxMultiple, Cards, Plus, Folders } from "tabler-icons-react";
+import {
+  IconFolders,
+  IconPlus,
+  IconBoxMultiple,
+  IconCards,
+} from "@tabler/icons-react";
 
 const AddButton = () => {
   const addThinkSession = () => {
@@ -26,19 +31,19 @@ const AddButton = () => {
     >
       <Menu.Target>
         <ActionIcon id="add-think-button" size={"3rem"}>
-          <Plus id="plus-icon" size={"2.5rem"} />
+          <IconPlus id="plus-icon" size={"2rem"} />
         </ActionIcon>
       </Menu.Target>
 
       <Menu.Dropdown>
         <Menu.Label sx={{ float: "left" }}>Add Options:</Menu.Label>
-        <Menu.Item onClick={() => addThinkSession()} icon={<BoxMultiple />}>
+        <Menu.Item onClick={() => addThinkSession()} icon={<IconBoxMultiple />}>
           Add Think Session
         </Menu.Item>
-        <Menu.Item onClick={() => addReviewSet()} icon={<Cards />}>
+        <Menu.Item onClick={() => addReviewSet()} icon={<IconCards />}>
           Add Review Set
         </Menu.Item>
-        <Menu.Item onClick={() => addThinkFolder()} icon={<Folders />}>
+        <Menu.Item onClick={() => addThinkFolder()} icon={<IconFolders />}>
           Add Think Folder
         </Menu.Item>
       </Menu.Dropdown>

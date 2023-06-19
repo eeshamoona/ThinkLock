@@ -4,9 +4,7 @@ import PlanOverviewPage from "./pages/plan/PlanOverviewPage";
 import { AppShell } from "@mantine/core";
 import Header from "./components/header/Header";
 import { Tabs } from "@mantine/core";
-import { Checklist } from "tabler-icons-react";
-import { Bulb } from "tabler-icons-react";
-import { Checkbox } from "tabler-icons-react";
+import { IconChecklist, IconBulb, IconCheckbox } from "@tabler/icons-react";
 
 const AppLayout = () => {
   return (
@@ -20,21 +18,21 @@ const AppLayout = () => {
         <Tabs.List grow id="tab-list">
           <Tabs.Tab
             value="plan"
-            icon={<Checklist size="1.25rem" />}
+            icon={<IconChecklist size="1.25rem" />}
             className="tab"
           >
             Plan
           </Tabs.Tab>
           <Tabs.Tab
             value="study"
-            icon={<Bulb size="1.25rem" />}
+            icon={<IconBulb size="1.25rem" />}
             className="tab"
           >
             Study
           </Tabs.Tab>
           <Tabs.Tab
             value="review"
-            icon={<Checkbox size="1.25rem" />}
+            icon={<IconCheckbox size="1.25rem" />}
             className="tab"
           >
             Review

@@ -1,8 +1,8 @@
 import React from "react";
 import "./header.scss";
-import { LockAccess } from "tabler-icons-react";
-import { Bell } from "tabler-icons-react";
-import { Search } from "tabler-icons-react";
+import { IconSearch } from "@tabler/icons-react";
+import { IconLockAccess } from "@tabler/icons-react";
+import { IconBell } from "@tabler/icons-react";
 import {
   ActionIcon,
   UnstyledButton,
@@ -17,7 +17,7 @@ const Header = () => {
   return (
     <div id="header-container">
       <UnstyledButton id="thinklock-header-logo">
-        <LockAccess id="lock-icon" size={"2.5rem"} />
+        <IconLockAccess id="lock-icon" size={"2.5rem"} />
         <h1 id="think-lock-title">ThinkLock</h1>
       </UnstyledButton>
 
@@ -28,7 +28,7 @@ const Header = () => {
             id="search-bar"
             rightSection={
               <Box id="search-icon-background">
-                <Search id="search-icon" color="gray" />
+                <IconSearch id="search-icon" color="gray" />
               </Box>
             }
           />
@@ -39,7 +39,7 @@ const Header = () => {
         <div id="notification-button-container">
           <ActionIcon id="notification-button">
             <Indicator color="red" size={".75rem"}>
-              <Bell id="bell-icon" size={"2.5rem"} />
+              <IconBell id="bell-icon" size={"2rem"} />
             </Indicator>
           </ActionIcon>
         </div>
