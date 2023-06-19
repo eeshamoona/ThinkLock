@@ -1,6 +1,5 @@
 .App {
+  text-align: center;
   padding: 1.25rem;
   background-color: #f3f5f7;
-  height: 100vh;
-  width: 100vw;
 }
