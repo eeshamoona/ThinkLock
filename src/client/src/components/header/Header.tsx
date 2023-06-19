@@ -1,7 +1,6 @@
 import React from "react";
 import "./header.scss";
 import { LockAccess } from "tabler-icons-react";
-import { Plus } from "tabler-icons-react";
 import { Bell } from "tabler-icons-react";
 import { Search } from "tabler-icons-react";
 import {
@@ -12,6 +11,7 @@ import {
   Box,
 } from "@mantine/core";
 import { TextInput } from "@mantine/core";
+import AddButton from "../add_button/AddButton";
 
 const Header = () => {
   return (
@@ -34,9 +34,7 @@ const Header = () => {
           />
         </div>
         <div id="add-think-button-container">
-          <ActionIcon id="add-think-button" size={"3rem"}>
-            <Plus id="plus-icon" size={"2.5rem"} />
-          </ActionIcon>
+          <AddButton />
         </div>
         <div id="notification-button-container">
           <ActionIcon id="notification-button">
