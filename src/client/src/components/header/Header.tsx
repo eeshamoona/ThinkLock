@@ -13,7 +13,11 @@ import {
 import { TextInput } from "@mantine/core";
 import AddButton from "../add_button/AddButton";
 
-const Header = () => {
+interface HeaderProps {
+  changeTabCallback: (tab: string) => void;
+}
+
+const Header = ({ changeTabCallback }: HeaderProps) => {
   return (
     <div id="header-container">
       <UnstyledButton id="thinklock-header-logo">
@@ -34,7 +38,7 @@ const Header = () => {
           />
         </div>
         <div id="add-think-button-container">
-          <AddButton />
+          <AddButton changeTabCallback={changeTabCallback} />
         </div>
         <div id="notification-button-container">
           <ActionIcon id="notification-button">

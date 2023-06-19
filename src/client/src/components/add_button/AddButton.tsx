@@ -7,17 +7,24 @@ import {
   IconCards,
 } from "@tabler/icons-react";
 
-const AddButton = () => {
-  const addThinkSession = () => {
+interface AddButtonProps {
+  changeTabCallback: (tab: string) => void;
+}
+
+const AddButton = ({ changeTabCallback }: AddButtonProps) => {
+  const openAddThinkSessionModal = () => {
     console.log("Add Think Session");
+    changeTabCallback("study");
   };
 
-  const addReviewSet = () => {
+  const openAddReviewSetModal = () => {
     console.log("Add Review Set");
+    changeTabCallback("review");
   };
 
-  const addThinkFolder = () => {
+  const openAddThinkFolderModel = () => {
     console.log("Add Think Folder");
+    changeTabCallback("plan");
   };
 
   return (
@@ -37,13 +44,19 @@ const AddButton = () => {
 
       <Menu.Dropdown>
         <Menu.Label sx={{ float: "left" }}>Add Options:</Menu.Label>
-        <Menu.Item onClick={() => addThinkSession()} icon={<IconBoxMultiple />}>
+        <Menu.Item
+          onClick={() => openAddThinkSessionModal()}
+          icon={<IconBoxMultiple />}
+        >
           Add Think Session
         </Menu.Item>
-        <Menu.Item onClick={() => addReviewSet()} icon={<IconCards />}>
+        <Menu.Item onClick={() => openAddReviewSetModal()} icon={<IconCards />}>
           Add Review Set
         </Menu.Item>
-        <Menu.Item onClick={() => addThinkFolder()} icon={<IconFolders />}>
+        <Menu.Item
+          onClick={() => openAddThinkFolderModel()}
+          icon={<IconFolders />}
+        >
           Add Think Folder
         </Menu.Item>
       </Menu.Dropdown>

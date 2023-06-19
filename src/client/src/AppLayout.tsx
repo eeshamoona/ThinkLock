@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./appLayout.scss";
 import PlanOverviewPage from "./pages/plan/PlanOverviewPage";
 import { AppShell } from "@mantine/core";
@@ -7,14 +7,18 @@ import { Tabs } from "@mantine/core";
 import { IconChecklist, IconBulb, IconCheckbox } from "@tabler/icons-react";
 
 const AppLayout = () => {
+  const [activeTab, setActiveTab] = useState<string>("plan");
+
+  const changeTab = (tab: string) => {
+    setActiveTab(tab);
+  };
+
   return (
-    <AppShell padding="1.25rem" header={<Header />}>
-      <Tabs
-        variant="pills"
-        defaultValue="study"
-        radius={"md"}
-        id="tab-container"
-      >
+    <AppShell
+      padding="1.25rem"
+      header={<Header changeTabCallback={changeTab} />}
+    >
+      <Tabs variant="pills" value={activeTab} radius={"md"} id="tab-container">
         <Tabs.List grow id="tab-list">
           <Tabs.Tab
             value="plan"
