@@ -3,6 +3,18 @@ import { ActionIcon, Menu } from "@mantine/core";
 import { BoxMultiple, Cards, Plus, Folders } from "tabler-icons-react";
 
 const AddButton = () => {
+  const addThinkSession = () => {
+    console.log("Add Think Session");
+  };
+
+  const addReviewSet = () => {
+    console.log("Add Review Set");
+  };
+
+  const addThinkFolder = () => {
+    console.log("Add Think Folder");
+  };
+
   return (
     <Menu
       shadow="md"
@@ -20,9 +32,15 @@ const AddButton = () => {
 
       <Menu.Dropdown>
         <Menu.Label sx={{ float: "left" }}>Add Options:</Menu.Label>
-        <Menu.Item icon={<BoxMultiple />}>Add Think Session</Menu.Item>
-        <Menu.Item icon={<Cards />}>Add Review Set</Menu.Item>
-        <Menu.Item icon={<Folders />}>Add Think Folder</Menu.Item>
+        <Menu.Item onClick={() => addThinkSession()} icon={<BoxMultiple />}>
+          Add Think Session
+        </Menu.Item>
+        <Menu.Item onClick={() => addReviewSet()} icon={<Cards />}>
+          Add Review Set
+        </Menu.Item>
+        <Menu.Item onClick={() => addThinkFolder()} icon={<Folders />}>
+          Add Think Folder
+        </Menu.Item>
       </Menu.Dropdown>
     </Menu>
   );

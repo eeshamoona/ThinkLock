@@ -3,10 +3,9 @@ import "./thinkFolder.scss";
 import { ActionIcon } from "@mantine/core";
 import { Folder } from "tabler-icons-react";
 interface ThinkFolderProps {
-  folderKey: number;
   folderColor?: string;
 }
-const ThinkFolder = ({ folderKey, folderColor }: ThinkFolderProps) => {
+const ThinkFolderCard = ({ folderColor }: ThinkFolderProps) => {
   return (
     <div id="think-folder-container">
       <ActionIcon id="think-folder-button" variant="light" color={folderColor}>
@@ -16,4 +15,4 @@ const ThinkFolder = ({ folderKey, folderColor }: ThinkFolderProps) => {
   );
 };
 
-export default ThinkFolder;
+export default ThinkFolderCard;

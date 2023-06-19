@@ -1,21 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./planOverviewPage.scss";
 import { SimpleGrid } from "@mantine/core";
-import ThinkFolder from "../../components/thinkfolder/ThinkFolder";
+import ThinkFolderCard from "../../components/thinkfolder/ThinkFolderCard";
+import { ThinkFolder } from "../../utils/models/thinkfolder.model";
+import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
 
 const PlanOverviewPage = () => {
+  const [folders, setFolders] = useState<ThinkFolder[]>([]);
+
+  useEffect(() => {
+    getAllThinkFolders().then((res) => setFolders(res as ThinkFolder[]));
+  });
+
   return (
     <SimpleGrid
-      cols={5}
+      cols={folders?.length > 3 ? 4 : folders?.length}
       spacing="md"
       breakpoints={[
-        { maxWidth: "85rem", cols: 4, spacing: "md" },
-        { maxWidth: "65rem", cols: 3, spacing: "sm" },
+        { maxWidth: "85rem", cols: 3, spacing: "md" },
+        { maxWidth: "65rem", cols: 2, spacing: "sm" },
       ]}
     >
-      <ThinkFolder folderKey={1} folderColor="red" />
-      <ThinkFolder folderKey={2} folderColor="#21DA22" />
-      <ThinkFolder folderKey={3} />
+      {folders?.map((folder) => (
+        <ThinkFolderCard key={folder.id} folderColor={folder.color} />
+      ))}
     </SimpleGrid>
   );
 };
