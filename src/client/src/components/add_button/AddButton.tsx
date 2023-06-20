@@ -1,5 +1,5 @@
 import React from "react";
-import { ActionIcon, Menu } from "@mantine/core";
+import { ActionIcon, Menu, Title } from "@mantine/core";
 import {
   IconFolders,
   IconPlus,
@@ -55,11 +55,23 @@ const AddButton = ({ changeTabCallback }: AddButtonProps) => {
   const getModalTitle = (modalContent: AddOptions | null) => {
     switch (modalContent) {
       case AddOptions.ThinkSession:
-        return <>Create a Think Session</>;
+        return (
+          <div>
+            <Title order={4}>Create a Think Session</Title>
+          </div>
+        );
       case AddOptions.ReviewSet:
-        return <>Create a Review Set</>;
+        return (
+          <div>
+            <Title order={4}>Create a Review Set</Title>
+          </div>
+        );
       case AddOptions.ThinkFolder:
-        return <>Create a Think Folder</>;
+        return (
+          <div>
+            <Title order={4}>Create a Think Folder</Title>
+          </div>
+        );
       default:
         return <div></div>;
     }
@@ -69,6 +81,8 @@ const AddButton = ({ changeTabCallback }: AddButtonProps) => {
     modals.openModal({
       title: getModalTitle(content),
       children: <>{getModalContent(content)}</>,
+      sx: { borderRadius: "1rem" },
+      size: "md",
     });
   };
 

@@ -5,28 +5,19 @@ import {
   Button,
   ColorPicker,
   ColorSwatch,
+  CopyButton,
   Group,
+  Space,
   TextInput,
-  useMantineTheme,
+  Textarea,
+  Tooltip,
 } from "@mantine/core";
 import { closeAllModals } from "@mantine/modals";
 import { addThinkFolder } from "../../services/thinkFolderAPICallerService";
+import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
+import { IconCheck, IconCopy } from "@tabler/icons-react";
 
 const AddThinkFolderModal = () => {
-  const theme = useMantineTheme();
-  const hexToColorNameMap: Record<string, string> = {
-    "#FF0000": "Red",
-    "#FFA500": "Orange",
-    "#FFFF00": "Yellow",
-    "#008000": "Green",
-    "#0000FF": "Blue",
-    "#4B0082": "Indigo",
-    "#EE82EE": "Violet",
-    "#000000": "Black",
-    "#808080": "Gray",
-  };
-
-  const hexCodes = Object.keys(hexToColorNameMap);
   const newThinkFolderForm = useForm({
     initialValues: {
       name: "",
@@ -36,7 +27,6 @@ const AddThinkFolderModal = () => {
 
     validate: {
       name: isNotEmpty("Name"),
-      description: isNotEmpty("Description"),
       color: isNotEmpty("Color"),
     },
   });
@@ -55,29 +45,14 @@ const AddThinkFolderModal = () => {
           placeholder="Think Folder Name"
           {...newThinkFolderForm.getInputProps("name")}
         />
+        <Space h="sm" />
 
-        <TextInput
-          withAsterisk
+        <Textarea
           label="Description"
           placeholder="Think Folder Description"
           {...newThinkFolderForm.getInputProps("description")}
         />
 
-        <ColorPicker
-          format="hex"
-          size="md"
-          withPicker={false}
-          fullWidth
-          swatches={Object.keys(hexToColorNameMap)}
-          //   swatches={Object.keys(theme.colors).map(
-          //     (color) => theme.colors[color][6]
-          //   )}
-
-          onColorSwatchClick={(color) =>
-            newThinkFolderForm.setFieldValue("color", hexToColorNameMap[color])
-          }
-          {...newThinkFolderForm.getInputProps("color")}
-        />
         <div
           className={
             newThinkFolderForm.isValid("color")
@@ -85,17 +60,69 @@ const AddThinkFolderModal = () => {
               : "color-swatch-hidden"
           }
         >
-          <ColorSwatch
-            color={newThinkFolderForm.getInputProps("color").value}
-          />
-          <p>{newThinkFolderForm.getInputProps("color").value}</p>
-          <p>{"THE HEX CODE TO COPY?"}</p>
+          <CopyButton value={newThinkFolderForm.getInputProps("color").value}>
+            {({ copied, copy }) => (
+              <Tooltip
+                label={copied ? "Copied" : "Copy"}
+                withArrow
+                position="right"
+              >
+                <Button
+                  variant="light"
+                  color={
+                    hexToColorNameMap[
+                      newThinkFolderForm.getInputProps("color").value
+                    ]
+                  }
+                  radius="xl"
+                  compact
+                  onClick={copy}
+                >
+                  {copied ? (
+                    <IconCheck size="1.25rem" />
+                  ) : (
+                    <IconCopy size="1.25rem" />
+                  )}
+                  <Space w="sm" />
+
+                  <ColorSwatch
+                    size={"1.25rem"}
+                    color={newThinkFolderForm.getInputProps("color").value}
+                  />
+                  <Space w="sm" />
+                  <p>{newThinkFolderForm.getInputProps("color").value}</p>
+                  <Space w="sm" />
+                  <p id="color-label">
+                    {
+                      hexToColorNameMap[
+                        newThinkFolderForm.getInputProps("color").value
+                      ]
+                    }
+                  </p>
+                </Button>
+              </Tooltip>
+            )}
+          </CopyButton>
         </div>
+        <Space h="sm" />
+
+        <ColorPicker
+          format="hex"
+          size="sm"
+          withPicker={false}
+          swatchesPerRow={Object.keys(hexToColorNameMap).length}
+          fullWidth
+          className="color-picker"
+          swatches={Object.keys(hexToColorNameMap)}
+          {...newThinkFolderForm.getInputProps("color")}
+        />
         <Group position="right" mt="md">
           <Button type="reset" variant="light" onClick={() => closeAllModals()}>
             Cancel
           </Button>
-          <Button type="submit">Create</Button>
+          <Button type="submit" disabled={!newThinkFolderForm.isValid()}>
+            Create
+          </Button>
         </Group>
       </form>
     </div>

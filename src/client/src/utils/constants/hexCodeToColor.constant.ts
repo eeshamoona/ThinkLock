@@ -1,0 +1,16 @@
+export const hexToColorNameMap: Record<string, string> = {
+  "#25262b": "dark",
+  "#868e96": "gray",
+  "#fa5252": "red",
+  "#e64980": "pink",
+  "#be4bdb": "grape",
+  "#7950f2": "violet",
+  "#4c6ef5": "indigo",
+  "#228be6": "blue",
+  "#15aabf": "cyan",
+  "#12b886": "teal",
+  "#40c057": "green",
+  "#82c91e": "lime",
+  "#fab005": "yellow",
+  "#fd7e14": "orange",
+};

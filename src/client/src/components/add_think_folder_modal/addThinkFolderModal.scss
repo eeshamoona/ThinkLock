@@ -1,5 +1,17 @@
+.mantine-nc8l82 {
+  border-radius: 2rem;
+  width: 1.5rem;
+}
+
 .mantine-1emiw5l {
-  border-radius: 1rem;
+  border-radius: 2rem;
+  width: 1.5rem;
+}
+
+.mantine-1yzxak0 {
+  border-radius: 2rem;
+  width: 1.5rem;
+  height: 2rem;
 }
 
 .color-swatch-selected {
@@ -7,8 +19,25 @@
   flex-direction: row;
   gap: 1rem;
   align-items: center;
+  margin-top: 1rem;
+  margin-left: 0.2rem;
 }
 
 .color-swatch-hidden {
   display: none;
+}
+
+.color-picker {
+  display: flex;
+  justify-content: center;
+}
+
+.color-swatch-selected-chip {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#color-label {
+  text-transform: "capitalize";
 }
