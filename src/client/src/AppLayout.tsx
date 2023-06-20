@@ -7,7 +7,7 @@ import { Tabs } from "@mantine/core";
 import { IconChecklist, IconBulb, IconCheckbox } from "@tabler/icons-react";
 
 const AppLayout = () => {
-  const [activeTab, setActiveTab] = useState<string>("plan");
+  const [activeTab, setActiveTab] = useState<string | null>("plan");
 
   const changeTab = (tab: string) => {
     setActiveTab(tab);
@@ -18,7 +18,13 @@ const AppLayout = () => {
       padding="1.25rem"
       header={<Header changeTabCallback={changeTab} />}
     >
-      <Tabs variant="pills" value={activeTab} radius={"md"} id="tab-container">
+      <Tabs
+        variant="pills"
+        value={activeTab}
+        radius={"md"}
+        id="tab-container"
+        onTabChange={setActiveTab}
+      >
         <Tabs.List grow id="tab-list">
           <Tabs.Tab
             value="plan"

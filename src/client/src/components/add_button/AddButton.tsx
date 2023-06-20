@@ -6,61 +6,111 @@ import {
   IconBoxMultiple,
   IconCards,
 } from "@tabler/icons-react";
+import { useModals } from "@mantine/modals";
+import AddThinkFolderModal from "../add_think_folder_modal/AddThinkFolderModal";
+import AddThinkSessionModal from "../add_think_session_modal/AddThinkSessionModal";
+import AddReviewSetModal from "../add_review_set_modal/AddReviewSetModal";
+
+enum AddOptions {
+  ThinkSession,
+  ReviewSet,
+  ThinkFolder,
+}
 
 interface AddButtonProps {
   changeTabCallback: (tab: string) => void;
 }
 
 const AddButton = ({ changeTabCallback }: AddButtonProps) => {
+  const modals = useModals();
+
   const openAddThinkSessionModal = () => {
-    console.log("Add Think Session");
     changeTabCallback("study");
+    openModal(AddOptions.ThinkSession);
   };
 
   const openAddReviewSetModal = () => {
-    console.log("Add Review Set");
     changeTabCallback("review");
+    openModal(AddOptions.ReviewSet);
   };
 
   const openAddThinkFolderModel = () => {
-    console.log("Add Think Folder");
     changeTabCallback("plan");
+    openModal(AddOptions.ThinkFolder);
+  };
+
+  const getModalContent = (modalContent: AddOptions | null) => {
+    switch (modalContent) {
+      case AddOptions.ThinkSession:
+        return <AddThinkSessionModal />;
+      case AddOptions.ReviewSet:
+        return <AddReviewSetModal />;
+      case AddOptions.ThinkFolder:
+        return <AddThinkFolderModal />;
+      default:
+        return <div></div>;
+    }
+  };
+
+  const getModalTitle = (modalContent: AddOptions | null) => {
+    switch (modalContent) {
+      case AddOptions.ThinkSession:
+        return <>Create a Think Session</>;
+      case AddOptions.ReviewSet:
+        return <>Create a Review Set</>;
+      case AddOptions.ThinkFolder:
+        return <>Create a Think Folder</>;
+      default:
+        return <div></div>;
+    }
+  };
+
+  const openModal = (content: AddOptions) => {
+    modals.openModal({
+      title: getModalTitle(content),
+      children: <>{getModalContent(content)}</>,
+    });
   };
 
   return (
-    <Menu
-      shadow="md"
-      width={200}
-      withArrow
-      trigger="hover"
-      openDelay={100}
-      closeDelay={400}
-    >
-      <Menu.Target>
-        <ActionIcon id="add-think-button" size={"3rem"}>
-          <IconPlus id="plus-icon" size={"2rem"} />
-        </ActionIcon>
-      </Menu.Target>
+    <>
+      <Menu
+        shadow="md"
+        width={200}
+        withArrow
+        trigger="hover"
+        openDelay={100}
+        closeDelay={400}
+      >
+        <Menu.Target>
+          <ActionIcon id="add-think-button" size={"3rem"}>
+            <IconPlus id="plus-icon" size={"2rem"} />
+          </ActionIcon>
+        </Menu.Target>
 
-      <Menu.Dropdown>
-        <Menu.Label sx={{ float: "left" }}>Add Options:</Menu.Label>
-        <Menu.Item
-          onClick={() => openAddThinkSessionModal()}
-          icon={<IconBoxMultiple />}
-        >
-          Add Think Session
-        </Menu.Item>
-        <Menu.Item onClick={() => openAddReviewSetModal()} icon={<IconCards />}>
-          Add Review Set
-        </Menu.Item>
-        <Menu.Item
-          onClick={() => openAddThinkFolderModel()}
-          icon={<IconFolders />}
-        >
-          Add Think Folder
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+        <Menu.Dropdown>
+          <Menu.Label sx={{ float: "left" }}>Add Options:</Menu.Label>
+          <Menu.Item
+            onClick={() => openAddThinkSessionModal()}
+            icon={<IconBoxMultiple />}
+          >
+            Add Think Session
+          </Menu.Item>
+          <Menu.Item
+            onClick={() => openAddReviewSetModal()}
+            icon={<IconCards />}
+          >
+            Add Review Set
+          </Menu.Item>
+          <Menu.Item
+            onClick={() => openAddThinkFolderModel()}
+            icon={<IconFolders />}
+          >
+            Add Think Folder
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
+    </>
   );
 };
 

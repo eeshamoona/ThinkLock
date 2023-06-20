@@ -4,6 +4,8 @@ import { MantineProvider } from "@mantine/core";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
+import { ModalsProvider } from "@mantine/modals";
+import { Notifications } from "@mantine/notifications";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -15,9 +17,12 @@ root.render(
       withGlobalStyles
       withNormalizeCSS
     >
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <ModalsProvider>
+        <Notifications />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ModalsProvider>
     </MantineProvider>
   </React.StrictMode>
 );
