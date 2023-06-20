@@ -72,6 +72,7 @@ const AddThinkFolderModal = () => {
           //   swatches={Object.keys(theme.colors).map(
           //     (color) => theme.colors[color][6]
           //   )}
+
           onColorSwatchClick={(color) =>
             newThinkFolderForm.setFieldValue("color", hexToColorNameMap[color])
           }
