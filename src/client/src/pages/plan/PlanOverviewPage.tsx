@@ -14,7 +14,7 @@ const PlanOverviewPage = () => {
 
   return (
     <SimpleGrid
-      cols={folders?.length > 3 ? 4 : folders?.length}
+      cols={4}
       spacing="md"
       breakpoints={[
         { maxWidth: "85rem", cols: 3, spacing: "md" },
