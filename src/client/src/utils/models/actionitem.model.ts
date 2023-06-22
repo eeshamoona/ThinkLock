@@ -1,4 +1,4 @@
-export interface Todo {
+export interface ActionItem {
   id: number;
   thinksession_id: number;
   thinkfolder_id: number;

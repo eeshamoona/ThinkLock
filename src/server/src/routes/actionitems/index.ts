@@ -7,13 +7,13 @@ import {
 } from "../../controllers/actionitem.controller";
 import { ActionItem } from "../../models/actionitem.model";
 
-const actionItemRouter: Router = express.Router();
+const actionItemsRouter: Router = express.Router();
 
-actionItemRouter.get("/", async (req, res) => {
+actionItemsRouter.get("/", async (req, res) => {
   res.status(200).send({ message: "You have reached the action item route" });
 });
 
-actionItemRouter.get("/all", async (req, res) => {
+actionItemsRouter.get("/all", async (req, res) => {
   try {
     const actionItems: ActionItem[] | FailureResponse =
       await getAllActionItems();
@@ -27,7 +27,7 @@ actionItemRouter.get("/all", async (req, res) => {
   }
 });
 
-actionItemRouter.get("/:id", async (req, res) => {
+actionItemsRouter.get("/:id", async (req, res) => {
   try {
     const actionItem: ActionItem | FailureResponse = await getActionItemById(
       parseInt(req.params.id)
@@ -42,7 +42,7 @@ actionItemRouter.get("/:id", async (req, res) => {
   }
 });
 
-actionItemRouter.post("/create", async (req, res) => {
+actionItemsRouter.post("/create", async (req, res) => {
   try {
     const actionItemId: number | FailureResponse = await createActionItem(
       req.body.thinksession_id,
@@ -60,4 +60,4 @@ actionItemRouter.post("/create", async (req, res) => {
   }
 });
 
-export default actionItemRouter;
+export default actionItemsRouter;

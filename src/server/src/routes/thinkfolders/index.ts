@@ -7,13 +7,13 @@ import {
 } from "../../controllers/thinkfolder.controller";
 import { ThinkFolder } from "../../models/thinkfolder.model";
 
-const thinkFolderRouter: Router = express.Router();
+const thinkFoldersRouter: Router = express.Router();
 
-thinkFolderRouter.get("/", async (req, res) => {
+thinkFoldersRouter.get("/", async (req, res) => {
   res.status(200).send({ message: "You have reached the thinkfolder route" });
 });
 
-thinkFolderRouter.get("/all", async (req, res) => {
+thinkFoldersRouter.get("/all", async (req, res) => {
   try {
     const thinkfolders: ThinkFolder[] | FailureResponse =
       await getAllThinkFolders();
@@ -27,7 +27,7 @@ thinkFolderRouter.get("/all", async (req, res) => {
   }
 });
 
-thinkFolderRouter.get("/:id", async (req, res) => {
+thinkFoldersRouter.get("/:id", async (req, res) => {
   try {
     const thinkfolder: ThinkFolder | FailureResponse = await getThinkFolderById(
       parseInt(req.params.id)
@@ -42,7 +42,7 @@ thinkFolderRouter.get("/:id", async (req, res) => {
   }
 });
 
-thinkFolderRouter.post("/create", async (req, res) => {
+thinkFoldersRouter.post("/create", async (req, res) => {
   try {
     const createInfo: Partial<ThinkFolder> = req.body;
     const thinkfolder: number | FailureResponse = await createThinkFolder(
@@ -51,11 +51,11 @@ thinkFolderRouter.post("/create", async (req, res) => {
     if (thinkfolder instanceof FailureResponse) {
       res.status(thinkfolder.status).send({ error: thinkfolder.error });
     } else {
-      res.status(200).send({ thinkfolder_id: thinkfolder });
+      res.status(200).send({ thinkfolder: thinkfolder });
     }
   } catch (error) {
     res.status(500).send({ error: `${error}` });
   }
 });
 
-export default thinkFolderRouter;
+export default thinkFoldersRouter;
