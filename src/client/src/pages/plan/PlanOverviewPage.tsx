@@ -9,7 +9,11 @@ const PlanOverviewPage = () => {
   const [folders, setFolders] = useState<ThinkFolder[]>([]);
 
   useEffect(() => {
-    getAllThinkFolders().then((res) => setFolders(res as ThinkFolder[]));
+    getAllThinkFolders().then((res) => {
+      if (typeof res !== "string") {
+        setFolders(res as ThinkFolder[]);
+      }
+    });
   });
 
   return (

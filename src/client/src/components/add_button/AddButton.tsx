@@ -5,16 +5,19 @@ import {
   IconPlus,
   IconBoxMultiple,
   IconCards,
+  IconListDetails,
 } from "@tabler/icons-react";
 import { useModals } from "@mantine/modals";
 import AddThinkFolderModal from "../add_think_folder_modal/AddThinkFolderModal";
 import AddThinkSessionModal from "../add_think_session_modal/AddThinkSessionModal";
 import AddReviewSetModal from "../add_review_set_modal/AddReviewSetModal";
+import AddActionItemModal from "../add_action_item_modal/AddActionItemModal";
 
 enum AddOptions {
   ThinkSession,
   ReviewSet,
   ThinkFolder,
+  ActionItem,
 }
 
 interface AddButtonProps {
@@ -39,6 +42,11 @@ const AddButton = ({ changeTabCallback }: AddButtonProps) => {
     openModal(AddOptions.ThinkFolder);
   };
 
+  const openAddActionItemModal = () => {
+    changeTabCallback("plan");
+    openModal(AddOptions.ActionItem);
+  };
+
   const getModalContent = (modalContent: AddOptions | null) => {
     switch (modalContent) {
       case AddOptions.ThinkSession:
@@ -47,6 +55,8 @@ const AddButton = ({ changeTabCallback }: AddButtonProps) => {
         return <AddReviewSetModal />;
       case AddOptions.ThinkFolder:
         return <AddThinkFolderModal />;
+      case AddOptions.ActionItem:
+        return <AddActionItemModal />;
       default:
         return <div></div>;
     }
@@ -72,8 +82,29 @@ const AddButton = ({ changeTabCallback }: AddButtonProps) => {
             <Title order={4}>Create a Think Folder</Title>
           </div>
         );
+      case AddOptions.ActionItem:
+        return (
+          <div>
+            <Title order={4}>Create an Action Item</Title>
+          </div>
+        );
       default:
         return <div></div>;
+    }
+  };
+
+  const getModalSize = (modalContent: AddOptions | null) => {
+    switch (modalContent) {
+      case AddOptions.ThinkSession:
+        return "md";
+      case AddOptions.ReviewSet:
+        return "md";
+      case AddOptions.ThinkFolder:
+        return "md";
+      case AddOptions.ActionItem:
+        return "lg";
+      default:
+        return "md";
     }
   };
 
@@ -82,7 +113,7 @@ const AddButton = ({ changeTabCallback }: AddButtonProps) => {
       title: getModalTitle(content),
       children: <>{getModalContent(content)}</>,
       sx: { borderRadius: "1rem" },
-      size: "md",
+      size: getModalSize(content),
     });
   };
 
@@ -109,6 +140,12 @@ const AddButton = ({ changeTabCallback }: AddButtonProps) => {
             icon={<IconBoxMultiple />}
           >
             Add Think Session
+          </Menu.Item>
+          <Menu.Item
+            onClick={() => openAddActionItemModal()}
+            icon={<IconListDetails />}
+          >
+            Add Action Item
           </Menu.Item>
           <Menu.Item
             onClick={() => openAddReviewSetModal()}

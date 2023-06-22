@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import thinkFolderRouter from "./routes/thinkfolders";
-import todoRouter from "./routes/todos";
+import actionItemRouter from "./routes/actionitem";
 // import swaggerJsdoc from "swagger-jsdoc";
 // import swaggerUi from "swagger-ui-express";
 // import swaggerOptions from "./utils/swagger_options";
@@ -15,7 +15,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/thinkfolders", thinkFolderRouter);
-app.use("/todos", todoRouter);
+app.use("/actionitem", actionItemRouter);
 
 // app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs, { explorer: true }));
 
