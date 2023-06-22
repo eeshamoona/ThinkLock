@@ -31,6 +31,7 @@ const dbPromise = (async (): Promise<Database> => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         thinksession_id INTEGER,
         thinkfolder_id INTEGER NOT NULL,
+        title TEXT NOT NULL,
         description TEXT,
         FOREIGN KEY (thinkfolder_id) REFERENCES thinkfolder(id)
         FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
