@@ -33,6 +33,7 @@ const dbPromise = (async (): Promise<Database> => {
         thinkfolder_id INTEGER NOT NULL,
         title TEXT NOT NULL,
         description TEXT,
+        completed BOOLEAN NOT NULL DEFAULT 0,
         FOREIGN KEY (thinkfolder_id) REFERENCES thinkfolder(id)
         FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
     )`);
