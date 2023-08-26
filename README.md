@@ -23,6 +23,9 @@
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
+      <ul>
+      <a href="#notion-link"> Notion Link </a>
+      </ul>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
@@ -44,9 +47,7 @@
 <i>
 To learn more about the project, please ask for access to this Notion Teamspace, which includes all the documentation about the project. </i>
 
-<br/>
-
-### Notion Link [here][notion-url]
+##### [Notion Link][notion-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
