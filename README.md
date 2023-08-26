@@ -4,7 +4,7 @@
 <br />
 <div align="center">
 
-  <h3 align="center">Think Lock</h3>
+  <h1 align="center">Think Lock</h1>
 
   <p align="center">
     Focus your thoughts, organize your learnings, and unlock your potential
@@ -23,9 +23,6 @@
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#notion-link">Notion Link</a></li>
-      </ul>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
@@ -48,7 +45,8 @@
 To learn more about the project, please ask for access to this Notion Teamspace, which includes all the documentation about the project. </i>
 
 <br/>
-<strong><a href="https://www.notion.so/be879357d0e443c0b436ca44a82b79ff?v=72d8c37e1c1e4c1eb16eb44327cdb617"> <h5> Notion Link</h5> </a></strong>
+
+### Notion Link [here][notion-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -174,3 +172,4 @@ See the [open issues](https://github.com/eeshamoona/ThinkLock/issues) for a full
 [storybook-url]: https://storybook.js.org/
 [react.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [react-url]: https://reactjs.org/
+[notion-url]: https://www.notion.so/be879357d0e443c0b436ca44a82b79ff?v=72d8c37e1c1e4c1eb16eb44327cdb617
