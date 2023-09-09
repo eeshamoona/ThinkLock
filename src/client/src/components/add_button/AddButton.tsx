@@ -128,7 +128,7 @@ const AddButton = ({ changeTabCallback }: AddButtonProps) => {
         closeDelay={400}
       >
         <Menu.Target>
-          <ActionIcon id="add-think-button" size={"3rem"}>
+          <ActionIcon id="add-think-button" size={"3rem"} radius={"50%"}>
             <IconPlus id="plus-icon" size={"2rem"} />
           </ActionIcon>
         </Menu.Target>

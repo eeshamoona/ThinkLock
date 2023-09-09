@@ -1,7 +1,7 @@
 #header-container {
   display: flex;
   flex-direction: row;
-  width: stretch;
+  width: auto; /* Allow content to dictate the width */
   height: 3rem;
   align-items: center;
   justify-content: space-between;
@@ -12,7 +12,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
 #header-right-container {
@@ -22,7 +22,7 @@
 }
 
 #think-lock-title {
-  font-size: 2em;
+  font-size: 1.5rem;
   margin: 0;
 }
 
@@ -34,11 +34,11 @@
 #search-bar {
   background-color: #fff;
   border: 1px solid #ddd;
-  border-radius: 3rem;
-  width: 30rem;
-  height: 3rem;
+  border-radius: 1.5rem;
+  width: 20rem;
+  height: 2.5rem;
   color: gray;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
 }
 
 #search-bar:hover {
@@ -48,8 +48,8 @@
 #search-icon-background {
   background-color: #f0f0f0;
   border-radius: 50%;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -64,26 +64,27 @@
 #search-icon {
   vertical-align: -webkit-baseline-middle;
   display: inline-flex;
+  height: 1.25rem;
 }
 
 .mantine-1nmvwx4 {
-  width: 3rem;
+  width: 2.5rem;
 }
 
 #add-think-button-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 2rem;
+  border-radius: 1.5rem;
   background-color: #fff;
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 #add-think-button {
-  border-radius: 2rem;
-  width: 3rem;
-  height: 3rem;
+  border-radius: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 #add-think-button:hover {
@@ -96,14 +97,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 2rem;
+  border-radius: 1.5rem;
   background-color: #fff;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 #notification-button {
-  border-radius: 2rem;
-  width: 3rem;
-  height: 3rem;
+  border-radius: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 #notification-button:hover {
@@ -116,8 +119,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 3rem;
-  height: 3rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border-radius: 50%;
   background-color: #fff;
 }
@@ -128,7 +131,5 @@
 }
 
 #user-profile {
-  width: 2.5rem;
-  height: 2.5rem;
   border-radius: 50%;
 }
