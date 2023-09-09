@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./thinkFolder.scss";
+import "./thinkFolderItem.scss";
 import { ActionIcon } from "@mantine/core";
 import { IconFolderFilled } from "@tabler/icons-react";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";

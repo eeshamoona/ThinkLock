@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./planOverviewPage.scss";
-import ThinkFolderCard from "../../components/thinkfolder/ThinkFolderCard";
+import ThinkFolderCard from "../../components/thinkfolder/ThinkFolderItem";
 import { ThinkFolder } from "../../utils/models/thinkfolder.model";
 import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
 
