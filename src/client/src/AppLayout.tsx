@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import "./appLayout.scss";
 import PlanOverviewPage from "./pages/plan/PlanOverviewPage";
 import { AppShell } from "@mantine/core";
-import Header from "./components/header/Header";
+import CustomHeader from "./components/header/Header";
+import { Header } from "@mantine/core";
 import { Tabs } from "@mantine/core";
 import { IconChecklist, IconBulb, IconCheckbox } from "@tabler/icons-react";
 
@@ -15,8 +16,20 @@ const AppLayout = () => {
 
   return (
     <AppShell
-      padding="1.25rem"
-      header={<Header changeTabCallback={changeTab} />}
+      className="app-shell"
+      styles={(theme) => ({
+        main: {
+          backgroundColor:
+            theme.colorScheme === "dark"
+              ? theme.colors.dark[8]
+              : theme.colors.gray[0],
+        },
+      })}
+      header={
+        <Header height={60} p="xs">
+          {<CustomHeader changeTabCallback={changeTab} />}
+        </Header>
+      }
     >
       <Tabs
         variant="pills"

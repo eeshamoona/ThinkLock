@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./thinkFolder.scss";
 import { ActionIcon } from "@mantine/core";
 import { IconFolderFilled } from "@tabler/icons-react";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
+
 interface ThinkFolderProps {
-  folderColor?: string;
+  folderColor: string;
+  folderName: string;
+  folderSubtitle: string;
+  folderIcon?: string;
 }
-const ThinkFolderCard = ({ folderColor }: ThinkFolderProps) => {
+
+const ThinkFolderCard = ({
+  folderColor,
+  folderName,
+  folderSubtitle,
+  folderIcon,
+}: ThinkFolderProps) => {
   const getColorFromHex = () => {
     if (folderColor) {
       return hexToColorNameMap[folderColor];
@@ -14,15 +24,54 @@ const ThinkFolderCard = ({ folderColor }: ThinkFolderProps) => {
     return "gray";
   };
 
+  const [hoverColor, setHoverColor] = useState(
+    folderColor ? `${folderColor}22` : ""
+  );
+
+  useEffect(() => {
+    setHoverColor(folderColor ? `${folderColor}22` : "");
+  }, [folderColor]);
+
+  const handleMouseEnter = () => {
+    // Set the hover color when mouse enters
+    if (folderColor) {
+      document.documentElement.style.setProperty(
+        "--hover-background-color",
+        hoverColor
+      );
+    }
+  };
+
+  const handleMouseLeave = () => {
+    // Reset to default hover color when mouse leaves
+    document.documentElement.style.setProperty(
+      "--hover-background-color",
+      getColorFromHex()
+    );
+  };
+
   return (
-    <div id="think-folder-container">
-      <ActionIcon
-        id="think-folder-button"
-        variant="light"
-        color={getColorFromHex()}
-      >
-        <IconFolderFilled id="folder-icon" />
-      </ActionIcon>
+    <div
+      className="think-folder-item-container"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="think-folder-icon-container">
+        <ActionIcon
+          variant="light"
+          color={getColorFromHex()}
+          size="xl"
+          style={{
+            backgroundColor: folderColor + "55",
+          }}
+        >
+          <IconFolderFilled color={getColorFromHex()} />
+        </ActionIcon>
+      </div>
+      <div className="think-folder-title-container">
+        <span className="think-folder-title">{folderName}</span>
+        <span className="think-folder-subtitle">{folderSubtitle}</span>
+      </div>
     </div>
   );
 };

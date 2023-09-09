@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./planOverviewPage.scss";
-import { SimpleGrid } from "@mantine/core";
 import ThinkFolderCard from "../../components/thinkfolder/ThinkFolderCard";
 import { ThinkFolder } from "../../utils/models/thinkfolder.model";
 import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
@@ -17,18 +16,16 @@ const PlanOverviewPage = () => {
   });
 
   return (
-    <SimpleGrid
-      cols={4}
-      spacing="md"
-      breakpoints={[
-        { maxWidth: "85rem", cols: 3, spacing: "md" },
-        { maxWidth: "65rem", cols: 2, spacing: "sm" },
-      ]}
-    >
+    <div className="think-folder-container">
       {folders?.map((folder) => (
-        <ThinkFolderCard key={folder.id} folderColor={folder.color} />
+        <ThinkFolderCard
+          key={folder.id}
+          folderColor={folder.color}
+          folderName={folder.name}
+          folderSubtitle={folder.description}
+        />
       ))}
-    </SimpleGrid>
+    </div>
   );
 };
 
