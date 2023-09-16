@@ -41,13 +41,27 @@ export async function createActionItem(
   try {
     const db = await dbPromise;
     const query =
-      "INSERT INTO actionitem (thinksession_id, thinkfolder_id, description) VALUES (?, ?, ?)";
+      "INSERT INTO actionitem (thinksession_id, thinkfolder_id, title, description) VALUES (?, ?, ?, ?)";
     const params = [thinksession_id, thinkfolder_id, description, title];
     const res = await db.run(query, params);
     if (!res.lastID) {
       return new FailureResponse(500, "failed to create action item");
     }
     return res.lastID;
+  } catch (error) {
+    return new FailureResponse(500, `${error}`);
+  }
+}
+
+export async function getAllActionItemsByThinkFolderId(
+  thinkfolder_id: string
+): Promise<ActionItem[] | FailureResponse> {
+  try {
+    const db = await dbPromise;
+    const query = `SELECT * FROM actionitem WHERE thinkfolder_id = ?`;
+    const params = [thinkfolder_id];
+    const res = await db.all<ActionItem[]>(query, params);
+    return res;
   } catch (error) {
     return new FailureResponse(500, `${error}`);
   }

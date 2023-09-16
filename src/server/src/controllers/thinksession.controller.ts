@@ -57,3 +57,17 @@ export async function createThinkSession(
     return new FailureResponse(500, `${error}`);
   }
 }
+
+export async function getAllThinkSessionsByThinkFolderId(
+  thinkfolder_id: number
+): Promise<ThinkSession[] | FailureResponse> {
+  try {
+    const db = await dbPromise;
+    const query = `SELECT * FROM thinksession WHERE thinkfolder_id = ?`;
+    const params = [thinkfolder_id];
+    const res = await db.all<ThinkSession[]>(query, params);
+    return res;
+  } catch (error) {
+    return new FailureResponse(500, `${error}`);
+  }
+}

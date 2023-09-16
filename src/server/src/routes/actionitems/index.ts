@@ -4,6 +4,7 @@ import {
   getAllActionItems,
   getActionItemById,
   createActionItem,
+  getAllActionItemsByThinkFolderId,
 } from "../../controllers/actionitem.controller";
 import { ActionItem } from "../../models/actionitem.model";
 
@@ -17,6 +18,20 @@ actionItemsRouter.get("/all", async (req, res) => {
   try {
     const actionItems: ActionItem[] | FailureResponse =
       await getAllActionItems();
+    if (actionItems instanceof FailureResponse) {
+      res.status(actionItems.status).send({ error: actionItems.error });
+    } else {
+      res.status(200).send({ actionItems: actionItems });
+    }
+  } catch (error) {
+    res.status(500).send({ error: `${error}` });
+  }
+});
+
+actionItemsRouter.get("/all/:think_folder_id", async (req, res) => {
+  try {
+    const actionItems: ActionItem[] | FailureResponse =
+      await getAllActionItemsByThinkFolderId(req.params.think_folder_id);
     if (actionItems instanceof FailureResponse) {
       res.status(actionItems.status).send({ error: actionItems.error });
     } else {

@@ -4,6 +4,7 @@ import {
   createThinkSession,
   getAllThinkSessions,
   getThinkSessionById,
+  getAllThinkSessionsByThinkFolderId,
 } from "../../controllers/thinksession.controller";
 import { ThinkSession } from "../../models/thinksession.model";
 
@@ -17,6 +18,22 @@ thinkSessionsRouter.get("/all", async (req, res) => {
   try {
     const thinksessions: ThinkSession[] | FailureResponse =
       await getAllThinkSessions();
+    if (thinksessions instanceof FailureResponse) {
+      res.status(thinksessions.status).send({ error: thinksessions.error });
+    } else {
+      res.status(200).send({ thinksessions: thinksessions });
+    }
+  } catch (error) {
+    res.status(500).send({ error: `${error}` });
+  }
+});
+
+thinkSessionsRouter.get("/all/:think_folder_id", async (req, res) => {
+  try {
+    const thinksessions: ThinkSession[] | FailureResponse =
+      await getAllThinkSessionsByThinkFolderId(
+        parseInt(req.params.think_folder_id)
+      );
     if (thinksessions instanceof FailureResponse) {
       res.status(thinksessions.status).send({ error: thinksessions.error });
     } else {
