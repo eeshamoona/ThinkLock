@@ -42,11 +42,12 @@ export async function createThinkFolder(
   try {
     const db = dbInstance || (await dbPromise);
     const query =
-      "INSERT INTO thinkfolder (name, description, color) VALUES (?, ?, ?)";
+      "INSERT INTO thinkfolder (name, description, color, icon) VALUES (?, ?, ?, ?)";
     const params = [
       thinkfolder.name,
       thinkfolder.description,
       thinkfolder.color,
+      thinkfolder.icon,
     ];
     const res = await db.run(query, params);
     if (!res.lastID) {

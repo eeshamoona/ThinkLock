@@ -23,6 +23,7 @@ const PlanOverviewPage = () => {
           folderColor={folder.color}
           folderName={folder.name}
           folderSubtitle={folder.description}
+          folderIcon={folder.icon}
         />
       ))}
     </div>

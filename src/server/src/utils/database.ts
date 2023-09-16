@@ -22,7 +22,8 @@ const dbPromise = (async (): Promise<Database> => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         description TEXT,
-        color TEXT NOT NULL
+        color TEXT NOT NULL,
+        icon TEXT NOT NULL
     )`);
     loggerInstance.success(`Table created: thinkfolder`);
 

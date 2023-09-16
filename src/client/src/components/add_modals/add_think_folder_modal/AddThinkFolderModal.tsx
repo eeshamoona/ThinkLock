@@ -16,6 +16,7 @@ import { closeAllModals } from "@mantine/modals";
 import { addThinkFolder } from "../../../services/thinkFolderAPICallerService";
 import { hexToColorNameMap } from "../../../utils/constants/hexCodeToColor.constant";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
+import IconSelector from "../../icon_picker/IconSelector";
 
 const AddThinkFolderModal = () => {
   const newThinkFolderForm = useForm({
@@ -23,14 +24,15 @@ const AddThinkFolderModal = () => {
       name: "",
       description: "",
       color: "",
+      icon: "",
     },
 
     validate: {
       name: isNotEmpty("Name"),
+      icon: isNotEmpty("Icon"),
       color: isNotEmpty("Color"),
     },
   });
-
   return (
     <div id="add-think-folder-modal-container">
       <form
@@ -52,6 +54,25 @@ const AddThinkFolderModal = () => {
           placeholder="Think Folder Description"
           {...newThinkFolderForm.getInputProps("description")}
         />
+        <Space h={"sm"} />
+
+        <IconSelector
+          {...newThinkFolderForm.getInputProps("icon")}
+          color={newThinkFolderForm.getInputProps("color").value || "gray"}
+        />
+
+        <Space h="sm" />
+        <ColorPicker
+          format="hex"
+          size="sm"
+          withPicker={false}
+          swatchesPerRow={Object.keys(hexToColorNameMap).length}
+          fullWidth
+          className="color-picker"
+          swatches={Object.keys(hexToColorNameMap)}
+          {...newThinkFolderForm.getInputProps("color")}
+        />
+        <Space h={"sm"} />
 
         <div
           className={
@@ -104,18 +125,6 @@ const AddThinkFolderModal = () => {
             )}
           </CopyButton>
         </div>
-        <Space h="sm" />
-
-        <ColorPicker
-          format="hex"
-          size="sm"
-          withPicker={false}
-          swatchesPerRow={Object.keys(hexToColorNameMap).length}
-          fullWidth
-          className="color-picker"
-          swatches={Object.keys(hexToColorNameMap)}
-          {...newThinkFolderForm.getInputProps("color")}
-        />
         <Group position="right" mt="md">
           <Button type="reset" variant="light" onClick={() => closeAllModals()}>
             Cancel

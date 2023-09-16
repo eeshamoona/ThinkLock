@@ -3,4 +3,5 @@ export interface ThinkFolder {
   name: string;
   description: string;
   color: string;
+  icon: string;
 }

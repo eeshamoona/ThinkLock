@@ -3,4 +3,5 @@ export class ThinkFolder {
   name!: string;
   description!: string;
   color!: string;
+  icon!: string;
 }

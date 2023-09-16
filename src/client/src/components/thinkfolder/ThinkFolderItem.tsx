@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
 import "./thinkFolderItem.scss";
 import { ActionIcon } from "@mantine/core";
-import { IconFolderFilled } from "@tabler/icons-react";
+import * as allIcons from "tabler-icons-react";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 
 interface ThinkFolderProps {
   folderColor: string;
   folderName: string;
   folderSubtitle: string;
-  folderIcon?: string;
+  folderIcon: string;
 }
+
+type IconType = Record<
+  string,
+  React.FunctionComponent<React.SVGProps<SVGSVGElement>>
+>;
 
 const ThinkFolderCard = ({
   folderColor,
@@ -50,6 +55,8 @@ const ThinkFolderCard = ({
     );
   };
 
+  const Icon = (allIcons as IconType)[folderIcon];
+
   return (
     <div
       className="think-folder-item-container"
@@ -65,7 +72,7 @@ const ThinkFolderCard = ({
             backgroundColor: folderColor + "55",
           }}
         >
-          <IconFolderFilled color={getColorFromHex()} />
+          {Icon && <Icon className="think-folder-icon" />}
         </ActionIcon>
       </div>
       <div className="think-folder-title-container">
