@@ -6,6 +6,10 @@
   border-radius: 0.5rem;
 }
 
+.hover-inactive {
+  background-color: var(--hover-background-color);
+}
+
 .think-folder-item-container:hover {
   cursor: pointer;
   background-color: var(--hover-background-color);

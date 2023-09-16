@@ -2,7 +2,7 @@ import axios from "axios";
 import { ActionItem } from "../utils/models/actionitem.model";
 
 export async function addActionItem(
-  actionItem: Pick<ActionItem, "title" | "description" | "thinkfolder_id">
+  actionItem: Pick<ActionItem, "title" | "description" | "thinkfolder_id">,
 ): Promise<number | string> {
   try {
     const response = await axios.post("/actionitems/create", actionItem);
@@ -22,7 +22,7 @@ export async function getAllActionItems(): Promise<ActionItem[] | string> {
 }
 
 export async function getActionItemById(
-  actionItemId: number
+  actionItemId: number,
 ): Promise<ActionItem | string> {
   try {
     const response = await axios.get(`/actionitems/${actionItemId}`);
@@ -33,7 +33,7 @@ export async function getActionItemById(
 }
 
 export async function getAllActionItemsByThinkFolderId(
-  thinkFolderId: number
+  thinkFolderId: number,
 ): Promise<ActionItem[] | string> {
   try {
     const response = await axios.get(`/actionitems/all/${thinkFolderId}`);

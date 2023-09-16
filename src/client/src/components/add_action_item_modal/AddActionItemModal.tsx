@@ -15,9 +15,8 @@ import {
 import { DatePickerInput } from "@mantine/dates";
 import { closeAllModals } from "@mantine/modals";
 import { IconCalendar, IconFolder } from "@tabler/icons-react";
-import { getAllThinkFolders } from "../../../services/thinkFolderAPICallerService";
-import { ThinkFolder } from "../../../utils/models/thinkfolder.model";
-import { hexToColorNameMap } from "../../../utils/constants/hexCodeToColor.constant";
+import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
+import { ThinkFolder } from "../../utils/models/thinkfolder.model";
 
 interface ActionItemProps extends React.ComponentPropsWithoutRef<"div"> {
   color: string;

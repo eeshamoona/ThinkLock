@@ -2,7 +2,7 @@ import axios from "axios";
 import { ThinkFolder } from "../utils/models/thinkfolder.model";
 
 export async function addThinkFolder(
-  thinkFolder: Pick<ThinkFolder, "name" | "description" | "color">
+  thinkFolder: Pick<ThinkFolder, "name" | "description" | "color">,
 ): Promise<number | string> {
   try {
     const response = await axios.post("/thinkfolders/create", thinkFolder);
@@ -22,7 +22,7 @@ export async function getAllThinkFolders(): Promise<ThinkFolder[] | string> {
 }
 
 export async function getThinkFolderById(
-  thinkFolderId: number
+  thinkFolderId: number,
 ): Promise<ThinkFolder | string> {
   try {
     const response = await axios.get(`/thinkfolders/${thinkFolderId}`);

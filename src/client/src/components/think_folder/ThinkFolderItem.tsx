@@ -9,6 +9,8 @@ interface ThinkFolderProps {
   folderName: string;
   folderSubtitle: string;
   folderIcon: string;
+  onClick?: any;
+  hoverActive?: boolean;
 }
 
 type IconType = Record<
@@ -21,6 +23,8 @@ const ThinkFolderCard = ({
   folderName,
   folderSubtitle,
   folderIcon,
+  onClick,
+  hoverActive,
 }: ThinkFolderProps) => {
   const getColorFromHex = () => {
     if (folderColor) {
@@ -35,33 +39,46 @@ const ThinkFolderCard = ({
 
   useEffect(() => {
     setHoverColor(folderColor ? `${folderColor}22` : "");
-  }, [folderColor]);
+  }, [folderColor, hoverActive, hoverColor]);
 
   const handleMouseEnter = () => {
-    // Set the hover color when mouse enters
-    if (folderColor) {
-      document.documentElement.style.setProperty(
-        "--hover-background-color",
-        hoverColor
-      );
+    if (hoverActive) {
+      // Set the hover color when mouse enters
+      if (folderColor) {
+        document.documentElement.style.setProperty(
+          "--hover-background-color",
+          hoverColor
+        );
+      }
     }
   };
 
   const handleMouseLeave = () => {
-    // Reset to default hover color when mouse leaves
-    document.documentElement.style.setProperty(
-      "--hover-background-color",
-      getColorFromHex()
-    );
+    if (hoverActive) {
+      // Reset to default hover color when mouse leaves
+      document.documentElement.style.setProperty(
+        "--hover-background-color",
+        getColorFromHex()
+      );
+    }
+  };
+
+  const handleOnClick = () => {
+    if (onClick) {
+      onClick();
+    }
   };
 
   const Icon = (allIcons as IconType)[folderIcon];
 
   return (
     <div
-      className="think-folder-item-container"
+      className={`think-folder-item-container ${
+        hoverActive ? "" : "hover-inactive"
+      }`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={handleOnClick}
     >
       <div className="think-folder-icon-container">
         <ActionIcon

@@ -13,10 +13,10 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { closeAllModals } from "@mantine/modals";
-import { addThinkFolder } from "../../../services/thinkFolderAPICallerService";
-import { hexToColorNameMap } from "../../../utils/constants/hexCodeToColor.constant";
+import { addThinkFolder } from "../../services/thinkFolderAPICallerService";
+import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
-import IconSelector from "../../icon_picker/IconSelector";
+import IconSelector from "../icon_selector/IconSelector";
 
 const AddThinkFolderModal = () => {
   const newThinkFolderForm = useForm({
