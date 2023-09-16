@@ -1,12 +1,14 @@
 import dbPromise from "../utils/database";
 import { ThinkFolder } from "../models/thinkfolder.model";
 import { SuccessResponse, FailureResponse } from "../utils/responses";
+import { Database } from "sqlite";
 
-export async function getAllThinkFolders(): Promise<
-  ThinkFolder[] | FailureResponse
-> {
+// Optional testing parameter: database instance
+export async function getAllThinkFolders(
+  dbInstance?: Database
+): Promise<ThinkFolder[] | FailureResponse> {
   try {
-    const db = await dbPromise;
+    const db = dbInstance || (await dbPromise);
     const query = `SELECT * FROM thinkfolder`;
     const res = await db.all<ThinkFolder[]>(query);
     return res;
@@ -16,10 +18,11 @@ export async function getAllThinkFolders(): Promise<
 }
 
 export async function getThinkFolderById(
-  id: number
+  id: number,
+  dbInstance?: Database
 ): Promise<ThinkFolder | FailureResponse> {
   try {
-    const db = await dbPromise;
+    const db = dbInstance || (await dbPromise);
     const query = `SELECT * FROM thinkfolder WHERE id = ?`;
     const params = [id];
     const res = await db.get<ThinkFolder>(query, params);
@@ -33,10 +36,11 @@ export async function getThinkFolderById(
 }
 
 export async function createThinkFolder(
-  thinkfolder: Partial<ThinkFolder>
+  thinkfolder: Partial<ThinkFolder>,
+  dbInstance?: Database
 ): Promise<number | FailureResponse> {
   try {
-    const db = await dbPromise;
+    const db = dbInstance || (await dbPromise);
     const query =
       "INSERT INTO thinkfolder (name, description, color) VALUES (?, ?, ?)";
     const params = [
