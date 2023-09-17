@@ -2,11 +2,14 @@ import axios from "axios";
 import { ActionItem } from "../utils/models/actionitem.model";
 
 export async function addActionItem(
-  actionItem: Pick<ActionItem, "title" | "description" | "thinkfolder_id">,
+  actionItem: Pick<
+    ActionItem,
+    "title" | "description" | "thinkfolder_id" | "thinksession_id"
+  >
 ): Promise<number | string> {
   try {
     const response = await axios.post("/actionitems/create", actionItem);
-    return response.data.actionitem_id;
+    return response.data.actionItemId as string;
   } catch (err) {
     return `${err}`;
   }
@@ -22,7 +25,7 @@ export async function getAllActionItems(): Promise<ActionItem[] | string> {
 }
 
 export async function getActionItemById(
-  actionItemId: number,
+  actionItemId: number
 ): Promise<ActionItem | string> {
   try {
     const response = await axios.get(`/actionitems/${actionItemId}`);
@@ -33,7 +36,7 @@ export async function getActionItemById(
 }
 
 export async function getAllActionItemsByThinkFolderId(
-  thinkFolderId: number,
+  thinkFolderId: number
 ): Promise<ActionItem[] | string> {
   try {
     const response = await axios.get(`/actionitems/all/${thinkFolderId}`);

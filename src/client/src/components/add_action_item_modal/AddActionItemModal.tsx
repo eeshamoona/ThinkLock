@@ -12,11 +12,13 @@ import {
   Text,
   Textarea,
 } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
 import { closeAllModals } from "@mantine/modals";
-import { IconCalendar, IconFolder } from "@tabler/icons-react";
+import { IconFolder } from "@tabler/icons-react";
 import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
 import { ThinkFolder } from "../../utils/models/thinkfolder.model";
+import { addActionItem } from "../../services/actionItemAPICallerService";
+import { showSuccessNotification } from "../../utils/notifications";
+import { showErrorNotification } from "../../utils/notifications";
 
 interface ActionItemProps extends React.ComponentPropsWithoutRef<"div"> {
   color: string;
@@ -49,7 +51,6 @@ const AddActionItemModal = () => {
     initialValues: {
       title: "",
       description: "",
-      dueDate: new Date(),
       thinkfolderId: "",
       thinksessionId: "",
     },
@@ -66,7 +67,7 @@ const AddActionItemModal = () => {
         setThinkFolders(res as ThinkFolder[]);
       }
     });
-  });
+  }, []);
 
   const getThinkFolderData = () => {
     const thinkFolderData = thinkFolders.map((folder) => {
@@ -83,8 +84,24 @@ const AddActionItemModal = () => {
   return (
     <div id="add-action-item-modal-container">
       <form
-        onSubmit={newActionItemForm.onSubmit((values) => {
-          console.log(values);
+        onSubmit={newActionItemForm.onSubmit(async (values) => {
+          const actionItemId = await addActionItem({
+            title: values.title,
+            description: values.description,
+            thinkfolder_id: parseInt(values.thinkfolderId),
+            thinksession_id: parseInt(values.thinksessionId),
+          });
+
+          if (actionItemId !== null) {
+            showSuccessNotification(
+              "Success",
+              `Action Item Created ID:${actionItemId as string} `
+            );
+            closeAllModals();
+          } else {
+            showErrorNotification("Error", "Action Item Creation Failed");
+            console.log(values);
+          }
         })}
       >
         <TextInput
@@ -106,16 +123,6 @@ const AddActionItemModal = () => {
 
         <div className="modal-buttons-container">
           <div className="additional-buttons-container">
-            <DatePickerInput
-              valueFormat="MMM DD, YYYY"
-              clearable
-              label="Due Date"
-              placeholder="Due Date"
-              w={175}
-              size="sm"
-              icon={<IconCalendar />}
-              {...newActionItemForm.getInputProps("dueDate")}
-            />
             <Select
               placeholder="Think Folder"
               itemComponent={ThinkFolderItem}
@@ -126,7 +133,6 @@ const AddActionItemModal = () => {
               data={getThinkFolderData()}
               dropdownComponent="div"
               maxDropdownHeight={100}
-              w={175}
               clearable
               icon={<IconFolder />}
               {...newActionItemForm.getInputProps("thinkfolderId")}

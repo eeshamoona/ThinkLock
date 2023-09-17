@@ -4,7 +4,8 @@ import ThinkFolderCard from "../../components/think_folder/ThinkFolderItem";
 import { ThinkFolder } from "../../utils/models/thinkfolder.model";
 import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
 import { ActionIcon, Text } from "@mantine/core";
-import { ArrowLeft } from "tabler-icons-react";
+import { ArrowLeft, Plus } from "tabler-icons-react";
+import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 
 const PlanOverviewPage = () => {
   const [folders, setFolders] = useState<ThinkFolder[]>([]);
@@ -80,18 +81,36 @@ const PlanOverviewPage = () => {
           showFolderDetails ? "think-folders-action-items container" : "hidden"
         }
       >
-        <Text size="md" weight={700}>
-          Action Items
-        </Text>
+        <div className="action-item-header">
+          <Text size="lg" weight={700}>
+            Action Items
+          </Text>
+          <ActionIcon
+            color={hexToColorNameMap[selectedFolder?.color as string] || "gray"}
+            size="lg"
+            variant="light"
+          >
+            <Plus size="1.75rem" />
+          </ActionIcon>
+        </div>
       </div>
       <div
         className={
           showFolderDetails ? "think-folders-think-session container" : "hidden"
         }
       >
-        <Text size="md" weight={700}>
-          Think Sessions
-        </Text>
+        <div className="think-session-header">
+          <Text size="lg" weight={700}>
+            Think Sessions
+          </Text>
+          <ActionIcon
+            color={hexToColorNameMap[selectedFolder?.color as string] || "gray"}
+            size="lg"
+            variant="light"
+          >
+            <Plus size="1.75rem" />
+          </ActionIcon>
+        </div>
       </div>
     </div>
   );

@@ -1,17 +1,17 @@
 .think-folder-item-container {
   display: flex;
   gap: 1rem;
-  background-color: #fff;
   padding: 0.75rem;
   border-radius: 0.5rem;
+  cursor: pointer;
 }
 
 .hover-inactive {
+  cursor: auto;
   background-color: var(--hover-background-color);
 }
 
 .think-folder-item-container:hover {
-  cursor: pointer;
   background-color: var(--hover-background-color);
 }
 

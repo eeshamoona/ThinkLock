@@ -29,6 +29,22 @@
   display: none;
 }
 
+.think-session-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.action-item-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
 .mantine-1ndvke8 {
   height: 95%;
   padding-bottom: 1rem;
