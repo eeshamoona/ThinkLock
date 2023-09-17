@@ -21,26 +21,30 @@ const PlanOverviewPage = () => {
   const [thinkSessions, setThinkSessions] = useState<any[]>([]);
 
   useEffect(() => {
-    if (selectedFolder === null || !showFolderDetails) {
-      getAllThinkFolders().then((res) => {
+    const fetchData = async () => {
+      if (selectedFolder === null || !showFolderDetails) {
+        const res = await getAllThinkFolders();
         if (typeof res !== "string") {
           setFolders(res as ThinkFolder[]);
         }
-      });
-    } else {
-      // Get action items for selected folder
-      getAllActionItemsByThinkFolderId(selectedFolder.id).then((res) => {
-        if (typeof res !== "string") {
-          setActionItems(res as any[]);
+      } else {
+        const actionItemsRes = await getAllActionItemsByThinkFolderId(
+          selectedFolder.id
+        );
+        if (typeof actionItemsRes !== "string") {
+          setActionItems(actionItemsRes as any[]);
         }
-      });
 
-      getAllThinkSessionsByThinkFolderId(selectedFolder.id).then((res) => {
-        if (typeof res !== "string") {
-          setThinkSessions(res as any[]);
+        const thinkSessionsRes = await getAllThinkSessionsByThinkFolderId(
+          selectedFolder.id
+        );
+        if (typeof thinkSessionsRes !== "string") {
+          setThinkSessions(thinkSessionsRes as any[]);
         }
-      });
-    }
+      }
+    };
+
+    fetchData();
   }, [selectedFolder, showFolderDetails]);
 
   const handleFolderClick = (folder: ThinkFolder) => {

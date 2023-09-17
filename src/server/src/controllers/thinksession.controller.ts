@@ -38,15 +38,14 @@ export async function createThinkSession(
   try {
     const db = await dbPromise;
     const query =
-      "INSERT INTO thinksession (thinkfolder_id, title, description, date, start_time, end_time, duration) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      "INSERT INTO thinksession (thinkfolder_id, title, location, date, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?)";
     const params = [
       thinksession.thinkfolder_id,
       thinksession.title,
-      thinksession.description,
+      thinksession.location,
       thinksession.date,
       thinksession.start_time,
       thinksession.end_time,
-      thinksession.duration,
     ];
     const res = await db.run(query, params);
     if (!res.lastID) {
