@@ -43,6 +43,7 @@ const AppLayout = () => {
             value="plan"
             icon={<IconChecklist size="1.25rem" />}
             className="tab"
+            onClick={() => changeTab("plan")}
           >
             Plan
           </Tabs.Tab>
@@ -50,6 +51,7 @@ const AppLayout = () => {
             value="study"
             icon={<IconBulb size="1.25rem" />}
             className="tab"
+            onClick={() => changeTab("study")}
           >
             Study
           </Tabs.Tab>
@@ -57,6 +59,7 @@ const AppLayout = () => {
             value="review"
             icon={<IconCheckbox size="1.25rem" />}
             className="tab"
+            onClick={() => changeTab("review")}
           >
             Review
           </Tabs.Tab>
