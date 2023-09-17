@@ -8,6 +8,8 @@ import { ArrowLeft, Plus } from "tabler-icons-react";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 import ActionItemCard from "../../components/action_item/ActionItemCard";
 import { getAllActionItemsByThinkFolderId } from "../../services/actionItemAPICallerService";
+import { getAllThinkSessionsByThinkFolderId } from "../../services/thinkSessionAPICallerService";
+import ThinkSessionItem from "../../components/think_session/ThinkSessionItem";
 
 const PlanOverviewPage = () => {
   const [folders, setFolders] = useState<ThinkFolder[]>([]);
@@ -16,9 +18,10 @@ const PlanOverviewPage = () => {
   );
   const [showFolderDetails, setShowFolderDetails] = useState<boolean>(false);
   const [actionItems, setActionItems] = useState<any[]>([]);
+  const [thinkSessions, setThinkSessions] = useState<any[]>([]);
 
   useEffect(() => {
-    if (selectedFolder === null) {
+    if (selectedFolder === null || !showFolderDetails) {
       getAllThinkFolders().then((res) => {
         if (typeof res !== "string") {
           setFolders(res as ThinkFolder[]);
@@ -31,8 +34,14 @@ const PlanOverviewPage = () => {
           setActionItems(res as any[]);
         }
       });
+
+      getAllThinkSessionsByThinkFolderId(selectedFolder.id).then((res) => {
+        if (typeof res !== "string") {
+          setThinkSessions(res as any[]);
+        }
+      });
     }
-  });
+  }, [selectedFolder, showFolderDetails]);
 
   const handleFolderClick = (folder: ThinkFolder) => {
     setSelectedFolder(folder);
@@ -134,6 +143,29 @@ const PlanOverviewPage = () => {
           >
             <Plus size="1.75rem" />
           </ActionIcon>
+        </div>
+        <div className="action-item-list-container">
+          <ThinkSessionItem
+            title="Think Session Title"
+            location="Think Session Description"
+            thinkfolderColor={selectedFolder?.color as string}
+            date={new Date()}
+            start_time={new Date()}
+            end_time={new Date()}
+            thinkfolderIcon={selectedFolder?.icon as string}
+          />
+          {thinkSessions?.map((thinkSession) => (
+            <ThinkSessionItem
+              key={thinkSession.id}
+              title={thinkSession.title}
+              location={thinkSession.location}
+              thinkfolderColor={selectedFolder?.color as string}
+              date={new Date(thinkSession.date)}
+              start_time={new Date(thinkSession.start_time)}
+              end_time={new Date(thinkSession.end_time)}
+              thinkfolderIcon={selectedFolder?.icon as string}
+            />
+          ))}
         </div>
       </div>
     </div>

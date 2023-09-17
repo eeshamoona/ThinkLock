@@ -11,7 +11,7 @@ export async function addThinkSession(
     | "start_time"
     | "end_time"
     | "duration"
-  >,
+  >
 ): Promise<number | string> {
   try {
     const response = await axios.post("/thinksessions/create", thinkSession);
@@ -31,7 +31,7 @@ export async function getAllThinkSessions(): Promise<ThinkSession[] | string> {
 }
 
 export async function getThinkSessionById(
-  thinkSessionId: number,
+  thinkSessionId: number
 ): Promise<ThinkSession | string> {
   try {
     const response = await axios.get(`/thinksessions/${thinkSessionId}`);
@@ -42,7 +42,7 @@ export async function getThinkSessionById(
 }
 
 export async function getAllThinkSessionsByThinkFolderId(
-  thinkFolderId: number,
+  thinkFolderId: number
 ): Promise<ThinkSession[] | string> {
   try {
     const response = await axios.get(`/thinksessions/all/${thinkFolderId}`);

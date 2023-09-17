@@ -9,4 +9,5 @@ export interface ThinkSession {
   duration: number;
   notes: string;
   summary: string;
+  location: string;
 }

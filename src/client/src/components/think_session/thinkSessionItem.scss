@@ -1,0 +1,36 @@
+.think-session-item-container {
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  background-color: #fff;
+}
+
+.think-session-date {
+  font-weight: 500;
+  font-size: xx-large;
+}
+
+.think-session-top-section {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  border-right: 5px solid var(--border-color);
+  margin: 0.5rem;
+  margin-right: 0;
+}
+
+.think-session-bottom-section {
+  margin: 0.5rem;
+  margin-top: 0;
+}
+
+.think-session-day-time {
+  display: flex;
+  flex-direction: column;
+}
+
+.think-session-location {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
