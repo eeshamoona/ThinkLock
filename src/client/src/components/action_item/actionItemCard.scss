@@ -1,0 +1,26 @@
+.action-item-card-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: center;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #fff;
+}
+
+.mantine-hqx0d1 {
+  align-items: center;
+}
+
+.mantine-1si5nio {
+  margin: 0;
+}
+
+.textCompleted {
+  text-decoration: line-through;
+  color: lightgray;
+}
+
+.textNotCompleted {
+  text-decoration: none;
+}

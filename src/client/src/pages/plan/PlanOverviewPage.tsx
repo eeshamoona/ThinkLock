@@ -6,6 +6,8 @@ import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
 import { ActionIcon, Text } from "@mantine/core";
 import { ArrowLeft, Plus } from "tabler-icons-react";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
+import ActionItemCard from "../../components/action_item/ActionItemCard";
+import { getAllActionItemsByThinkFolderId } from "../../services/actionItemAPICallerService";
 
 const PlanOverviewPage = () => {
   const [folders, setFolders] = useState<ThinkFolder[]>([]);
@@ -13,13 +15,23 @@ const PlanOverviewPage = () => {
     null
   );
   const [showFolderDetails, setShowFolderDetails] = useState<boolean>(false);
+  const [actionItems, setActionItems] = useState<any[]>([]);
 
   useEffect(() => {
-    getAllThinkFolders().then((res) => {
-      if (typeof res !== "string") {
-        setFolders(res as ThinkFolder[]);
-      }
-    });
+    if (selectedFolder === null) {
+      getAllThinkFolders().then((res) => {
+        if (typeof res !== "string") {
+          setFolders(res as ThinkFolder[]);
+        }
+      });
+    } else {
+      // Get action items for selected folder
+      getAllActionItemsByThinkFolderId(selectedFolder.id).then((res) => {
+        if (typeof res !== "string") {
+          setActionItems(res as any[]);
+        }
+      });
+    }
   });
 
   const handleFolderClick = (folder: ThinkFolder) => {
@@ -92,6 +104,18 @@ const PlanOverviewPage = () => {
           >
             <Plus size="1.75rem" />
           </ActionIcon>
+        </div>
+        <div className="action-item-list-container">
+          {actionItems?.map((actionItem) => (
+            <ActionItemCard
+              key={actionItem.id}
+              title={actionItem.title}
+              description={actionItem.description}
+              completed={actionItem.completed}
+              draggable={true}
+              thinkfolderColor={selectedFolder?.color as string}
+            />
+          ))}
         </div>
       </div>
       <div

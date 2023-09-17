@@ -45,6 +45,18 @@
   gap: 1rem;
 }
 
+.action-item-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+  background-color: #f8f9fa;
+  overflow-y: scroll;
+}
+
 .mantine-1ndvke8 {
   height: 95%;
   padding-bottom: 1rem;
