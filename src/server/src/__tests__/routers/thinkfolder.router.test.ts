@@ -3,6 +3,7 @@ import express from "express";
 import createThinkFoldersRouter from "../../routes/thinkfolders";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
+import { describe, beforeAll, afterAll, it, expect, jest } from "@jest/globals";
 
 describe("thinkFoldersRouter", () => {
   let test_db: any;
@@ -18,17 +19,18 @@ describe("thinkFoldersRouter", () => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       description TEXT,
+      icon TEXT NOT NULL,
       color TEXT NOT NULL
     )`);
 
     await test_db.run(`
-      INSERT INTO thinkfolder (name, description, color)
-      VALUES ("Test Routing ThinkFolder 1", "Router Description", "#000000")
+      INSERT INTO thinkfolder (name, description, icon, color)
+      VALUES ("Test Routing ThinkFolder 1", "Router Description", "test-icon-start", "#000000")
     `);
 
     await test_db.run(`
-      INSERT INTO thinkfolder (name, description, color)
-      VALUES ("Test Routing ThinkFolder 2", "Another Router Description", "#FFFFFF")
+      INSERT INTO thinkfolder (name, description, icon, color)
+      VALUES ("Test Routing ThinkFolder 2", "Another Router Description","test-icon-next", "#FFFFFF")
     `);
 
     test_app = express();
@@ -57,12 +59,14 @@ describe("thinkFoldersRouter", () => {
       id: 1,
       name: "Test Routing ThinkFolder 1",
       description: "Router Description",
+      icon: "test-icon-start",
       color: "#000000",
     });
     expect(response.body.thinkfolders[1]).toEqual({
       id: 2,
       name: "Test Routing ThinkFolder 2",
       description: "Another Router Description",
+      icon: "test-icon-next",
       color: "#FFFFFF",
     });
   });
@@ -93,6 +97,7 @@ describe("thinkFoldersRouter", () => {
     const newThinkFolder = {
       name: "Test Routing ThinkFolder",
       description: "This is a test thinkfolder in router test file",
+      icon: "test-icon",
       color: "#000000",
     };
     const response = await request(test_app)
@@ -115,7 +120,9 @@ describe("thinkFoldersRouter", () => {
 
   it("GET /thinkfolders/all should return a 500 status code if the database throws an error", async () => {
     // Mock the database to throw an error
-    test_db.all = jest.fn().mockRejectedValueOnce(new Error("Database error"));
+    test_db.all = jest
+      .fn()
+      .mockRejectedValueOnce(new Error("Database error") as never);
     const response = await request(test_app).get("/thinkfolders/all");
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
@@ -125,7 +132,9 @@ describe("thinkFoldersRouter", () => {
 
   it("GET /thinkfolders/:id should return a 500 status code if the database throws an error", async () => {
     // Mock the database to throw an error
-    test_db.get = jest.fn().mockRejectedValueOnce(new Error("Database error"));
+    test_db.get = jest
+      .fn()
+      .mockRejectedValueOnce(new Error("Database error") as never);
     const response = await request(test_app).get("/thinkfolders/1");
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
@@ -135,7 +144,9 @@ describe("thinkFoldersRouter", () => {
 
   it("POST /thinkfolders/create should return a 500 status code if the database throws an error", async () => {
     // Mock the database to throw an error
-    test_db.run = jest.fn().mockRejectedValueOnce(new Error("Database error"));
+    test_db.run = jest
+      .fn()
+      .mockRejectedValueOnce(new Error("Database error") as never);
     const response = await request(test_app).post("/thinkfolders/create").send({
       name: "Test Routing ThinkFolder",
       description: "This is a test thinkfolder in router test file",
