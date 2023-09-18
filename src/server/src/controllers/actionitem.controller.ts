@@ -16,7 +16,7 @@ export async function getAllActionItems(): Promise<
 }
 
 export async function getActionItemById(
-  id: number
+  id: number,
 ): Promise<ActionItem | FailureResponse> {
   try {
     const db = await dbPromise;
@@ -36,7 +36,7 @@ export async function createActionItem(
   thinksession_id: number | null,
   thinkfolder_id: number,
   description: string,
-  title: string
+  title: string,
 ): Promise<number | FailureResponse> {
   try {
     const db = await dbPromise;
@@ -54,7 +54,7 @@ export async function createActionItem(
 }
 
 export async function getAllActionItemsByThinkFolderId(
-  thinkfolder_id: string
+  thinkfolder_id: string,
 ): Promise<ActionItem[] | FailureResponse> {
   try {
     const db = await dbPromise;

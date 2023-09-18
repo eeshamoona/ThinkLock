@@ -16,27 +16,15 @@ describe("thinkfolder.controller", () => {
   let db: any;
 
   beforeAll(async () => {
-    // Open the database and create tables if they do not exist
-    try {
-      db = await open({
-        filename: ":memory:",
-        driver: sqlite3.Database,
-      });
-      loggerInstance.success(`Database opened in Controller Test File`);
-    } catch (error) {
-      loggerInstance.error(
-        `Error opening database: ${error} in Cotroller Test File`
-      );
-      throw error;
-    }
+    db = await open({ filename: ":memory:", driver: sqlite3.Database });
+    loggerInstance.success(`Database opened in Controller Test File`);
 
-    // Create thinkfolder table
     await db.run(`CREATE TABLE IF NOT EXISTS thinkfolder (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        description TEXT,
-        icon TEXT NOT NULL,
-        color TEXT NOT NULL
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      description TEXT,
+      icon TEXT NOT NULL,
+      color TEXT NOT NULL
     )`);
 
     await db.run(`
@@ -50,16 +38,14 @@ describe("thinkfolder.controller", () => {
     `);
 
     loggerInstance.success(`Database populated in Controller Test File`);
-    //Check that the database is populated
     expect((await db.all(`SELECT * FROM thinkfolder`)).length).toBe(2);
   });
 
   describe("getAllThinkFolders", () => {
     it("should return an array of thinkfolders", async () => {
-      let result = await getAllThinkFolders(db);
+      const result = await getAllThinkFolders(db);
       expect(Array.isArray(result)).toBe(true);
       expect((result as Array<ThinkFolder>).length).toBe(2);
-      result = result as Array<ThinkFolder>;
       expect(result).toEqual([
         {
           id: 1,
@@ -79,11 +65,9 @@ describe("thinkfolder.controller", () => {
     });
 
     it("should return a FailureResponse if there is an error", async () => {
-      // Mock the database to throw an error
       db.all = jest
         .fn()
         .mockRejectedValueOnce(new Error("Database error") as never);
-
       const result = await getAllThinkFolders(db);
       expect(result).toBeInstanceOf(FailureResponse);
       expect((result as FailureResponse).status).toBe(500);
@@ -116,11 +100,9 @@ describe("thinkfolder.controller", () => {
     });
 
     it("should return a FailureResponse if there is an error", async () => {
-      // Mock the database to throw an error
       db.get = jest
         .fn()
-        .mockRejectedValueOnce(new Error("Database error") as never) as any;
-
+        .mockRejectedValueOnce(new Error("Database error") as never);
       const result = await getThinkFolderById(1, db);
       expect(result).toBeInstanceOf(FailureResponse);
       expect((result as FailureResponse).status).toBe(500);
@@ -133,7 +115,7 @@ describe("thinkfolder.controller", () => {
       const newThinkFolder: Partial<ThinkFolder> = {
         name: "New ThinkFolder",
         description: "This is a new thinkfolder",
-        icon: "test-icon",
+        icon: "new-test-icon",
         color: "#123456",
       };
       const result = await createThinkFolder(newThinkFolder, db);
@@ -142,13 +124,11 @@ describe("thinkfolder.controller", () => {
     });
 
     it("should return a FailureResponse if the thinkfolder is not created", async () => {
-      // Mock the database to return a result without a lastID property
       db.run = jest.fn().mockResolvedValueOnce({} as never);
-
       const newThinkFolder: Partial<ThinkFolder> = {
         name: "New ThinkFolder",
         description: "This is a new thinkfolder",
-        icon: "test-icon",
+        icon: "new-test-icon",
         color: "#123456",
       };
       const result = await createThinkFolder(newThinkFolder, db);
@@ -160,15 +140,13 @@ describe("thinkfolder.controller", () => {
     });
 
     it("should return a FailureResponse if there is an error", async () => {
-      // Mock the database to throw an error
       db.run = jest
         .fn()
         .mockRejectedValueOnce(new Error("Database error") as never);
-
       const newThinkFolder: Partial<ThinkFolder> = {
         name: "New ThinkFolder",
         description: "This is a new thinkfolder",
-        icon: "test-icon",
+        icon: "new-test-icon",
         color: "#123456",
       };
       const result = await createThinkFolder(newThinkFolder, db);

@@ -10,7 +10,7 @@ export class Logger {
    */
   success(message: string): void {
     console.log(
-      `${this.FG_GREEN}${this.DB_LOG_PREFIX}${message}${this.FG_RESET}`
+      `${this.FG_GREEN}${this.DB_LOG_PREFIX}${message}${this.FG_RESET}`,
     );
   }
 
@@ -20,7 +20,7 @@ export class Logger {
    */
   error(message: string): void {
     console.log(
-      `${this.FG_RED}}${this.DB_LOG_PREFIX}${message}${this.FG_RESET}`
+      `${this.FG_RED}}${this.DB_LOG_PREFIX}${message}${this.FG_RESET}`,
     );
   }
 }

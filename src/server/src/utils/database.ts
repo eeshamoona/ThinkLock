@@ -25,7 +25,7 @@ const dbPromise = (async (): Promise<Database> => {
         color TEXT NOT NULL,
         icon TEXT NOT NULL
     )`);
-    loggerInstance.success(`Table created: thinkfolder`);
+    loggerInstance.success("Table created: thinkfolder");
 
     // Create actionitem table
     await db.run(`CREATE TABLE IF NOT EXISTS actionitem (
@@ -38,7 +38,7 @@ const dbPromise = (async (): Promise<Database> => {
         FOREIGN KEY (thinkfolder_id) REFERENCES thinkfolder(id)
         FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
     )`);
-    loggerInstance.success(`Table created: actionitem`);
+    loggerInstance.success("Table created: actionitem");
 
     // Create thinksession table
     await db.run(`CREATE TABLE IF NOT EXISTS thinksession (
@@ -54,7 +54,7 @@ const dbPromise = (async (): Promise<Database> => {
         summary TEXT,
         FOREIGN KEY (thinkfolder_id) REFERENCES thinkfolder(id)
     )`);
-    loggerInstance.success(`Table created: thinksession`);
+    loggerInstance.success("Table created: thinksession");
 
     return db;
   } catch (error) {

@@ -5,7 +5,7 @@ import { Database } from "sqlite";
 
 // Optional testing parameter: database instance
 export async function getAllThinkFolders(
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<ThinkFolder[] | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -19,7 +19,7 @@ export async function getAllThinkFolders(
 
 export async function getThinkFolderById(
   id: number,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<ThinkFolder | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -37,7 +37,7 @@ export async function getThinkFolderById(
 
 export async function createThinkFolder(
   thinkfolder: Partial<ThinkFolder>,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<number | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);

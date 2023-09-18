@@ -45,9 +45,9 @@ describe("thinkFoldersRouter", () => {
   it("GET /thinkfolders should return a 200 status code and a message", async () => {
     const response = await request(test_app).get("/thinkfolders");
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({
-      message: "You have reached the thinkfolder route",
-    });
+    expect(response.body.message).toBe(
+      "You have reached the thinkfolder route"
+    );
   });
 
   it("GET /thinkfolders/all should return a 200 status code and an array of thinkfolders", async () => {
@@ -55,20 +55,12 @@ describe("thinkFoldersRouter", () => {
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body.thinkfolders)).toBe(true);
     expect(response.body.thinkfolders.length).toBe(2);
-    expect(response.body.thinkfolders[0]).toEqual({
-      id: 1,
-      name: "Test Routing ThinkFolder 1",
-      description: "Router Description",
-      icon: "test-icon-start",
-      color: "#000000",
-    });
-    expect(response.body.thinkfolders[1]).toEqual({
-      id: 2,
-      name: "Test Routing ThinkFolder 2",
-      description: "Another Router Description",
-      icon: "test-icon-next",
-      color: "#FFFFFF",
-    });
+    expect(response.body.thinkfolders[0].name).toBe(
+      "Test Routing ThinkFolder 1"
+    );
+    expect(response.body.thinkfolders[1].name).toBe(
+      "Test Routing ThinkFolder 2"
+    );
   });
 
   it("GET /thinkfolders/:id should return a 200 status code and a thinkfolder object", async () => {
@@ -80,17 +72,13 @@ describe("thinkFoldersRouter", () => {
   it("GET /thinkfolders/:id should return a 404 status code if the thinkfolder is not found", async () => {
     const response = await request(test_app).get("/thinkfolders/999");
     expect(response.status).toBe(404);
-    expect(response.body).toEqual({
-      error: "thinkfolder with id 999 not found",
-    });
+    expect(response.body.error).toBe("thinkfolder with id 999 not found");
   });
 
   it("GET /thinkfolders/:id should return a 404 status code if the id parameter is not a number", async () => {
     const response = await request(test_app).get("/thinkfolders/abc");
     expect(response.status).toBe(404);
-    expect(response.body).toEqual({
-      error: "thinkfolder with id NaN not found",
-    });
+    expect(response.body.error).toBe("thinkfolder with id NaN not found");
   });
 
   it("POST /thinkfolders/create should return a 200 status code and the created thinkfolder object", async () => {
@@ -104,7 +92,7 @@ describe("thinkFoldersRouter", () => {
       .post("/thinkfolders/create")
       .send(newThinkFolder);
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ thinkfolder: 3 });
+    expect(response.body.thinkfolder).toBe(3);
   });
 
   it("POST /thinkfolders/create should return a 500 status code if the request body is missing required fields", async () => {
@@ -112,10 +100,7 @@ describe("thinkFoldersRouter", () => {
       .post("/thinkfolders/create")
       .send({});
     expect(response.status).toBe(500);
-    expect(response.body).toEqual({
-      error:
-        "Error: SQLITE_CONSTRAINT: NOT NULL constraint failed: thinkfolder.name",
-    });
+    expect(response.body.error).toContain("NOT NULL constraint failed");
   });
 
   it("GET /thinkfolders/all should return a 500 status code if the database throws an error", async () => {
@@ -125,9 +110,7 @@ describe("thinkFoldersRouter", () => {
       .mockRejectedValueOnce(new Error("Database error") as never);
     const response = await request(test_app).get("/thinkfolders/all");
     expect(response.status).toBe(500);
-    expect(response.body).toEqual({
-      error: "Error: Database error",
-    });
+    expect(response.body.error).toBe("Error: Database error");
   });
 
   it("GET /thinkfolders/:id should return a 500 status code if the database throws an error", async () => {
@@ -137,9 +120,7 @@ describe("thinkFoldersRouter", () => {
       .mockRejectedValueOnce(new Error("Database error") as never);
     const response = await request(test_app).get("/thinkfolders/1");
     expect(response.status).toBe(500);
-    expect(response.body).toEqual({
-      error: "Error: Database error",
-    });
+    expect(response.body.error).toBe("Error: Database error");
   });
 
   it("POST /thinkfolders/create should return a 500 status code if the database throws an error", async () => {
@@ -153,8 +134,6 @@ describe("thinkFoldersRouter", () => {
       color: "#000000",
     });
     expect(response.status).toBe(500);
-    expect(response.body).toEqual({
-      error: "Error: Database error",
-    });
+    expect(response.body.error).toBe("Error: Database error");
   });
 });

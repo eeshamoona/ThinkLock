@@ -16,7 +16,7 @@ export async function getAllThinkSessions(): Promise<
 }
 
 export async function getThinkSessionById(
-  id: number
+  id: number,
 ): Promise<ThinkSession | FailureResponse> {
   try {
     const db = await dbPromise;
@@ -33,7 +33,7 @@ export async function getThinkSessionById(
 }
 
 export async function createThinkSession(
-  thinksession: Partial<ThinkSession>
+  thinksession: Partial<ThinkSession>,
 ): Promise<number | FailureResponse> {
   try {
     const db = await dbPromise;
@@ -58,7 +58,7 @@ export async function createThinkSession(
 }
 
 export async function getAllThinkSessionsByThinkFolderId(
-  thinkfolder_id: number
+  thinkfolder_id: number,
 ): Promise<ThinkSession[] | FailureResponse> {
   try {
     const db = await dbPromise;
