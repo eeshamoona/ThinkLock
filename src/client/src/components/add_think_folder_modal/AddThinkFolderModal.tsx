@@ -17,6 +17,8 @@ import { addThinkFolder } from "../../services/thinkFolderAPICallerService";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
 import IconSelector from "../icon_selector/IconSelector";
+import { showErrorNotification } from "../../utils/notifications";
+import { showSuccessNotification } from "../../utils/notifications";
 
 const AddThinkFolderModal = () => {
   const newThinkFolderForm = useForm({
@@ -37,8 +39,21 @@ const AddThinkFolderModal = () => {
     <div id="add-think-folder-modal-container">
       <form
         onSubmit={newThinkFolderForm.onSubmit((values) => {
-          addThinkFolder(values);
-          closeAllModals();
+          addThinkFolder(values)
+            .then((res) => {
+              if (typeof res !== "string") {
+                showSuccessNotification(
+                  "Success",
+                  `Think Folder Added ID: ${res}`
+                );
+                closeAllModals();
+              } else {
+                showErrorNotification("Failed", res);
+              }
+            })
+            .catch((err) => {
+              showErrorNotification("Failed", err);
+            });
         })}
       >
         <TextInput

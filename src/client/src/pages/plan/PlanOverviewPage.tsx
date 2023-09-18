@@ -149,15 +149,6 @@ const PlanOverviewPage = () => {
           </ActionIcon>
         </div>
         <div className="action-item-list-container">
-          <ThinkSessionItem
-            title="Think Session Title"
-            location="Think Session Description"
-            thinkfolderColor={selectedFolder?.color as string}
-            date={new Date()}
-            start_time={new Date()}
-            end_time={new Date()}
-            thinkfolderIcon={selectedFolder?.icon as string}
-          />
           {thinkSessions?.map((thinkSession) => (
             <ThinkSessionItem
               key={thinkSession.id}
