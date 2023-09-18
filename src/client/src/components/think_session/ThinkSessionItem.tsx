@@ -1,10 +1,9 @@
 import React from "react";
 import "./thinkSessionItem.scss";
-import { ActionIcon, Text } from "@mantine/core";
+import { ActionIcon, Badge, Text } from "@mantine/core";
 import * as allIcons from "tabler-icons-react";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
-import { MapPin } from "tabler-icons-react";
-
+import { TbMapPinFilled } from "react-icons/tb";
 interface ThinkSessionProps {
   title: string;
   date: Date;
@@ -47,31 +46,40 @@ const ThinkSessionItem = ({
   return (
     <div className="think-session-item-container">
       <div className="think-session-top-section">
-        <ActionIcon color={color} size="xl" variant="light" radius="md">
+        <ActionIcon color={color} size={45} variant="light" radius="md">
           {Icon && (
-            <Icon className="think-folder-icon" color={thinkfolderColor} />
+            <Icon className="think-session-icon" color={thinkfolderColor} />
           )}
         </ActionIcon>
-        <Text size="xl" className="think-session-date">
-          {date.getDate()}
-        </Text>
+        <div className="think-session-title-info">
+          <Text size={"lg"} weight={"500"}>
+            {title}
+          </Text>
+          <div className="think-session-location">
+            <TbMapPinFilled size={18} color={`${thinkfolderColor}BB`} />
+            <Text size={"sm"} color="gray">
+              {location}
+            </Text>
+          </div>
+        </div>
+      </div>
+      <div className="think-session-bottom-section">
+        <div className="think-session-date-container">
+          <Badge size="xs" radius="xs" color="gray">
+            {date
+              .toLocaleString("default", { month: "short" })
+              .toLocaleUpperCase()}
+          </Badge>
+          <Text size="xl" className="think-session-date">
+            {date.getDate()}
+          </Text>
+        </div>
         <div className="think-session-day-time">
           <Text size="md">
             {date.toLocaleString("default", { weekday: "long" })}
           </Text>
-          <Text size="md" color="gray">
+          <Text size="md" color="gray" className="think-session-time">
             {formatTime(start_time)} - {formatTime(end_time)}
-          </Text>
-        </div>
-      </div>
-      <div className="think-session-bottom-section">
-        <Text size={"lg"} weight={"500"}>
-          {title}
-        </Text>
-        <div className="think-session-location">
-          <MapPin />
-          <Text size={"md"} color="gray">
-            {location}
           </Text>
         </div>
       </div>
