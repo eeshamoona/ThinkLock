@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./actionItemCard.scss";
-import { Checkbox, Text } from "@mantine/core";
+import { Card, Checkbox, Text } from "@mantine/core";
 import { RxDragHandleDots2 } from "react-icons/rx";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 
@@ -30,7 +30,12 @@ const ActionItemCard = ({
   };
 
   return (
-    <div className="action-item-card-container">
+    <Card
+      shadow="sm"
+      padding="sm"
+      radius="sm"
+      className="action-item-card-container"
+    >
       <Checkbox
         label={<Text className={textClassName}>{description}</Text>}
         description={<Text className={textClassName}>{title}</Text>}
@@ -39,14 +44,12 @@ const ActionItemCard = ({
         checked={isCompleted}
         onChange={() => setIsCompleted(!isCompleted)}
       />
-      <div className="right-section">
-        {draggable ? (
-          <RxDragHandleDots2 color="gray" size={"1.75rem"} />
-        ) : (
-          <div className="empty-space"></div>
-        )}
-      </div>
-    </div>
+      {draggable ? (
+        <RxDragHandleDots2 color="gray" size={"1.75rem"} />
+      ) : (
+        <div className="empty-space"></div>
+      )}
+    </Card>
   );
 };
 

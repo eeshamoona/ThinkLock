@@ -152,7 +152,7 @@ const PlanOverviewPage = () => {
             <div className="folder-to-back-container">
               <div className="go-back-container">
                 <ActionIcon onClick={handleBackClick}>
-                  <ArrowLeft color="black" />
+                  <ArrowLeft />
                 </ActionIcon>
                 <Text size="sm">Back To Folders</Text>
               </div>

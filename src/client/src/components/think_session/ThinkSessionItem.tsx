@@ -1,6 +1,6 @@
 import React from "react";
 import "./thinkSessionItem.scss";
-import { ActionIcon, Badge, Text } from "@mantine/core";
+import { ActionIcon, Badge, Text, Card } from "@mantine/core";
 import * as allIcons from "tabler-icons-react";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 import { TbMapPinFilled } from "react-icons/tb";
@@ -37,11 +37,19 @@ const ThinkSessionItem = ({
 
   document.documentElement.style.setProperty(
     "--border-color",
-    `${thinkfolderColor}22`
+    `${thinkfolderColor}AA`
   );
 
+  document.documentElement.style.setProperty("--secondary-color", `#909296`);
+
   return (
-    <div className="think-session-item-container">
+    <Card
+      shadow="sm"
+      padding="xs"
+      pr={0}
+      radius="xs"
+      className="think-session-item-container"
+    >
       <div className="think-session-top-section">
         <ActionIcon color={color} size={45} variant="light" radius="md">
           {Icon && (
@@ -54,7 +62,7 @@ const ThinkSessionItem = ({
           </Text>
           <div className="think-session-location">
             <TbMapPinFilled size={18} color={`${thinkfolderColor}BB`} />
-            <Text size={"sm"} color="gray">
+            <Text size={"sm"} className="location-text">
               {location}
             </Text>
           </div>
@@ -62,7 +70,7 @@ const ThinkSessionItem = ({
       </div>
       <div className="think-session-bottom-section">
         <div className="think-session-date-container">
-          <Badge size="xs" radius="xs" color="gray">
+          <Badge size="xs" radius="xs" color={color}>
             {date
               .toLocaleString("default", { month: "short" })
               .toLocaleUpperCase()}
@@ -75,12 +83,12 @@ const ThinkSessionItem = ({
           <Text size="md">
             {date.toLocaleString("default", { weekday: "long" })}
           </Text>
-          <Text size="md" color="gray" className="think-session-time">
+          <Text size="md" className="think-session-time">
             {formatTime(start_time)} - {formatTime(end_time)}
           </Text>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 
