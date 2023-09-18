@@ -79,11 +79,9 @@ const AddThinkFolderModal = () => {
         <Space h="sm" />
         <ColorPicker
           format="hex"
-          size="sm"
           withPicker={false}
           swatchesPerRow={Object.keys(hexToColorNameMap).length}
           fullWidth
-          className="color-picker"
           swatches={Object.keys(hexToColorNameMap)}
           {...newThinkFolderForm.getInputProps("color")}
         />

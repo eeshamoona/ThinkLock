@@ -13,7 +13,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <MantineProvider
-      theme={{ colorScheme: "light" }}
+      theme={{ colorScheme: "dark" }}
       withGlobalStyles
       withNormalizeCSS
     >
