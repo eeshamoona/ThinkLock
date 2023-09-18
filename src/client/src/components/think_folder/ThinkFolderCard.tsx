@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import "./thinkFolderItem.scss";
+import "./thinkFolderCard.scss";
 import { ThemeIcon } from "@mantine/core";
 import * as allIcons from "tabler-icons-react";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
+import IconType from "../../utils/constants/iconType.constant";
 
 interface ThinkFolderProps {
   folderColor: string;
@@ -12,11 +13,6 @@ interface ThinkFolderProps {
   onClick?: any;
   hoverActive?: boolean;
 }
-
-type IconType = Record<
-  string,
-  React.FunctionComponent<React.SVGProps<SVGSVGElement>>
->;
 
 const ThinkFolderCard = ({
   folderColor,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./planOverviewPage.scss";
-import ThinkFolderCard from "../../components/think_folder/ThinkFolderItem";
+import ThinkFolderCard from "../../components/think_folder/ThinkFolderCard";
 import { ThinkFolder } from "../../utils/models/thinkfolder.model";
 import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
 import { ActionIcon, Text } from "@mantine/core";

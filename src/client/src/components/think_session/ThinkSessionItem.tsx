@@ -4,6 +4,8 @@ import { ActionIcon, Badge, Text } from "@mantine/core";
 import * as allIcons from "tabler-icons-react";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 import { TbMapPinFilled } from "react-icons/tb";
+import IconType from "../../utils/constants/iconType.constant";
+
 interface ThinkSessionProps {
   title: string;
   date: Date;
@@ -13,11 +15,6 @@ interface ThinkSessionProps {
   thinkfolderColor: string;
   thinkfolderIcon: string;
 }
-
-type IconType = Record<
-  string,
-  React.FunctionComponent<React.SVGProps<SVGSVGElement>>
->;
 
 const ThinkSessionItem = ({
   title,

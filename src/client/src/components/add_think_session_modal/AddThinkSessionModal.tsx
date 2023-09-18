@@ -1,10 +1,4 @@
-import React, {
-  useRef,
-  RefObject,
-  forwardRef,
-  useEffect,
-  useState,
-} from "react";
+import React, { useRef, RefObject, useEffect, useState } from "react";
 import "./addThinkSessionModal.scss";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { closeAllModals } from "@mantine/modals";
@@ -17,63 +11,20 @@ import {
   Space,
   TextInput,
   Text,
-  ThemeIcon,
   ActionIcon,
 } from "@mantine/core";
 import { IconFolder } from "@tabler/icons-react";
-import * as allIcons from "tabler-icons-react";
-import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
 import { ThinkFolder } from "../../utils/models/thinkfolder.model";
 import { addThinkSession } from "../../services/thinkSessionAPICallerService";
 import { showSuccessNotification } from "../../utils/notifications";
 import { showErrorNotification } from "../../utils/notifications";
-
-interface ThinkFolderItemProps extends React.ComponentPropsWithoutRef<"div"> {
-  color: string;
-  icon: string;
-  label: string;
-  description: string;
-  value: string;
-}
-
-type IconType = Record<
-  string,
-  React.FunctionComponent<React.SVGProps<SVGSVGElement>>
->;
-
-const ThinkFolderItem = forwardRef<HTMLDivElement, ThinkFolderItemProps>(
-  (
-    { color, label, description, value, icon, ...others }: ThinkFolderItemProps,
-    ref
-  ) => {
-    const Icon = (allIcons as IconType)[icon];
-    const colorString = hexToColorNameMap[color] || "gray";
-
-    return (
-      <div ref={ref} {...others}>
-        <Group noWrap>
-          <ThemeIcon color={colorString} size="lg" variant="light" radius="sm">
-            {Icon && <Icon className="think-folder-icon" color={color} />}
-          </ThemeIcon>
-
-          <div>
-            <Text size="sm">{label}</Text>
-            <Text size="xs" opacity={0.65}>
-              {description}
-            </Text>
-          </div>
-        </Group>
-      </div>
-    );
-  }
-);
+import ThinkFolderSelectItem from "../think_folder/ThinkFolderSelectItem";
 
 interface AddThinkSessionModalProps {
   thinkFolderId?: string;
   thinkSessionDate?: Date;
 }
-
 const AddThinkSessionModal = ({
   thinkFolderId,
   thinkSessionDate,
@@ -96,6 +47,7 @@ const AddThinkSessionModal = ({
       thinkfolder_id: isNotEmpty("Think Folder"),
     },
   });
+
   const startRef: RefObject<HTMLInputElement> = useRef(null);
   const endRef: RefObject<HTMLInputElement> = useRef(null);
   const [thinkFolders, setThinkFolders] = useState<ThinkFolder[]>([]);
@@ -201,7 +153,7 @@ const AddThinkSessionModal = ({
           <Space h="sm" />
           <Select
             placeholder="Think Folder"
-            itemComponent={ThinkFolderItem}
+            itemComponent={ThinkFolderSelectItem}
             searchable
             withAsterisk
             maxDropdownHeight={200}

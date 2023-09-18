@@ -2,11 +2,7 @@ import React, { useState } from "react";
 import * as allIcons from "tabler-icons-react";
 import "./iconSelector.scss";
 import { Select } from "@mantine/core";
-
-type IconType = Record<
-  string,
-  React.FunctionComponent<React.SVGProps<SVGSVGElement>>
->;
+import IconType from "../../utils/constants/iconType.constant";
 
 interface IconPickerProps {
   value: any;
