@@ -69,15 +69,23 @@ const ThinkFolderItem = forwardRef<HTMLDivElement, ThinkFolderItemProps>(
   }
 );
 
-const AddThinkSessionModal = () => {
+interface AddThinkSessionModalProps {
+  thinkFolderId?: string;
+  thinkSessionDate?: Date;
+}
+
+const AddThinkSessionModal = ({
+  thinkFolderId,
+  thinkSessionDate,
+}: AddThinkSessionModalProps) => {
   const newThinkSessionForm = useForm({
     initialValues: {
       title: "",
       location: "",
-      date: new Date(),
-      start_time: null,
-      end_time: null,
-      thinkfolder_id: "",
+      date: thinkSessionDate || new Date(),
+      start_time: "",
+      end_time: "",
+      thinkfolder_id: thinkFolderId || "",
     },
 
     validate: {

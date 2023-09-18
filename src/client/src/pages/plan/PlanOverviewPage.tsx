@@ -10,7 +10,14 @@ import ActionItemCard from "../../components/action_item/ActionItemCard";
 import { getAllActionItemsByThinkFolderId } from "../../services/actionItemAPICallerService";
 import { getAllThinkSessionsByThinkFolderId } from "../../services/thinkSessionAPICallerService";
 import ThinkSessionItem from "../../components/think_session/ThinkSessionItem";
+import AddThinkSessionModal from "../../components/add_think_session_modal/AddThinkSessionModal";
+import AddActionItemModal from "../../components/add_action_item_modal/AddActionItemModal";
+import { useModals } from "@mantine/modals";
 
+enum ModalOptions {
+  ThinkSession,
+  ActionItem,
+}
 const PlanOverviewPage = () => {
   const [folders, setFolders] = useState<ThinkFolder[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<ThinkFolder | null>(
@@ -60,6 +67,82 @@ const PlanOverviewPage = () => {
         setFolders(res as ThinkFolder[]);
       }
     });
+  };
+
+  const modals = useModals();
+
+  const getModalContent = (content: ModalOptions) => {
+    switch (content) {
+      case ModalOptions.ThinkSession:
+        if (selectedFolder) {
+          return (
+            <AddThinkSessionModal
+              thinkFolderId={selectedFolder.id.toString()}
+            />
+          );
+        }
+        return <AddThinkSessionModal />;
+      case ModalOptions.ActionItem:
+        if (selectedFolder) {
+          return (
+            <AddActionItemModal thinkFolderId={selectedFolder.id.toString()} />
+          );
+        }
+        return <AddActionItemModal />;
+      default:
+        return <div></div>;
+    }
+  };
+
+  const getModalTitle = (content: ModalOptions) => {
+    switch (content) {
+      case ModalOptions.ThinkSession:
+        return (
+          <div>
+            <Text size="lg" weight={700}>
+              Add Think Session
+            </Text>
+          </div>
+        );
+      case ModalOptions.ActionItem:
+        return (
+          <div>
+            <Text size="lg" weight={700}>
+              Add Action Item
+            </Text>
+          </div>
+        );
+      default:
+        return <div></div>;
+    }
+  };
+
+  const getModalSize = (content: ModalOptions) => {
+    switch (content) {
+      case ModalOptions.ThinkSession:
+        return "md";
+      case ModalOptions.ActionItem:
+        return "lg";
+      default:
+        return "md";
+    }
+  };
+
+  const openModal = (content: ModalOptions) => {
+    modals.openModal({
+      title: getModalTitle(content),
+      children: <>{getModalContent(content)}</>,
+      sx: { borderRadius: "1rem" },
+      size: getModalSize(content),
+    });
+  };
+
+  const openAddThinkSessionModal = () => {
+    openModal(ModalOptions.ThinkSession);
+  };
+
+  const openAddActionItemModal = () => {
+    openModal(ModalOptions.ActionItem);
   };
 
   return (
@@ -114,6 +197,7 @@ const PlanOverviewPage = () => {
             color={hexToColorNameMap[selectedFolder?.color as string] || "gray"}
             size="lg"
             variant="light"
+            onClick={openAddActionItemModal}
           >
             <Plus size="1.75rem" />
           </ActionIcon>
@@ -144,6 +228,7 @@ const PlanOverviewPage = () => {
             color={hexToColorNameMap[selectedFolder?.color as string] || "gray"}
             size="lg"
             variant="light"
+            onClick={openAddThinkSessionModal}
           >
             <Plus size="1.75rem" />
           </ActionIcon>

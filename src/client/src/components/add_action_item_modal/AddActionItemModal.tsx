@@ -5,7 +5,6 @@ import {
   Button,
   Group,
   Select,
-  SelectItem,
   Space,
   TextInput,
   Text,
@@ -62,15 +61,23 @@ const ThinkFolderItem = forwardRef<HTMLDivElement, ThinkFolderItemProps>(
   }
 );
 
-const AddActionItemModal = () => {
+interface AddActionItemModalProps {
+  thinkSessionId?: string;
+  thinkFolderId?: string;
+}
+
+const AddActionItemModal = ({
+  thinkSessionId,
+  thinkFolderId,
+}: AddActionItemModalProps) => {
   const [thinkFolders, setThinkFolders] = useState<ThinkFolder[]>([]);
 
   const newActionItemForm = useForm({
     initialValues: {
       title: "",
       description: "",
-      thinkfolderId: "",
-      thinksessionId: "",
+      thinkfolderId: thinkFolderId || "",
+      thinksessionId: thinkSessionId || "",
     },
 
     validate: {
@@ -88,16 +95,13 @@ const AddActionItemModal = () => {
   }, []);
 
   const getThinkFolderData = () => {
-    const thinkFolderData = thinkFolders.map((folder) => {
-      return {
-        value: folder.id,
-        label: folder.name,
-        color: folder.color,
-        icon: folder.icon,
-        description: folder.description,
-      } as unknown as SelectItem;
-    });
-    return thinkFolderData;
+    return thinkFolders.map(({ id, name, color, icon, description }) => ({
+      value: id.toString(),
+      label: name,
+      color,
+      icon,
+      description,
+    }));
   };
 
   return (
