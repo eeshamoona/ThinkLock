@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./thinkFolderItem.scss";
-import { ActionIcon } from "@mantine/core";
+import { ThemeIcon } from "@mantine/core";
 import * as allIcons from "tabler-icons-react";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 
@@ -81,7 +81,7 @@ const ThinkFolderCard = ({
       onClick={handleOnClick}
     >
       <div className="think-folder-icon-container">
-        <ActionIcon
+        <ThemeIcon
           variant="light"
           color={getColorFromHex()}
           size="xl"
@@ -90,7 +90,7 @@ const ThinkFolderCard = ({
           }}
         >
           {Icon && <Icon className="think-folder-icon" />}
-        </ActionIcon>
+        </ThemeIcon>
       </div>
       <div className="think-folder-title-container">
         <span className="think-folder-title">{folderName}</span>

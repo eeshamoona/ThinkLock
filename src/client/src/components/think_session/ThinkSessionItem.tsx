@@ -70,7 +70,9 @@ const ThinkSessionItem = ({
         </Text>
         <div className="think-session-location">
           <MapPin />
-          <Text>{location}</Text>
+          <Text size={"md"} color="gray">
+            {location}
+          </Text>
         </div>
       </div>
     </div>

@@ -3,7 +3,6 @@ import "./addActionItemModal.scss";
 import { isNotEmpty, useForm } from "@mantine/form";
 import {
   Button,
-  ColorSwatch,
   Group,
   Select,
   SelectItem,
@@ -11,6 +10,7 @@ import {
   TextInput,
   Text,
   Textarea,
+  ThemeIcon,
 } from "@mantine/core";
 import { closeAllModals } from "@mantine/modals";
 import { IconFolder } from "@tabler/icons-react";
@@ -19,29 +19,47 @@ import { ThinkFolder } from "../../utils/models/thinkfolder.model";
 import { addActionItem } from "../../services/actionItemAPICallerService";
 import { showSuccessNotification } from "../../utils/notifications";
 import { showErrorNotification } from "../../utils/notifications";
+import * as allIcons from "tabler-icons-react";
+import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 
-interface ActionItemProps extends React.ComponentPropsWithoutRef<"div"> {
+interface ThinkFolderItemProps extends React.ComponentPropsWithoutRef<"div"> {
   color: string;
+  icon: string;
   label: string;
   description: string;
   value: string;
 }
 
-const ThinkFolderItem = forwardRef<HTMLDivElement, ActionItemProps>(
-  ({ color, label, description, value, ...others }: ActionItemProps, ref) => (
-    <div ref={ref} {...others}>
-      <Group noWrap>
-        <ColorSwatch color={color} />
+type IconType = Record<
+  string,
+  React.FunctionComponent<React.SVGProps<SVGSVGElement>>
+>;
 
-        <div>
-          <Text size="sm">{label}</Text>
-          <Text size="xs" opacity={0.65}>
-            {description}
-          </Text>
-        </div>
-      </Group>
-    </div>
-  )
+const ThinkFolderItem = forwardRef<HTMLDivElement, ThinkFolderItemProps>(
+  (
+    { color, label, description, value, icon, ...others }: ThinkFolderItemProps,
+    ref
+  ) => {
+    const Icon = (allIcons as IconType)[icon];
+    const colorString = hexToColorNameMap[color] || "gray";
+
+    return (
+      <div ref={ref} {...others}>
+        <Group noWrap>
+          <ThemeIcon color={colorString} size="lg" variant="light" radius="sm">
+            {Icon && <Icon className="think-folder-icon" color={color} />}
+          </ThemeIcon>
+
+          <div>
+            <Text size="sm">{label}</Text>
+            <Text size="xs" opacity={0.65}>
+              {description}
+            </Text>
+          </div>
+        </Group>
+      </div>
+    );
+  }
 );
 
 const AddActionItemModal = () => {
@@ -75,6 +93,7 @@ const AddActionItemModal = () => {
         value: folder.id,
         label: folder.name,
         color: folder.color,
+        icon: folder.icon,
         description: folder.description,
       } as unknown as SelectItem;
     });
@@ -119,7 +138,7 @@ const AddActionItemModal = () => {
           {...newActionItemForm.getInputProps("description")}
         />
 
-        <Space h="xl" />
+        <Space h="lg" />
 
         <div className="modal-buttons-container">
           <div className="additional-buttons-container">
@@ -128,12 +147,13 @@ const AddActionItemModal = () => {
               itemComponent={ThinkFolderItem}
               searchable
               withAsterisk
+              maxDropdownHeight={200}
               label="Think Folder"
               nothingFound="No folders found"
               data={getThinkFolderData()}
               dropdownComponent="div"
-              maxDropdownHeight={100}
               clearable
+              dropdownPosition="bottom"
               icon={<IconFolder />}
               {...newActionItemForm.getInputProps("thinkfolderId")}
             />

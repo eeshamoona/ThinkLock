@@ -32,8 +32,8 @@ const ActionItemCard = ({
   return (
     <div className="action-item-card-container">
       <Checkbox
-        label={<Text className={textClassName}>{title}</Text>}
-        description={<Text className={textClassName}>{description}</Text>}
+        label={<Text className={textClassName}>{description}</Text>}
+        description={<Text className={textClassName}>{title}</Text>}
         size="md"
         color={getColorFromHex()}
         checked={isCompleted}
