@@ -26,10 +26,11 @@ const PlanOverviewPage = () => {
   const [showFolderDetails, setShowFolderDetails] = useState<boolean>(false);
   const [actionItems, setActionItems] = useState<any[]>([]);
   const [thinkSessions, setThinkSessions] = useState<any[]>([]);
+  const modals = useModals();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (selectedFolder === null || !showFolderDetails) {
+      if (selectedFolder === null) {
         const res = await getAllThinkFolders();
         if (typeof res !== "string") {
           setFolders(res as ThinkFolder[]);
@@ -52,7 +53,7 @@ const PlanOverviewPage = () => {
     };
 
     fetchData();
-  }, [selectedFolder, showFolderDetails]);
+  }, [selectedFolder, modals]);
 
   const handleFolderClick = (folder: ThinkFolder) => {
     setSelectedFolder(folder);
@@ -68,8 +69,6 @@ const PlanOverviewPage = () => {
       }
     });
   };
-
-  const modals = useModals();
 
   const getModalContent = (content: ModalOptions) => {
     switch (content) {
