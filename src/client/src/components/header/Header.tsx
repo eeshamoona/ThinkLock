@@ -13,6 +13,8 @@ import {
 import { TextInput } from "@mantine/core";
 import AddButton from "../add_button/AddButton";
 
+//Add DarkMode Button
+
 interface HeaderProps {
   changeTabCallback: (tab: string) => void;
 }
