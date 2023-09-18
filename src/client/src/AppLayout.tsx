@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./appLayout.scss";
 import PlanOverviewPage from "./pages/plan/PlanOverviewPage";
 import { AppShell } from "@mantine/core";
-import CustomHeader from "./components/header/Header";
+import CustomHeader from "./components/header/CustomHeader";
 import { Header } from "@mantine/core";
 import { Tabs } from "@mantine/core";
 import { IconChecklist, IconBulb, IconCheckbox } from "@tabler/icons-react";
@@ -21,21 +21,21 @@ const AppLayout = () => {
         main: {
           backgroundColor:
             theme.colorScheme === "dark"
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0],
+              ? "var(--mantine-color-dark-8)"
+              : "var(--mantine-color-gray-0)",
         },
       })}
       header={
         <Header height={60} p="xs">
-          {<CustomHeader changeTabCallback={changeTab} />}
+          <CustomHeader changeTabCallback={changeTab} />
         </Header>
       }
     >
       <Tabs
         variant="pills"
         value={activeTab}
-        radius={"md"}
-        id="tab-container"
+        keepMounted={false}
+        h={"100%"}
         onTabChange={setActiveTab}
       >
         <Tabs.List grow id="tab-list">

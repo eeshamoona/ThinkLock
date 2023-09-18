@@ -1,10 +1,11 @@
-.mantine-huf8mr {
-  border: none;
+.tab {
+  padding: 1rem;
 }
 
-.tab {
-  font-size: 1.25rem;
-  height: 2.75rem;
+.tab:hover {
+  cursor: pointer;
+  // //TODO: make background gray if in light mode and dark gray if in dark mode
+  // background-color: map-get(theme.colors.gray, theme.colorScheme == "dark" ? 7 : 0);
 }
 
 #tab-container {

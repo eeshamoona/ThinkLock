@@ -3,7 +3,7 @@ import "./planOverviewPage.scss";
 import ThinkFolderCard from "../../components/think_folder/ThinkFolderCard";
 import { ThinkFolder } from "../../utils/models/thinkfolder.model";
 import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
-import { ActionIcon, Text } from "@mantine/core";
+import { ActionIcon, Paper, Text } from "@mantine/core";
 import { ArrowLeft, Plus } from "tabler-icons-react";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 import ActionItemCard from "../../components/action_item/ActionItemCard";
@@ -13,6 +13,7 @@ import ThinkSessionItem from "../../components/think_session/ThinkSessionItem";
 import AddThinkSessionModal from "../../components/add_think_session_modal/AddThinkSessionModal";
 import AddActionItemModal from "../../components/add_action_item_modal/AddActionItemModal";
 import { useModals } from "@mantine/modals";
+import { useMantineTheme } from "@mantine/core";
 
 enum ModalOptions {
   ThinkSession,
@@ -27,6 +28,7 @@ const PlanOverviewPage = () => {
   const [actionItems, setActionItems] = useState<any[]>([]);
   const [thinkSessions, setThinkSessions] = useState<any[]>([]);
   const modals = useModals();
+  const theme = useMantineTheme();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -151,7 +153,10 @@ const PlanOverviewPage = () => {
           selectedFolder && (
             <div className="folder-to-back-container">
               <div className="go-back-container">
-                <ActionIcon onClick={handleBackClick}>
+                <ActionIcon
+                  onClick={handleBackClick}
+                  c={theme.colorScheme === "dark" ? "white" : "black"}
+                >
                   <ArrowLeft />
                 </ActionIcon>
                 <Text size="sm">Back To Folders</Text>
@@ -168,7 +173,7 @@ const PlanOverviewPage = () => {
             </div>
           )
         ) : (
-          <>
+          <Paper p="md" className="container">
             {folders?.map((folder) => (
               <ThinkFolderCard
                 key={folder.id}
@@ -180,7 +185,7 @@ const PlanOverviewPage = () => {
                 hoverActive={true}
               />
             ))}
-          </>
+          </Paper>
         )}
       </div>
       <div
@@ -201,7 +206,14 @@ const PlanOverviewPage = () => {
             <Plus size="1.75rem" />
           </ActionIcon>
         </div>
-        <div className="action-item-list-container">
+        <Paper
+          p="md"
+          className="action-item-list-container"
+          style={{
+            backgroundColor:
+              theme.colorScheme === "light" ? `${selectedFolder?.color}11` : "",
+          }}
+        >
           {actionItems?.map((actionItem) => (
             <ActionItemCard
               key={actionItem.id}
@@ -212,7 +224,7 @@ const PlanOverviewPage = () => {
               thinkfolderColor={selectedFolder?.color as string}
             />
           ))}
-        </div>
+        </Paper>
       </div>
       <div
         className={
@@ -232,7 +244,14 @@ const PlanOverviewPage = () => {
             <Plus size="1.75rem" />
           </ActionIcon>
         </div>
-        <div className="action-item-list-container">
+        <Paper
+          p="md"
+          className="action-item-list-container"
+          style={{
+            backgroundColor:
+              theme.colorScheme === "light" ? `${selectedFolder?.color}11` : "",
+          }}
+        >
           {thinkSessions?.map((thinkSession) => (
             <ThinkSessionItem
               key={thinkSession.id}
@@ -245,7 +264,7 @@ const PlanOverviewPage = () => {
               thinkfolderIcon={selectedFolder?.icon as string}
             />
           ))}
-        </div>
+        </Paper>
       </div>
     </div>
   );

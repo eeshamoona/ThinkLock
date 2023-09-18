@@ -40,8 +40,6 @@ const ThinkSessionItem = ({
     `${thinkfolderColor}AA`
   );
 
-  document.documentElement.style.setProperty("--secondary-color", `#909296`);
-
   return (
     <Card
       shadow="sm"
@@ -62,7 +60,7 @@ const ThinkSessionItem = ({
           </Text>
           <div className="think-session-location">
             <TbMapPinFilled size={18} color={`${thinkfolderColor}BB`} />
-            <Text size={"sm"} className="location-text">
+            <Text size={"sm"} c="dimmed" className="location-text">
               {location}
             </Text>
           </div>
@@ -83,7 +81,7 @@ const ThinkSessionItem = ({
           <Text size="md">
             {date.toLocaleString("default", { weekday: "long" })}
           </Text>
-          <Text size="md" className="think-session-time">
+          <Text size="md" c="dimmed" className="think-session-time">
             {formatTime(start_time)} - {formatTime(end_time)}
           </Text>
         </div>

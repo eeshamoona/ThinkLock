@@ -1,5 +1,5 @@
 import React from "react";
-import "./header.scss";
+import "./customHeader.scss";
 import { IconSearch } from "@tabler/icons-react";
 import { IconLockAccess } from "@tabler/icons-react";
 import { IconBell } from "@tabler/icons-react";
@@ -12,14 +12,19 @@ import {
 } from "@mantine/core";
 import { TextInput } from "@mantine/core";
 import AddButton from "../add_button/AddButton";
-
-//Add DarkMode Button here
+import { useMantineTheme } from "@mantine/core";
+import { useMantineColorScheme } from "@mantine/core";
+import { IconSun, IconMoonStars } from "@tabler/icons-react";
 
 interface HeaderProps {
   changeTabCallback: (tab: string) => void;
 }
 
 const Header = ({ changeTabCallback }: HeaderProps) => {
+  const theme = useMantineTheme();
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const dark = colorScheme === "dark";
+
   return (
     <div id="header-container">
       <UnstyledButton id="thinklock-header-logo">
@@ -43,10 +48,26 @@ const Header = ({ changeTabCallback }: HeaderProps) => {
           <AddButton changeTabCallback={changeTabCallback} />
         </div>
         <div id="notification-button-container">
-          <ActionIcon id="notification-button">
+          <ActionIcon
+            id="notification-button"
+            c={theme.colorScheme === "dark" ? "cream" : "slategray"}
+          >
             <Indicator color="red" size={".75rem"}>
-              <IconBell id="bell-icon" size={"2rem"} />
+              <IconBell id="bell-icon" size={"1.5rem"} />
             </Indicator>
+          </ActionIcon>
+        </div>
+        <div id="dark-mode-toggle-container">
+          <ActionIcon
+            id="notification-button"
+            c={theme.colorScheme === "dark" ? "yellow" : "blue"}
+            onClick={() => toggleColorScheme()}
+          >
+            {dark ? (
+              <IconSun size={"1.5rem"} />
+            ) : (
+              <IconMoonStars size={"1.5rem"} />
+            )}
           </ActionIcon>
         </div>
         <div id="user-profile-button-container">

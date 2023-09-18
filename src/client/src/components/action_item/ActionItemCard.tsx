@@ -44,11 +44,7 @@ const ActionItemCard = ({
         checked={isCompleted}
         onChange={() => setIsCompleted(!isCompleted)}
       />
-      {draggable ? (
-        <RxDragHandleDots2 color="gray" size={"1.75rem"} />
-      ) : (
-        <div className="empty-space"></div>
-      )}
+      {draggable ? <RxDragHandleDots2 color="gray" size={"1.75rem"} /> : <></>}
     </Card>
   );
 };

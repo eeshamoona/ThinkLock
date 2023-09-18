@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./thinkFolderCard.scss";
-import { ThemeIcon } from "@mantine/core";
+import { ThemeIcon, Text } from "@mantine/core";
 import * as allIcons from "tabler-icons-react";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 import IconType from "../../utils/constants/iconType.constant";
@@ -39,7 +39,6 @@ const ThinkFolderCard = ({
 
   const handleMouseEnter = () => {
     if (hoverActive) {
-      // Set the hover color when mouse enters
       if (folderColor) {
         document.documentElement.style.setProperty(
           "--hover-background-color",
@@ -82,7 +81,8 @@ const ThinkFolderCard = ({
           color={getColorFromHex()}
           size="xl"
           style={{
-            backgroundColor: folderColor + "55",
+            color: folderColor,
+            backgroundColor: folderColor + "33",
           }}
         >
           {Icon && <Icon className="think-folder-icon" />}
@@ -90,7 +90,7 @@ const ThinkFolderCard = ({
       </div>
       <div className="think-folder-title-container">
         <span className="think-folder-title">{folderName}</span>
-        <span className="think-folder-subtitle">{folderSubtitle}</span>
+        <Text c="dimmed">{folderSubtitle}</Text>
       </div>
     </div>
   );

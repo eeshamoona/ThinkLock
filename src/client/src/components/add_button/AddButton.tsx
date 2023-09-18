@@ -12,6 +12,7 @@ import AddThinkFolderModal from "../add_think_folder_modal/AddThinkFolderModal";
 import AddThinkSessionModal from "../add_think_session_modal/AddThinkSessionModal";
 import AddReviewSetModal from "../add_review_set_modal/AddReviewSetModal";
 import AddActionItemModal from "../add_action_item_modal/AddActionItemModal";
+import { useMantineTheme } from "@mantine/core";
 
 enum AddOptions {
   ThinkSession,
@@ -26,6 +27,7 @@ interface AddButtonProps {
 
 const AddButton = ({ changeTabCallback }: AddButtonProps) => {
   const modals = useModals();
+  const theme = useMantineTheme();
 
   const openAddThinkSessionModal = () => {
     changeTabCallback("study");
@@ -128,8 +130,13 @@ const AddButton = ({ changeTabCallback }: AddButtonProps) => {
         closeDelay={400}
       >
         <Menu.Target>
-          <ActionIcon id="add-think-button" size={"3rem"} radius={"50%"}>
-            <IconPlus id="plus-icon" size={"2rem"} />
+          <ActionIcon
+            id="add-think-button"
+            size={"2.5rem"}
+            radius={"50%"}
+            c={theme.colorScheme === "dark" ? "cream" : "slategray"}
+          >
+            <IconPlus id="plus-icon" size={"1.5rem"} />
           </ActionIcon>
         </Menu.Target>
 

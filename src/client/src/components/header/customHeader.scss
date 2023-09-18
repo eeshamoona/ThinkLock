@@ -1,7 +1,7 @@
 #header-container {
   display: flex;
   flex-direction: row;
-  width: auto; /* Allow content to dictate the width */
+  width: auto;
   height: 3rem;
   align-items: center;
   justify-content: space-between;
@@ -22,7 +22,7 @@
 }
 
 #think-lock-title {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   margin: 0;
 }
 
@@ -35,12 +35,11 @@
   border: 1px solid #ddd;
   border-radius: 1.5rem;
   width: 20rem;
-  height: 2.5rem;
-  font-size: 1.1rem;
+  height: 1.5rem;
 }
 
 #search-bar:hover {
-  cursor: pointer;
+  cursor: text;
 }
 
 #search-icon-background {
@@ -55,17 +54,12 @@
 
 #search-icon-background:hover {
   cursor: pointer;
-  border: 1px solid #ddd;
 }
 
 #search-icon {
   vertical-align: -webkit-baseline-middle;
   display: inline-flex;
   height: 1.25rem;
-}
-
-.mantine-1nmvwx4 {
-  width: 2.5rem;
 }
 
 #add-think-button-container {
@@ -84,7 +78,6 @@
 }
 
 #add-think-button:hover {
-  border: 1px solid #ddd;
   cursor: pointer;
 }
 
@@ -104,7 +97,6 @@
 }
 
 #notification-button:hover {
-  border: 1px solid #ddd;
   cursor: pointer;
 }
 
@@ -118,7 +110,6 @@
 }
 
 #user-profile-button-container:hover {
-  border: 1px solid #ddd;
   cursor: pointer;
 }
 
