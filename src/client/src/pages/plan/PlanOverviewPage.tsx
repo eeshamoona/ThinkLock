@@ -14,6 +14,7 @@ import AddThinkSessionModal from "../../components/add_think_session_modal/AddTh
 import AddActionItemModal from "../../components/add_action_item_modal/AddActionItemModal";
 import { useModals } from "@mantine/modals";
 import { useMantineTheme } from "@mantine/core";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 enum ModalOptions {
   ThinkSession,
@@ -146,6 +147,17 @@ const PlanOverviewPage = () => {
     openModal(ModalOptions.ActionItem);
   };
 
+  const onDragEnd = (result: any) => {
+    if (!result.destination) return; // Drop outside of droppable area
+
+    const actionItemId = result.draggableId;
+    const eventId = result.destination.droppableId;
+
+    console.log(result);
+    console.log(actionItemId);
+    console.log(eventId);
+  };
+
   return (
     <div className="plan-page-container">
       <div className="think-folders-container container">
@@ -188,84 +200,114 @@ const PlanOverviewPage = () => {
           </Paper>
         )}
       </div>
-      <div
-        className={
-          showFolderDetails ? "think-folders-action-items container" : "hidden"
-        }
-      >
-        <div className="action-item-header">
-          <Text size="lg" weight={700}>
-            Action Items
-          </Text>
-          <ActionIcon
-            color={hexToColorNameMap[selectedFolder?.color as string] || "gray"}
-            size="lg"
-            variant="light"
-            onClick={openAddActionItemModal}
-          >
-            <Plus size="1.75rem" />
-          </ActionIcon>
-        </div>
-        <Paper
-          p="md"
-          className="action-item-list-container"
-          style={{
-            backgroundColor:
-              theme.colorScheme === "light" ? `${selectedFolder?.color}11` : "",
-          }}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div
+          className={
+            showFolderDetails
+              ? "think-folders-action-items container"
+              : "hidden"
+          }
         >
-          {actionItems?.map((actionItem) => (
-            <ActionItemCard
-              key={actionItem.id}
-              title={actionItem.title}
-              description={actionItem.description}
-              completed={actionItem.completed}
-              draggable={true}
-              thinkfolderColor={selectedFolder?.color as string}
-            />
-          ))}
-        </Paper>
-      </div>
-      <div
-        className={
-          showFolderDetails ? "think-folders-think-session container" : "hidden"
-        }
-      >
-        <div className="think-session-header">
-          <Text size="lg" weight={700}>
-            Think Sessions
-          </Text>
-          <ActionIcon
-            color={hexToColorNameMap[selectedFolder?.color as string] || "gray"}
-            size="lg"
-            variant="light"
-            onClick={openAddThinkSessionModal}
+          <div className="action-item-header">
+            <Text size="lg" weight={700}>
+              Action Items
+            </Text>
+            <ActionIcon
+              color={
+                hexToColorNameMap[selectedFolder?.color as string] || "gray"
+              }
+              size="lg"
+              variant="light"
+              onClick={openAddActionItemModal}
+            >
+              <Plus size="1.75rem" />
+            </ActionIcon>
+          </div>
+          <Paper
+            p="md"
+            className="action-item-list-container"
+            style={{
+              backgroundColor:
+                theme.colorScheme === "light"
+                  ? `${selectedFolder?.color}11`
+                  : "",
+            }}
           >
-            <Plus size="1.75rem" />
-          </ActionIcon>
+            <Droppable
+              droppableId={`folder-${selectedFolder?.id}`}
+              direction="vertical"
+            >
+              {(provided) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className="action-item-list"
+                >
+                  {actionItems?.map((actionItem, index) => (
+                    <ActionItemCard
+                      id={actionItem.id}
+                      index={index}
+                      key={actionItem.id}
+                      title={actionItem.title}
+                      description={actionItem.description}
+                      completed={actionItem.completed}
+                      draggable={true}
+                      thinkfolderColor={selectedFolder?.color as string}
+                    />
+                  ))}
+                </div>
+              )}
+            </Droppable>
+          </Paper>
         </div>
-        <Paper
-          p="md"
-          className="action-item-list-container"
-          style={{
-            backgroundColor:
-              theme.colorScheme === "light" ? `${selectedFolder?.color}11` : "",
-          }}
+        <div
+          className={
+            showFolderDetails
+              ? "think-folders-think-session container"
+              : "hidden"
+          }
         >
-          {thinkSessions?.map((thinkSession) => (
-            <ThinkSessionItem
-              key={thinkSession.id}
-              title={thinkSession.title}
-              location={thinkSession.location}
-              thinkfolderColor={selectedFolder?.color as string}
-              date={new Date(thinkSession.date)}
-              start_time={new Date(thinkSession.start_time)}
-              end_time={new Date(thinkSession.end_time)}
-              thinkfolderIcon={selectedFolder?.icon as string}
-            />
-          ))}
-        </Paper>
-      </div>
+          <div className="think-session-header">
+            <Text size="lg" weight={700}>
+              Think Sessions
+            </Text>
+            <ActionIcon
+              color={
+                hexToColorNameMap[selectedFolder?.color as string] || "gray"
+              }
+              size="lg"
+              variant="light"
+              onClick={openAddThinkSessionModal}
+            >
+              <Plus size="1.75rem" />
+            </ActionIcon>
+          </div>
+          <Paper
+            p="md"
+            className="action-item-list-container"
+            style={{
+              backgroundColor:
+                theme.colorScheme === "light"
+                  ? `${selectedFolder?.color}11`
+                  : "",
+            }}
+          >
+            {thinkSessions?.map((thinkSession) => (
+              <ThinkSessionItem
+                id={thinkSession.id}
+                key={thinkSession.id}
+                title={thinkSession.title}
+                location={thinkSession.location}
+                thinkfolderColor={selectedFolder?.color as string}
+                date={new Date(thinkSession.date)}
+                start_time={new Date(thinkSession.start_time)}
+                end_time={new Date(thinkSession.end_time)}
+                thinkfolderIcon={selectedFolder?.icon as string}
+              />
+            ))}
+          </Paper>
+        </div>
+      </DragDropContext>
     </div>
   );
 };

@@ -53,3 +53,13 @@
 .think-session-time {
   margin-top: -0.2rem;
 }
+
+.event-card {
+  display: none;
+}
+
+.event-card.dragging-over {
+  display: block;
+  margin-right: 0.5rem;
+  border: 2px dashed var(--border-color);
+}

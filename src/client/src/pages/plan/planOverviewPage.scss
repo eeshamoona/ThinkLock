@@ -55,6 +55,12 @@
   overflow-y: scroll;
 }
 
+.action-item-list {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
 .mantine-1ndvke8 {
   height: 95%;
 }
