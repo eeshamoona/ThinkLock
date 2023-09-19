@@ -96,7 +96,7 @@ const ThinkSessionItem = ({
               </div>
             </div>
             <div
-              className={`event-card ${
+              className={`action-item-drop-zone ${
                 snapshot.isDraggingOver ? "dragging-over" : ""
               }`}
             >
