@@ -44,16 +44,16 @@ const ThinkSessionItem = ({
   );
 
   return (
-    <Droppable droppableId={id.toString()}>
+    <Droppable droppableId={`think-session-id-${id.toString()}`}>
       {(provided, snapshot) => (
-        <div ref={provided.innerRef} {...provided.droppableProps}>
-          <Card
-            shadow="sm"
-            padding="xs"
-            pr={0}
-            radius="xs"
-            className="think-session-item-container"
-          >
+        <Card
+          shadow="sm"
+          padding="xs"
+          pr={0}
+          radius="xs"
+          className="think-session-item-container"
+        >
+          <div ref={provided.innerRef} {...provided.droppableProps}>
             <div className="think-session-top-section">
               <ActionIcon color={color} size={45} variant="light" radius="md">
                 {Icon && (
@@ -102,8 +102,8 @@ const ThinkSessionItem = ({
             >
               {provided.placeholder}
             </div>
-          </Card>
-        </div>
+          </div>
+        </Card>
       )}
     </Droppable>
   );

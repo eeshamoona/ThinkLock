@@ -57,6 +57,7 @@ const AddThinkFolderModal = () => {
         })}
       >
         <TextInput
+          data-autofocus
           withAsterisk
           label="Name"
           placeholder="Think Folder Name"

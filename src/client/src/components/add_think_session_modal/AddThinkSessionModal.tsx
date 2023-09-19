@@ -104,6 +104,7 @@ const AddThinkSessionModal = ({
         })}
       >
         <TextInput
+          data-autofocus
           withAsterisk
           label="Title"
           placeholder="Think Session Title"

@@ -33,9 +33,8 @@ const ActionItemCard = ({
     }
     return "blue";
   };
-
   return (
-    <Draggable draggableId={id.toString()} index={index}>
+    <Draggable draggableId={`action-item-id-${id}`} index={index}>
       {(provided: any) => (
         <div
           ref={provided.innerRef}

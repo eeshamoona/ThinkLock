@@ -7,56 +7,30 @@ import { ActionIcon, Paper, Text } from "@mantine/core";
 import { ArrowLeft, Plus } from "tabler-icons-react";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 import ActionItemCard from "../../components/action_item/ActionItemCard";
-import { getAllActionItemsByThinkFolderId } from "../../services/actionItemAPICallerService";
+import { getActionItemsWithNullThinkSessionId } from "../../services/actionItemAPICallerService";
 import { getAllThinkSessionsByThinkFolderId } from "../../services/thinkSessionAPICallerService";
+import { updateActionItem } from "../../services/actionItemAPICallerService";
 import ThinkSessionItem from "../../components/think_session/ThinkSessionItem";
 import AddThinkSessionModal from "../../components/add_think_session_modal/AddThinkSessionModal";
 import AddActionItemModal from "../../components/add_action_item_modal/AddActionItemModal";
 import { useModals } from "@mantine/modals";
 import { useMantineTheme } from "@mantine/core";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 enum ModalOptions {
   ThinkSession,
   ActionItem,
 }
+
 const PlanOverviewPage = () => {
   const [folders, setFolders] = useState<ThinkFolder[]>([]);
-  const [selectedFolder, setSelectedFolder] = useState<ThinkFolder | null>(
-    null
-  );
+  const [selectedFolder, setSelectedFolder] = useState<ThinkFolder | null>(null);
   const [showFolderDetails, setShowFolderDetails] = useState<boolean>(false);
   const [actionItems, setActionItems] = useState<any[]>([]);
   const [thinkSessions, setThinkSessions] = useState<any[]>([]);
+  const [updateDataFlag, setUpdateDataFlag] = useState<boolean>(false);
   const modals = useModals();
   const theme = useMantineTheme();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (selectedFolder === null) {
-        const res = await getAllThinkFolders();
-        if (typeof res !== "string") {
-          setFolders(res as ThinkFolder[]);
-        }
-      } else {
-        const actionItemsRes = await getAllActionItemsByThinkFolderId(
-          selectedFolder.id
-        );
-        if (typeof actionItemsRes !== "string") {
-          setActionItems(actionItemsRes as any[]);
-        }
-
-        const thinkSessionsRes = await getAllThinkSessionsByThinkFolderId(
-          selectedFolder.id
-        );
-        if (typeof thinkSessionsRes !== "string") {
-          setThinkSessions(thinkSessionsRes as any[]);
-        }
-      }
-    };
-
-    fetchData();
-  }, [selectedFolder, modals]);
 
   const handleFolderClick = (folder: ThinkFolder) => {
     setSelectedFolder(folder);
@@ -66,97 +40,76 @@ const PlanOverviewPage = () => {
   const handleBackClick = () => {
     setSelectedFolder(null);
     setShowFolderDetails(false);
-    getAllThinkFolders().then((res) => {
-      if (typeof res !== "string") {
-        setFolders(res as ThinkFolder[]);
-      }
-    });
-  };
-
-  const getModalContent = (content: ModalOptions) => {
-    switch (content) {
-      case ModalOptions.ThinkSession:
-        if (selectedFolder) {
-          return (
-            <AddThinkSessionModal
-              thinkFolderId={selectedFolder.id.toString()}
-            />
-          );
-        }
-        return <AddThinkSessionModal />;
-      case ModalOptions.ActionItem:
-        if (selectedFolder) {
-          return (
-            <AddActionItemModal thinkFolderId={selectedFolder.id.toString()} />
-          );
-        }
-        return <AddActionItemModal />;
-      default:
-        return <div></div>;
-    }
-  };
-
-  const getModalTitle = (content: ModalOptions) => {
-    switch (content) {
-      case ModalOptions.ThinkSession:
-        return (
-          <div>
-            <Text size="lg" weight={700}>
-              Add Think Session
-            </Text>
-          </div>
-        );
-      case ModalOptions.ActionItem:
-        return (
-          <div>
-            <Text size="lg" weight={700}>
-              Add Action Item
-            </Text>
-          </div>
-        );
-      default:
-        return <div></div>;
-    }
-  };
-
-  const getModalSize = (content: ModalOptions) => {
-    switch (content) {
-      case ModalOptions.ThinkSession:
-        return "md";
-      case ModalOptions.ActionItem:
-        return "lg";
-      default:
-        return "md";
-    }
   };
 
   const openModal = (content: ModalOptions) => {
     modals.openModal({
-      title: getModalTitle(content),
-      children: <>{getModalContent(content)}</>,
+      title: (
+        <div>
+          <Text size="lg" weight={700}>
+            {content === ModalOptions.ThinkSession ? "Add Think Session" : "Add Action Item"}
+          </Text>
+        </div>
+      ),
+      children: (
+        <>
+          {content === ModalOptions.ThinkSession ? (
+            selectedFolder ? (
+              <AddThinkSessionModal thinkFolderId={selectedFolder.id.toString()} />
+            ) : (
+              <AddThinkSessionModal />
+            )
+          ) : selectedFolder ? (
+            <AddActionItemModal thinkFolderId={selectedFolder.id.toString()} />
+          ) : (
+            <AddActionItemModal />
+          )}
+        </>
+      ),
       sx: { borderRadius: "1rem" },
-      size: getModalSize(content),
+      size: content === ModalOptions.ThinkSession ? "md" : "lg",
     });
-  };
-
-  const openAddThinkSessionModal = () => {
-    openModal(ModalOptions.ThinkSession);
-  };
-
-  const openAddActionItemModal = () => {
-    openModal(ModalOptions.ActionItem);
   };
 
   const onDragEnd = (result: any) => {
     if (!result.destination) return; // Drop outside of droppable area
 
-    const actionItemId = result.draggableId;
-    const eventId = result.destination.droppableId;
+    const destination = result.destination.droppableId.split("-")[3];
+    const source = result.source.droppableId.split("-")[3];
+    const actionItemId = result.draggableId.split("-")[3];
 
-    console.log(result);
-    console.log(actionItemId);
-    console.log(eventId);
+    if (destination === source) return; // No change in order
+
+    setUpdateDataFlag(!updateDataFlag);
+
+    updateActionItem(actionItemId, {
+      thinksession_id: destination,
+    });
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (selectedFolder === null) {
+        const res = await getAllThinkFolders();
+        if (typeof res !== "string") {
+          setFolders(res as ThinkFolder[]);
+        }
+      } else {
+        const [actionItemsRes, thinkSessionsRes] = await Promise.all([
+          getActionItemsWithNullThinkSessionId(selectedFolder.id),
+          getAllThinkSessionsByThinkFolderId(selectedFolder.id),
+        ]);
+        if (typeof actionItemsRes !== "string") {
+          setActionItems(actionItemsRes as any[]);
+        }
+        if (typeof thinkSessionsRes !== "string") {
+          setThinkSessions(thinkSessionsRes as any[]);
+        }
+      }
+    };
+
+    fetchData();
+  }, [selectedFolder, modals, updateDataFlag]);
 
   return (
     <div className="plan-page-container">
@@ -165,10 +118,7 @@ const PlanOverviewPage = () => {
           selectedFolder && (
             <div className="folder-to-back-container">
               <div className="go-back-container">
-                <ActionIcon
-                  onClick={handleBackClick}
-                  c={theme.colorScheme === "dark" ? "white" : "black"}
-                >
+                <ActionIcon onClick={handleBackClick} c={theme.colorScheme === "dark" ? "white" : "black"}>
                   <ArrowLeft />
                 </ActionIcon>
                 <Text size="sm">Back To Folders</Text>
@@ -201,24 +151,16 @@ const PlanOverviewPage = () => {
         )}
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
-        <div
-          className={
-            showFolderDetails
-              ? "think-folders-action-items container"
-              : "hidden"
-          }
-        >
+        <div className={showFolderDetails ? "think-folders-action-items container" : "hidden"}>
           <div className="action-item-header">
             <Text size="lg" weight={700}>
               Action Items
             </Text>
             <ActionIcon
-              color={
-                hexToColorNameMap[selectedFolder?.color as string] || "gray"
-              }
+              color={hexToColorNameMap[selectedFolder?.color as string] || "gray"}
               size="lg"
               variant="light"
-              onClick={openAddActionItemModal}
+              onClick={() => openModal(ModalOptions.ActionItem)}
             >
               <Plus size="1.75rem" />
             </ActionIcon>
@@ -228,13 +170,11 @@ const PlanOverviewPage = () => {
             className="action-item-list-container"
             style={{
               backgroundColor:
-                theme.colorScheme === "light"
-                  ? `${selectedFolder?.color}11`
-                  : "",
+                theme.colorScheme === "light" ? `${selectedFolder?.color}11` : "",
             }}
           >
             <Droppable
-              droppableId={`folder-${selectedFolder?.id}`}
+              droppableId={`action-item-list-folder-${selectedFolder?.id}`}
               direction="vertical"
             >
               {(provided) => (
@@ -255,29 +195,22 @@ const PlanOverviewPage = () => {
                       thinkfolderColor={selectedFolder?.color as string}
                     />
                   ))}
+                  {provided.placeholder}
                 </div>
               )}
             </Droppable>
           </Paper>
         </div>
-        <div
-          className={
-            showFolderDetails
-              ? "think-folders-think-session container"
-              : "hidden"
-          }
-        >
+        <div className={showFolderDetails ? "think-folders-think-session container" : "hidden"}>
           <div className="think-session-header">
             <Text size="lg" weight={700}>
               Think Sessions
             </Text>
             <ActionIcon
-              color={
-                hexToColorNameMap[selectedFolder?.color as string] || "gray"
-              }
+              color={hexToColorNameMap[selectedFolder?.color as string] || "gray"}
               size="lg"
               variant="light"
-              onClick={openAddThinkSessionModal}
+              onClick={() => openModal(ModalOptions.ThinkSession)}
             >
               <Plus size="1.75rem" />
             </ActionIcon>
@@ -287,9 +220,7 @@ const PlanOverviewPage = () => {
             className="action-item-list-container"
             style={{
               backgroundColor:
-                theme.colorScheme === "light"
-                  ? `${selectedFolder?.color}11`
-                  : "",
+                theme.colorScheme === "light" ? `${selectedFolder?.color}11` : "",
             }}
           >
             {thinkSessions?.map((thinkSession) => (

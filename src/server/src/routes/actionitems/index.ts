@@ -1,10 +1,11 @@
 import express, { Router } from "express";
-import { FailureResponse } from "../../utils/responses";
+import { FailureResponse, SuccessResponse } from "../../utils/responses";
 import {
   getAllActionItems,
   getActionItemById,
   createActionItem,
   getAllActionItemsByThinkFolderId,
+  updateActionItem,
 } from "../../controllers/actionitem.controller";
 import { ActionItem } from "../../models/actionitem.model";
 
@@ -65,6 +66,20 @@ actionItemsRouter.post("/create", async (req, res) => {
       req.body.description,
       req.body.title
     );
+    if (actionItemId instanceof FailureResponse) {
+      res.status(actionItemId.status).send({ error: actionItemId.error });
+    } else {
+      res.status(200).send({ actionItemId: actionItemId });
+    }
+  } catch (error) {
+    res.status(500).send({ error: `${error}` });
+  }
+});
+
+actionItemsRouter.put("/update/:id", async (req, res) => {
+  try {
+    const actionItemId: SuccessResponse | FailureResponse =
+      await updateActionItem(parseInt(req.params.id), req.body);
     if (actionItemId instanceof FailureResponse) {
       res.status(actionItemId.status).send({ error: actionItemId.error });
     } else {

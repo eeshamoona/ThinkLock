@@ -78,6 +78,7 @@ const AddActionItemModal = ({
         })}
       >
         <TextInput
+          data-autofocus
           withAsterisk
           width={"100%"}
           label="Title"
