@@ -56,7 +56,7 @@ const Header = ({ changeTabCallback }: HeaderProps) => {
         </ActionIcon>
         <ActionIcon
           id="notification-button"
-          c={theme.colorScheme === "dark" ? "yellow" : "blue"}
+          c={theme.colorScheme === "dark" ? "white" : "blue"}
           onClick={() => toggleColorScheme()}
         >
           {dark ? (

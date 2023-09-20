@@ -8,8 +8,15 @@
 
 .week-view-strip-calendar {
   margin: 0.5rem;
+  gap: 1rem;
 }
 
 .nav-button {
   padding: 0.1rem;
+}
+
+.week-view-container {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
 }

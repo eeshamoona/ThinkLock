@@ -21,7 +21,8 @@ const StudyOverviewPage = () => {
 
   useEffect(() => {
     getThinkSessionsWithDate(selectedDate);
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Paper className="study-overview-page-container">
