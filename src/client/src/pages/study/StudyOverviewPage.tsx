@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import WeekViewStripCalendar from "../../components/week-strip-calendar/WeekStripCalendar";
 import { getAllThinkSessionsByDate } from "../../services/thinkSessionAPICallerService";
 import { Paper, SimpleGrid } from "@mantine/core";
@@ -18,6 +18,10 @@ const StudyOverviewPage = () => {
       setUpdateDataFlag(!updateDataFlag);
     }
   };
+
+  useEffect(() => {
+    getThinkSessionsWithDate(selectedDate);
+  });
 
   return (
     <Paper className="study-overview-page-container">
