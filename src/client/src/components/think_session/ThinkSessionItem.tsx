@@ -1,6 +1,6 @@
 import React from "react";
 import "./thinkSessionItem.scss";
-import { ActionIcon, Badge, Text, Card } from "@mantine/core";
+import { ActionIcon, Badge, Text, Card, useMantineTheme } from "@mantine/core";
 import * as allIcons from "tabler-icons-react";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 import { TbMapPinFilled } from "react-icons/tb";
@@ -32,6 +32,8 @@ const ThinkSessionItem = ({
 }: ThinkSessionProps) => {
   const Icon = (allIcons as IconType)[thinkfolderIcon];
   const color = hexToColorNameMap[thinkfolderColor] || "gray";
+  const theme = useMantineTheme();
+  const darkMode = theme.colorScheme === "dark";
 
   const formatTime = (time: Date) => {
     const formattedHours = time.getHours() % 12 || 12;
@@ -48,21 +50,31 @@ const ThinkSessionItem = ({
     `${thinkfolderColor}AA`
   );
 
+  const thinkFolderColorExpanded =
+    darkMode && color === "dark" ? "#FFFFFFAA" : `${thinkfolderColor}AA`;
+
+  const variantExpanded = darkMode && color === "dark" ? "filled" : "light";
+
   const content = (
     <>
       <div
         className="think-session-top-section"
-        style={{ borderRight: `5px solid ${thinkfolderColor}AA` }}
+        style={{ borderRight: `5px solid ${thinkFolderColorExpanded}` }}
       >
-        <ActionIcon color={color} size={45} variant="light" radius="md">
+        <ActionIcon
+          color={color}
+          size={45}
+          variant={variantExpanded}
+          radius="md"
+        >
           {Icon && <Icon className="think-session-icon" />}
         </ActionIcon>
         <div className="think-session-title-info">
           <Text size={"lg"} weight={"500"}>
             {title}
           </Text>
-          <div className="think-session-location">
-            <TbMapPinFilled size={18} color={`${thinkfolderColor}BB`} />
+          <div className={location ? "think-session-location" : "no-location"}>
+            <TbMapPinFilled size={18} color={`${thinkFolderColorExpanded}`} />
             <Text size={"sm"} c="dimmed" className="location-text">
               {location}
             </Text>
@@ -71,7 +83,7 @@ const ThinkSessionItem = ({
       </div>
       <div className="think-session-bottom-section">
         <div className="think-session-date-container">
-          <Badge size="xs" radius="xs" color={color}>
+          <Badge size="xs" radius="xs" color={color} variant={variantExpanded}>
             {date
               .toLocaleString("default", { month: "short" })
               .toLocaleUpperCase()}
