@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import { format, startOfWeek, addDays, isToday } from "date-fns";
-import { Button, Group, Text, Card } from "@mantine/core";
-import { ChevronRight, ChevronLeft } from "tabler-icons-react";
+import { Button, Group, Text, Popover } from "@mantine/core";
+import { ChevronRight, ChevronLeft, ChevronDown } from "tabler-icons-react";
+import { MonthPicker } from "@mantine/dates";
 import "./weekStripCalendar.scss";
 
 interface DayCardProps {
@@ -12,17 +13,14 @@ interface DayCardProps {
 
 const DayCard = ({ day, isSelected, onClick }: DayCardProps) => {
   return (
-    <Card
-      shadow="sm"
+    <Button
+      variant="light"
+      color={isSelected ? "blue" : isToday(day) ? "indigo" : "gray"}
       p={"0.3rem"}
       w={"3rem"}
+      h={"3rem"}
       onClick={onClick}
-      style={
-        isToday(day) && !isSelected
-          ? { borderColor: "var(--mantine-color-blue-6)" }
-          : {}
-      }
-      className={isSelected ? "selected" : "day-card"}
+      className={`day-card`}
     >
       <div className="day-info">
         <Text size="xs" weight={700}>
@@ -30,7 +28,7 @@ const DayCard = ({ day, isSelected, onClick }: DayCardProps) => {
         </Text>
         <Text size="sm">{format(day, "dd")}</Text>
       </div>
-    </Card>
+    </Button>
   );
 };
 
@@ -69,6 +67,29 @@ const WeekViewStripCalendar = ({
 
   return (
     <Group className="week-view-strip-calendar">
+      {/* Month Picker */}
+      <Popover position="bottom" offset={10}>
+        <Popover.Target>
+          <Button
+            w={"8rem"}
+            h={"2.5rem"}
+            variant="light"
+            rightIcon={<ChevronDown size={18} />}
+          >
+            <Text size="sm">{format(currentDate, "MMM yyyy")}</Text>
+          </Button>
+        </Popover.Target>
+        <Popover.Dropdown>
+          <MonthPicker
+            value={currentDate}
+            onChange={(date) => {
+              if (date) {
+                setCurrentDate(date as Date);
+              }
+            }}
+          />
+        </Popover.Dropdown>
+      </Popover>
       {/* Navigation Left */}
       <Button
         color="blue"
