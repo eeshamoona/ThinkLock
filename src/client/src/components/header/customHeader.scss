@@ -1,118 +1,104 @@
 #header-container {
   display: flex;
-  flex-direction: row;
-  width: auto;
-  height: 3rem;
   align-items: center;
   justify-content: space-between;
   margin: 0 1rem;
-}
+  height: 3rem;
 
-#thinklock-header-logo {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5rem;
-}
+  #thinklock-header-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 
-#header-right-container {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-}
+    #think-lock-title {
+      font-size: 1.3rem;
+      margin: 0;
+    }
 
-#think-lock-title {
-  font-size: 1.3rem;
-  margin: 0;
-}
+    #lock-icon {
+      height: 2.5rem;
+    }
+  }
 
-#search-bar-container {
-  display: flex;
-  flex-direction: row;
-}
+  #header-right-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 
-#search-bar {
-  border: 1px solid #ddd;
-  border-radius: 1.5rem;
-  width: 20rem;
-  height: 1.5rem;
-}
+    #search-bar {
+      border-radius: 1.5rem;
+      width: 20rem;
+      height: 1.5rem;
 
-#search-bar:hover {
-  cursor: text;
-}
+      &:hover {
+        cursor: text;
+      }
 
-#search-icon-background {
-  border-radius: 50%;
-  width: 2rem;
-  height: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
+      &::placeholder {
+        color: gray;
+      }
+    }
 
-#search-icon-background:hover {
-  cursor: pointer;
-}
+    #search-icon-background {
+      border-radius: 50%;
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
 
-#search-icon {
-  vertical-align: -webkit-baseline-middle;
-  display: inline-flex;
-  height: 1.25rem;
-}
+      &:hover {
+        cursor: pointer;
+      }
 
-#add-think-button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 1.5rem;
-  width: 2.5rem;
-  height: 2.5rem;
-}
+      #search-icon {
+        vertical-align: -webkit-baseline-middle;
+        display: inline-flex;
+        height: 1.25rem;
+        color: gray;
+      }
+    }
 
-#add-think-button {
-  border-radius: 1.5rem;
-  width: 2.5rem;
-  height: 2.5rem;
-}
+    #add-think-button {
+      border-radius: 1.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
 
-#add-think-button:hover {
-  cursor: pointer;
-}
+      &:hover {
+        cursor: pointer;
+      }
+    }
 
-#notification-button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 1.5rem;
-  width: 2.5rem;
-  height: 2.5rem;
-}
+    #notification-button {
+      border-radius: 1.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
 
-#notification-button {
-  border-radius: 1.5rem;
-  width: 2.5rem;
-  height: 2.5rem;
-}
+      &:hover {
+        cursor: pointer;
+      }
 
-#notification-button:hover {
-  cursor: pointer;
-}
+      #bell-icon {
+        height: 1.5rem;
+      }
+    }
 
-#user-profile-button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 50%;
-}
+    #user-profile-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: auto;
+      border-radius: 50%;
 
-#user-profile-button-container:hover {
-  cursor: pointer;
-}
+      &:hover {
+        cursor: pointer;
+      }
 
-#user-profile {
-  border-radius: 50%;
+      #user-profile {
+        color: white;
+        border-radius: 50%;
+      }
+    }
+  }
 }
