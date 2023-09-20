@@ -42,9 +42,16 @@ const StudyOverviewPage = () => {
               key={thinkSession.id}
               id={thinkSession.id.toString()}
               title={thinkSession.title}
-              date={thinkSession.date}
-              start_time={thinkSession.start_time}
-              end_time={thinkSession.end_time}
+              date={
+                new Date(
+                  thinkSession.date
+                    .toString()
+                    .replace(/-/g, "/")
+                    .replace(/T.+/, "")
+                )
+              }
+              start_time={new Date(thinkSession.start_time)}
+              end_time={new Date(thinkSession.end_time)}
               location={thinkSession.location}
               thinkfolderColor={thinkSession.thinkfolder_color as string}
               thinkfolderIcon={thinkSession.thinkfolder_icon as string}

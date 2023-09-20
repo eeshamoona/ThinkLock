@@ -40,11 +40,6 @@ const ThinkSessionItem = ({
     return `${formattedHours}:${formattedMinutes} ${ampm}`;
   };
 
-  //Convert date to local date
-  date = new Date(date.toString().replace(/-/g, "/").replace(/T.+/, ""));
-  start_time = new Date(start_time);
-  end_time = new Date(end_time);
-
   document.documentElement.style.setProperty(
     "--border-color",
     `${thinkfolderColor}AA`
