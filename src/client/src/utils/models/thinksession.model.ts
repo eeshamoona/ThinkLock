@@ -9,4 +9,6 @@ export interface ThinkSession {
   duration?: number;
   notes?: string;
   summary?: string;
+  thinkfolder_icon?: string;
+  thinkfolder_color?: string;
 }

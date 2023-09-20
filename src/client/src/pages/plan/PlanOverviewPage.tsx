@@ -24,7 +24,9 @@ enum ModalOptions {
 
 const PlanOverviewPage = () => {
   const [folders, setFolders] = useState<ThinkFolder[]>([]);
-  const [selectedFolder, setSelectedFolder] = useState<ThinkFolder | null>(null);
+  const [selectedFolder, setSelectedFolder] = useState<ThinkFolder | null>(
+    null
+  );
   const [showFolderDetails, setShowFolderDetails] = useState<boolean>(false);
   const [actionItems, setActionItems] = useState<any[]>([]);
   const [thinkSessions, setThinkSessions] = useState<any[]>([]);
@@ -47,7 +49,9 @@ const PlanOverviewPage = () => {
       title: (
         <div>
           <Text size="lg" weight={700}>
-            {content === ModalOptions.ThinkSession ? "Add Think Session" : "Add Action Item"}
+            {content === ModalOptions.ThinkSession
+              ? "Add Think Session"
+              : "Add Action Item"}
           </Text>
         </div>
       ),
@@ -55,7 +59,9 @@ const PlanOverviewPage = () => {
         <>
           {content === ModalOptions.ThinkSession ? (
             selectedFolder ? (
-              <AddThinkSessionModal thinkFolderId={selectedFolder.id.toString()} />
+              <AddThinkSessionModal
+                thinkFolderId={selectedFolder.id.toString()}
+              />
             ) : (
               <AddThinkSessionModal />
             )
@@ -118,7 +124,10 @@ const PlanOverviewPage = () => {
           selectedFolder && (
             <div className="folder-to-back-container">
               <div className="go-back-container">
-                <ActionIcon onClick={handleBackClick} c={theme.colorScheme === "dark" ? "white" : "black"}>
+                <ActionIcon
+                  onClick={handleBackClick}
+                  c={theme.colorScheme === "dark" ? "white" : "black"}
+                >
                   <ArrowLeft />
                 </ActionIcon>
                 <Text size="sm">Back To Folders</Text>
@@ -151,13 +160,21 @@ const PlanOverviewPage = () => {
         )}
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className={showFolderDetails ? "think-folders-action-items container" : "hidden"}>
+        <div
+          className={
+            showFolderDetails
+              ? "think-folders-action-items container"
+              : "hidden"
+          }
+        >
           <div className="action-item-header">
             <Text size="lg" weight={700}>
               Action Items
             </Text>
             <ActionIcon
-              color={hexToColorNameMap[selectedFolder?.color as string] || "gray"}
+              color={
+                hexToColorNameMap[selectedFolder?.color as string] || "gray"
+              }
               size="lg"
               variant="light"
               onClick={() => openModal(ModalOptions.ActionItem)}
@@ -170,7 +187,9 @@ const PlanOverviewPage = () => {
             className="action-item-list-container"
             style={{
               backgroundColor:
-                theme.colorScheme === "light" ? `${selectedFolder?.color}11` : "",
+                theme.colorScheme === "light"
+                  ? `${selectedFolder?.color}11`
+                  : "",
             }}
           >
             <Droppable
@@ -201,13 +220,21 @@ const PlanOverviewPage = () => {
             </Droppable>
           </Paper>
         </div>
-        <div className={showFolderDetails ? "think-folders-think-session container" : "hidden"}>
+        <div
+          className={
+            showFolderDetails
+              ? "think-folders-think-session container"
+              : "hidden"
+          }
+        >
           <div className="think-session-header">
             <Text size="lg" weight={700}>
               Think Sessions
             </Text>
             <ActionIcon
-              color={hexToColorNameMap[selectedFolder?.color as string] || "gray"}
+              color={
+                hexToColorNameMap[selectedFolder?.color as string] || "gray"
+              }
               size="lg"
               variant="light"
               onClick={() => openModal(ModalOptions.ThinkSession)}
@@ -220,7 +247,9 @@ const PlanOverviewPage = () => {
             className="action-item-list-container"
             style={{
               backgroundColor:
-                theme.colorScheme === "light" ? `${selectedFolder?.color}11` : "",
+                theme.colorScheme === "light"
+                  ? `${selectedFolder?.color}11`
+                  : "",
             }}
           >
             {thinkSessions?.map((thinkSession) => (
@@ -234,6 +263,7 @@ const PlanOverviewPage = () => {
                 start_time={new Date(thinkSession.start_time)}
                 end_time={new Date(thinkSession.end_time)}
                 thinkfolderIcon={selectedFolder?.icon as string}
+                isDroppable={true}
               />
             ))}
           </Paper>

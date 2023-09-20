@@ -16,6 +16,7 @@ interface ThinkSessionProps {
   location: string;
   thinkfolderColor: string;
   thinkfolderIcon: string;
+  isDroppable: boolean;
 }
 
 const ThinkSessionItem = ({
@@ -27,6 +28,7 @@ const ThinkSessionItem = ({
   location,
   thinkfolderColor,
   thinkfolderIcon,
+  isDroppable,
 }: ThinkSessionProps) => {
   const Icon = (allIcons as IconType)[thinkfolderIcon];
   const color = hexToColorNameMap[thinkfolderColor] || "gray";
@@ -38,75 +40,101 @@ const ThinkSessionItem = ({
     return `${formattedHours}:${formattedMinutes} ${ampm}`;
   };
 
+  //Convert date to local date
+  date = new Date(date.toString().replace(/-/g, "/").replace(/T.+/, ""));
+  start_time = new Date(start_time);
+  end_time = new Date(end_time);
+
   document.documentElement.style.setProperty(
     "--border-color",
     `${thinkfolderColor}AA`
   );
 
-  return (
-    <Droppable droppableId={`think-session-id-${id.toString()}`}>
-      {(provided, snapshot) => (
-        <Card
-          shadow="sm"
-          padding="xs"
-          pr={0}
-          radius="xs"
-          className="think-session-item-container"
-        >
-          <div ref={provided.innerRef} {...provided.droppableProps}>
-            <div className="think-session-top-section">
-              <ActionIcon color={color} size={45} variant="light" radius="md">
-                {Icon && (
-                  <Icon
-                    className="think-session-icon"
-                    color={thinkfolderColor}
-                  />
-                )}
-              </ActionIcon>
-              <div className="think-session-title-info">
-                <Text size={"lg"} weight={"500"}>
-                  {title}
-                </Text>
-                <div className="think-session-location">
-                  <TbMapPinFilled size={18} color={`${thinkfolderColor}BB`} />
-                  <Text size={"sm"} c="dimmed" className="location-text">
-                    {location}
-                  </Text>
-                </div>
-              </div>
-            </div>
-            <div className="think-session-bottom-section">
-              <div className="think-session-date-container">
-                <Badge size="xs" radius="xs" color={color}>
-                  {date
-                    .toLocaleString("default", { month: "short" })
-                    .toLocaleUpperCase()}
-                </Badge>
-                <Text size="xl" className="think-session-date">
-                  {date.getDate()}
-                </Text>
-              </div>
-              <div className="think-session-day-time">
-                <Text size="md">
-                  {date.toLocaleString("default", { weekday: "long" })}
-                </Text>
-                <Text size="md" c="dimmed" className="think-session-time">
-                  {formatTime(start_time)} - {formatTime(end_time)}
-                </Text>
-              </div>
-            </div>
-            <div
-              className={`action-item-drop-zone ${
-                snapshot.isDraggingOver ? "dragging-over" : ""
-              }`}
-            >
-              {provided.placeholder}
-            </div>
+  const content = (
+    <>
+      <div
+        className="think-session-top-section"
+        style={{ borderRight: `5px solid ${thinkfolderColor}AA` }}
+      >
+        <ActionIcon color={color} size={45} variant="light" radius="md">
+          {Icon && (
+            <Icon className="think-session-icon" color={thinkfolderColor} />
+          )}
+        </ActionIcon>
+        <div className="think-session-title-info">
+          <Text size={"lg"} weight={"500"}>
+            {title}
+          </Text>
+          <div className="think-session-location">
+            <TbMapPinFilled size={18} color={`${thinkfolderColor}BB`} />
+            <Text size={"sm"} c="dimmed" className="location-text">
+              {location}
+            </Text>
           </div>
-        </Card>
-      )}
-    </Droppable>
+        </div>
+      </div>
+      <div className="think-session-bottom-section">
+        <div className="think-session-date-container">
+          <Badge size="xs" radius="xs" color={color}>
+            {date
+              .toLocaleString("default", { month: "short" })
+              .toLocaleUpperCase()}
+          </Badge>
+          <Text size="xl" className="think-session-date">
+            {date.getDate()}
+          </Text>
+        </div>
+        <div className="think-session-day-time">
+          <Text size="md">
+            {date.toLocaleString("default", { weekday: "long" })}
+          </Text>
+          <Text size="md" c="dimmed" className="think-session-time">
+            {formatTime(start_time)} - {formatTime(end_time)}
+          </Text>
+        </div>
+      </div>
+    </>
   );
+
+  if (isDroppable) {
+    return (
+      <Droppable droppableId={`think-session-id-${id.toString()}`}>
+        {(provided, snapshot) => (
+          <Card
+            shadow="sm"
+            padding="xs"
+            pr={0}
+            radius="xs"
+            className="think-session-item-container"
+          >
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              {content}
+
+              <div
+                className={`action-item-drop-zone ${
+                  snapshot.isDraggingOver ? "dragging-over" : ""
+                }`}
+              >
+                {provided.placeholder}
+              </div>
+            </div>
+          </Card>
+        )}
+      </Droppable>
+    );
+  } else {
+    return (
+      <Card
+        shadow="sm"
+        padding="xs"
+        pr={0}
+        radius="xs"
+        className="think-session-item-container"
+      >
+        {content}
+      </Card>
+    );
+  }
 };
 
 export default ThinkSessionItem;

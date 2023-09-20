@@ -5,6 +5,7 @@ import {
   getAllThinkSessions,
   getThinkSessionById,
   getAllThinkSessionsByThinkFolderId,
+  getAllThinkSessionsByDate,
 } from "../../controllers/thinksession.controller";
 import { ThinkSession } from "../../models/thinksession.model";
 
@@ -58,12 +59,26 @@ thinkSessionsRouter.get("/:id", async (req, res) => {
   }
 });
 
+thinkSessionsRouter.get("/all/date/:date", async (req, res) => {
+  try {
+    const date = new Date(req.params.date);
+    const thinksessions: ThinkSession[] | FailureResponse =
+      await getAllThinkSessionsByDate(date);
+    if (thinksessions instanceof FailureResponse) {
+      res.status(thinksessions.status).send({ error: thinksessions.error });
+    } else {
+      res.status(200).send({ thinksessions: thinksessions });
+    }
+  } catch (error) {
+    res.status(500).send({ error: `${error}` });
+  }
+});
+
 thinkSessionsRouter.post("/create", async (req, res) => {
   try {
     const createInfo: Partial<ThinkSession> = req.body;
-    const thinksession_id: number | FailureResponse = await createThinkSession(
-      createInfo
-    );
+    const thinksession_id: number | FailureResponse =
+      await createThinkSession(createInfo);
     if (thinksession_id instanceof FailureResponse) {
       res.status(thinksession_id.status).send({ error: thinksession_id.error });
     } else {

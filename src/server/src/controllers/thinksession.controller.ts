@@ -16,7 +16,7 @@ export async function getAllThinkSessions(): Promise<
 }
 
 export async function getThinkSessionById(
-  id: number,
+  id: number
 ): Promise<ThinkSession | FailureResponse> {
   try {
     const db = await dbPromise;
@@ -33,7 +33,7 @@ export async function getThinkSessionById(
 }
 
 export async function createThinkSession(
-  thinksession: Partial<ThinkSession>,
+  thinksession: Partial<ThinkSession>
 ): Promise<number | FailureResponse> {
   try {
     const db = await dbPromise;
@@ -58,12 +58,26 @@ export async function createThinkSession(
 }
 
 export async function getAllThinkSessionsByThinkFolderId(
-  thinkfolder_id: number,
+  thinkfolder_id: number
 ): Promise<ThinkSession[] | FailureResponse> {
   try {
     const db = await dbPromise;
     const query = `SELECT * FROM thinksession WHERE thinkfolder_id = ?`;
     const params = [thinkfolder_id];
+    const res = await db.all<ThinkSession[]>(query, params);
+    return res;
+  } catch (error) {
+    return new FailureResponse(500, `${error}`);
+  }
+}
+
+export async function getAllThinkSessionsByDate(
+  date: Date
+): Promise<ThinkSession[] | FailureResponse> {
+  try {
+    const db = await dbPromise;
+    const query = `SELECT * FROM thinksession WHERE date(date) = ?`;
+    const params = [date.toISOString().slice(0, 10)];
     const res = await db.all<ThinkSession[]>(query, params);
     return res;
   } catch (error) {
