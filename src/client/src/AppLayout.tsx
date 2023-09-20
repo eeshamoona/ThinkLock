@@ -27,7 +27,7 @@ const AppLayout = () => {
         },
       })}
       header={
-        <Header height={60} p="xs">
+        <Header height={"4rem"} p={"xs"}>
           <CustomHeader changeTabCallback={changeTab} />
         </Header>
       }
