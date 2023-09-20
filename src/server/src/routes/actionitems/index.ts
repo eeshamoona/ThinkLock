@@ -43,6 +43,23 @@ actionItemsRouter.get("/all/:think_folder_id", async (req, res) => {
   }
 });
 
+actionItemsRouter.get(
+  "/all/thinksession/:thinksession_id",
+  async (req, res) => {
+    try {
+      const actionItems: ActionItem[] | FailureResponse =
+        await getAllActionItemsByThinkFolderId(req.params.thinksession_id);
+      if (actionItems instanceof FailureResponse) {
+        res.status(actionItems.status).send({ error: actionItems.error });
+      } else {
+        res.status(200).send({ actionItems: actionItems });
+      }
+    } catch (error) {
+      res.status(500).send({ error: `${error}` });
+    }
+  }
+);
+
 actionItemsRouter.get("/:id", async (req, res) => {
   try {
     const actionItem: ActionItem | FailureResponse = await getActionItemById(

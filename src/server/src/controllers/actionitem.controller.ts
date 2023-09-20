@@ -1,6 +1,7 @@
 import dbPromise from "../utils/database";
 import { ActionItem } from "../models/actionitem.model";
 import { SuccessResponse, FailureResponse } from "../utils/responses";
+import e from "express";
 
 export async function getAllActionItems(): Promise<
   ActionItem[] | FailureResponse
@@ -60,6 +61,20 @@ export async function getAllActionItemsByThinkFolderId(
     const db = await dbPromise;
     const query = `SELECT * FROM actionitem WHERE thinkfolder_id = ?`;
     const params = [thinkfolder_id];
+    const res = await db.all<ActionItem[]>(query, params);
+    return res;
+  } catch (error) {
+    return new FailureResponse(500, `${error}`);
+  }
+}
+
+export async function getAllActionItemsByThinkSessionId(
+  thinksession_id: string
+): Promise<ActionItem[] | FailureResponse> {
+  try {
+    const db = await dbPromise;
+    const query = `SELECT * FROM actionitem WHERE thinksession_id = ?`;
+    const params = [thinksession_id];
     const res = await db.all<ActionItem[]>(query, params);
     return res;
   } catch (error) {

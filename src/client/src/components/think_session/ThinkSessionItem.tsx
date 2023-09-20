@@ -17,6 +17,7 @@ interface ThinkSessionProps {
   thinkfolderColor: string;
   thinkfolderIcon: string;
   isDroppable: boolean;
+  onClick?: (id: string) => void;
 }
 
 const ThinkSessionItem = ({
@@ -29,6 +30,7 @@ const ThinkSessionItem = ({
   thinkfolderColor,
   thinkfolderIcon,
   isDroppable,
+  onClick,
 }: ThinkSessionProps) => {
   const Icon = (allIcons as IconType)[thinkfolderIcon];
   const color = hexToColorNameMap[thinkfolderColor] || "gray";
@@ -138,6 +140,7 @@ const ThinkSessionItem = ({
         pr={0}
         radius="xs"
         className="think-session-item-container"
+        onClick={() => onClick && onClick(id)}
       >
         {content}
       </Card>

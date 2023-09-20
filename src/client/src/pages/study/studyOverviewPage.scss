@@ -1,6 +1,42 @@
 .study-overview-page-container {
+  display: flex;
+}
+
+.session-day-picker-container {
   padding: 0.5rem;
   width: fit-content;
   margin: 1rem;
   border-radius: 0.5rem;
+  min-height: 24rem;
+}
+
+.session-detail-container {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  flex-grow: 1;
+}
+
+.detail-container {
+  align-items: center;
+}
+
+.think-session-grid {
+  max-height: 18.5rem;
+  overflow-y: scroll;
+  /* Add left padding to scrollbar */
+  &::-webkit-scrollbar-thumb {
+    padding-left: 0.5rem;
+  }
+}
+
+.no-session-container {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  width: 12rem;
+  text-align: center;
+  align-self: center;
 }

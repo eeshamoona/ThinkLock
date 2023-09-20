@@ -1,3 +1,5 @@
+import { ActionItem } from "./actionitem.model";
+
 export interface ThinkSession {
   id: number;
   thinkfolder_id: number;
@@ -11,4 +13,5 @@ export interface ThinkSession {
   summary?: string;
   thinkfolder_icon?: string;
   thinkfolder_color?: string;
+  action_items?: ActionItem[];
 }
