@@ -81,7 +81,6 @@ const ThinkFolderCard = ({
           color={getColorFromHex()}
           size="xl"
           style={{
-            color: folderColor,
             backgroundColor: folderColor + "33",
           }}
         >

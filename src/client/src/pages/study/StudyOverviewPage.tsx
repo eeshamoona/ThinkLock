@@ -38,22 +38,21 @@ const StudyOverviewPage = () => {
         spacing="sm"
         cols={2}
         p={"1rem"}
+        breakpoints={[{ maxWidth: "sm", cols: 1 }]}
       >
         {thinkSessions?.map((thinkSession) => (
-          <>
-            <ThinkSessionCard
-              key={thinkSession.id}
-              id={thinkSession.id.toString()}
-              title={thinkSession.title}
-              date={thinkSession.date}
-              start_time={new Date(thinkSession.start_time)}
-              end_time={new Date(thinkSession.end_time)}
-              location={thinkSession.location}
-              thinkfolderColor={thinkSession.thinkfolder_color as string}
-              thinkfolderIcon={thinkSession.thinkfolder_icon as string}
-              isDroppable={false}
-            />
-          </>
+          <ThinkSessionCard
+            key={thinkSession.id}
+            id={thinkSession.id.toString()}
+            title={thinkSession.title}
+            date={thinkSession.date}
+            start_time={new Date(thinkSession.start_time)}
+            end_time={new Date(thinkSession.end_time)}
+            location={thinkSession.location}
+            thinkfolderColor={thinkSession.thinkfolder_color as string}
+            thinkfolderIcon={thinkSession.thinkfolder_icon as string}
+            isDroppable={false}
+          />
         ))}
       </SimpleGrid>
     </Paper>

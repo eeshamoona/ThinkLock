@@ -35,7 +35,7 @@ const ThinkFolderSelectItem = forwardRef<
       <div ref={ref} {...others}>
         <Group noWrap>
           <ThemeIcon color={colorString} size="lg" variant="light" radius="sm">
-            {Icon && <Icon className="think-folder-icon" color={color} />}
+            {Icon && <Icon className="think-folder-icon" />}
           </ThemeIcon>
 
           <div>

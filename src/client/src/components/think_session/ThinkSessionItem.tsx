@@ -55,9 +55,7 @@ const ThinkSessionItem = ({
         style={{ borderRight: `5px solid ${thinkfolderColor}AA` }}
       >
         <ActionIcon color={color} size={45} variant="light" radius="md">
-          {Icon && (
-            <Icon className="think-session-icon" color={thinkfolderColor} />
-          )}
+          {Icon && <Icon className="think-session-icon" />}
         </ActionIcon>
         <div className="think-session-title-info">
           <Text size={"lg"} weight={"500"}>

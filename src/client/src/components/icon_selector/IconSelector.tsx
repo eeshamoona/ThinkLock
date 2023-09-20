@@ -51,7 +51,7 @@ const IconSelector = ({
           })) as any
         }
       />
-      {Icon && <Icon className="icon-custom-styles" color={color} />}
+      {Icon && <Icon className="icon-custom-styles" />}
     </div>
   );
 };
