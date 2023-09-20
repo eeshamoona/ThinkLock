@@ -6,6 +6,7 @@ import CustomHeader from "./components/header/CustomHeader";
 import { Header } from "@mantine/core";
 import { Tabs } from "@mantine/core";
 import { IconChecklist, IconBulb, IconCheckbox } from "@tabler/icons-react";
+import StudyOverviewPage from "./pages/study/StudyOverviewPage";
 
 const AppLayout = () => {
   const [activeTab, setActiveTab] = useState<string | null>("plan");
@@ -70,7 +71,7 @@ const AppLayout = () => {
         </Tabs.Panel>
 
         <Tabs.Panel value="study" pt="md">
-          Study tab content
+          <StudyOverviewPage />
         </Tabs.Panel>
 
         <Tabs.Panel value="review" pt="md">

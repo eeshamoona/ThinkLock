@@ -1,0 +1,30 @@
+.selected {
+  background-color: var(--mantine-color-blue-6);
+  color: white;
+}
+
+/* Hover style for the day */
+.week-strip .day-card:hover {
+  cursor: pointer;
+  background-color: var(--mantine-color-gray-1);
+}
+
+.today {
+  border-color: var(--mantine-color-blue-6);
+}
+
+.day-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.week-view-strip-calendar {
+  margin: 0.5rem;
+}
+
+.nav-button {
+  padding: 0.1rem;
+}

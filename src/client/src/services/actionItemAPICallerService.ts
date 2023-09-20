@@ -5,7 +5,7 @@ export async function addActionItem(
   actionItem: Pick<
     ActionItem,
     "title" | "description" | "thinkfolder_id" | "thinksession_id"
-  >
+  >,
 ): Promise<number | string> {
   try {
     const response = await axios.post("/actionitems/create", actionItem);
@@ -25,7 +25,7 @@ export async function getAllActionItems(): Promise<ActionItem[] | string> {
 }
 
 export async function getActionItemById(
-  actionItemId: number
+  actionItemId: number,
 ): Promise<ActionItem | string> {
   try {
     const response = await axios.get(`/actionitems/${actionItemId}`);
@@ -36,7 +36,7 @@ export async function getActionItemById(
 }
 
 export async function getAllActionItemsByThinkFolderId(
-  thinkFolderId: number
+  thinkFolderId: number,
 ): Promise<ActionItem[] | string> {
   try {
     const response = await axios.get(`/actionitems/all/${thinkFolderId}`);
@@ -48,13 +48,13 @@ export async function getAllActionItemsByThinkFolderId(
 
 //TODO: Determine if this function should live in the backend only...
 export async function getActionItemsWithNullThinkSessionId(
-  thinkFolderId: number
+  thinkFolderId: number,
 ): Promise<ActionItem[] | string> {
   try {
     const actionItems = await getAllActionItemsByThinkFolderId(thinkFolderId);
     if (typeof actionItems === "string") return actionItems;
     return actionItems.filter(
-      (actionItem) => actionItem.thinksession_id === null
+      (actionItem) => actionItem.thinksession_id === null,
     );
   } catch (err) {
     return `${err}`;
@@ -63,12 +63,12 @@ export async function getActionItemsWithNullThinkSessionId(
 
 export async function updateActionItem(
   actionItemId: number,
-  actionItem: Partial<ActionItem>
+  actionItem: Partial<ActionItem>,
 ): Promise<string> {
   try {
     const response = await axios.put(
       `/actionitems/update/${actionItemId}`,
-      actionItem
+      actionItem,
     );
     return response.data.message;
   } catch (err) {
