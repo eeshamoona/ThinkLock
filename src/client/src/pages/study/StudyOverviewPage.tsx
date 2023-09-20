@@ -13,7 +13,6 @@ const StudyOverviewPage = () => {
 
   const getThinkSessionsWithDate = async (date: Date) => {
     const thinkSessions = await getAllThinkSessionsByDate(date);
-    console.log(thinkSessions);
     if (typeof thinkSessions !== "string") {
       setThinkSessions(thinkSessions);
       setUpdateDataFlag(!updateDataFlag);
@@ -42,14 +41,7 @@ const StudyOverviewPage = () => {
               key={thinkSession.id}
               id={thinkSession.id.toString()}
               title={thinkSession.title}
-              date={
-                new Date(
-                  thinkSession.date
-                    .toString()
-                    .replace(/-/g, "/")
-                    .replace(/T.+/, "")
-                )
-              }
+              date={thinkSession.date}
               start_time={new Date(thinkSession.start_time)}
               end_time={new Date(thinkSession.end_time)}
               location={thinkSession.location}

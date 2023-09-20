@@ -259,7 +259,7 @@ const PlanOverviewPage = () => {
                 title={thinkSession.title}
                 location={thinkSession.location}
                 thinkfolderColor={selectedFolder?.color as string}
-                date={new Date(thinkSession.date)}
+                date={thinkSession.date}
                 start_time={new Date(thinkSession.start_time)}
                 end_time={new Date(thinkSession.end_time)}
                 thinkfolderIcon={selectedFolder?.icon as string}
