@@ -6,6 +6,7 @@ import {
   createActionItem,
   getAllActionItemsByThinkFolderId,
   updateActionItem,
+  getAllActionItemsByThinkSessionId,
 } from "../../controllers/actionitem.controller";
 import { ActionItem } from "../../models/actionitem.model";
 
@@ -48,7 +49,7 @@ actionItemsRouter.get(
   async (req, res) => {
     try {
       const actionItems: ActionItem[] | FailureResponse =
-        await getAllActionItemsByThinkFolderId(req.params.thinksession_id);
+        await getAllActionItemsByThinkSessionId(req.params.thinksession_id);
       if (actionItems instanceof FailureResponse) {
         res.status(actionItems.status).send({ error: actionItems.error });
       } else {

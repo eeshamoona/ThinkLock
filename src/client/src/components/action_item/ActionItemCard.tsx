@@ -33,39 +33,55 @@ const ActionItemCard = ({
     }
     return "blue";
   };
-  return (
-    <Draggable draggableId={`action-item-id-${id}`} index={index}>
-      {(provided: any) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          className="action-item-card-draggable-container"
-        >
-          <Card
-            shadow="sm"
-            padding="sm"
-            radius="sm"
-            className="action-item-card-container"
+  if (draggable) {
+    return (
+      <Draggable draggableId={`action-item-id-${id}`} index={index}>
+        {(provided: any) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            className="action-item-card-draggable-container"
           >
-            <Checkbox
-              label={<Text className={textClassName}>{description}</Text>}
-              description={<Text className={textClassName}>{title}</Text>}
-              size="md"
-              color={getColorFromHex()}
-              checked={isCompleted}
-              onChange={() => setIsCompleted(!isCompleted)}
-            />
-            {draggable ? (
+            <Card
+              shadow="sm"
+              padding="sm"
+              radius="sm"
+              className="action-item-card-container"
+            >
+              <Checkbox
+                label={<Text className={textClassName}>{description}</Text>}
+                description={<Text className={textClassName}>{title}</Text>}
+                size="md"
+                color={getColorFromHex()}
+                checked={isCompleted}
+                onChange={() => setIsCompleted(!isCompleted)}
+              />
               <RxDragHandleDots2 color="gray" size={"1.75rem"} />
-            ) : (
-              <></>
-            )}
-          </Card>
-        </div>
-      )}
-    </Draggable>
-  );
+            </Card>
+          </div>
+        )}
+      </Draggable>
+    );
+  } else {
+    return (
+      <Card
+        shadow="sm"
+        padding="sm"
+        radius="sm"
+        className="action-item-card-container"
+      >
+        <Checkbox
+          label={<Text className={textClassName}>{description}</Text>}
+          description={<Text className={textClassName}>{title}</Text>}
+          size="md"
+          color={getColorFromHex()}
+          checked={isCompleted}
+          onChange={() => setIsCompleted(!isCompleted)}
+        />
+      </Card>
+    );
+  }
 };
 
 export default ActionItemCard;

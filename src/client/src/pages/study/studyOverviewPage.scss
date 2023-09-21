@@ -20,7 +20,9 @@
 }
 
 .detail-container {
-  align-items: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .think-session-grid {
@@ -39,4 +41,14 @@
   width: 12rem;
   text-align: center;
   align-self: center;
+}
+
+.action-items-tab {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.action-items-scroll-area {
+  flex-grow: 1;
 }

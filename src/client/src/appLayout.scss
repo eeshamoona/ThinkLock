@@ -4,10 +4,12 @@
 
 .tab:hover {
   cursor: pointer;
-  // //TODO: make background gray if in light mode and dark gray if in dark mode
-  // background-color: map-get(theme.colors.gray, theme.colorScheme == "dark" ? 7 : 0);
 }
 
 #tab-container {
   height: 100%;
+}
+
+.mantine-x934ul:hover {
+  background-color: var(--mantine-color-blue-0);
 }
