@@ -35,7 +35,7 @@ const ActionItemCard = ({
   };
   if (draggable) {
     return (
-      <Draggable draggableId={`action-item-id-${id}`} index={index}>
+      <Draggable draggableId={`action-item-id-${id}`} index={index} key={id}>
         {(provided: any) => (
           <div
             ref={provided.innerRef}

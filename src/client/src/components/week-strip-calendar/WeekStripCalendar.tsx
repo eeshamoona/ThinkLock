@@ -12,6 +12,7 @@ import { TbCalendarBolt } from "react-icons/tb";
 import "./weekStripCalendar.scss";
 import { useModals } from "@mantine/modals";
 import AddThinkSessionModal from "../add_think_session_modal/AddThinkSessionModal";
+import { startOfDay } from "date-fns";
 
 interface DayCardProps {
   day: Date;
@@ -80,8 +81,8 @@ const WeekViewStripCalendar = ({
       <Popover position="bottom-start" offset={10}>
         <Popover.Target>
           <Button
-            w={"7rem"}
-            h={"2.5rem"}
+            w={"8rem"}
+            h={"3rem"}
             variant="light"
             p={"0.5rem"}
             rightIcon={<ChevronDown size={18} />}
@@ -153,12 +154,13 @@ const WeekViewStripCalendar = ({
         <ActionIcon
           color="violet"
           variant="light"
-          w={"3rem"}
-          h={"2.5rem"}
+          w={"3.5rem"}
+          h={"3rem"}
           onClick={() => {
-            setCurrentDate(new Date());
-            setSelectedDate(new Date());
-            onDayClick(new Date());
+            const today = startOfDay(new Date());
+            setCurrentDate(today);
+            setSelectedDate(today);
+            onDayClick(today);
           }}
           className="nav-button"
         >
@@ -168,8 +170,8 @@ const WeekViewStripCalendar = ({
         <ActionIcon
           color="blue"
           variant="light"
-          w={"3rem"}
-          h={"2.5rem"}
+          w={"3.5rem"}
+          h={"3rem"}
           onClick={() =>
             modals.openModal({
               title: "Add Think Session",

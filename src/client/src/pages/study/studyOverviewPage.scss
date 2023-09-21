@@ -13,21 +13,16 @@
 .session-detail-container {
   display: flex;
   flex-direction: column;
-  margin: 1rem;
+  margin: 1rem 1rem 1rem 0;
   border-radius: 0.5rem;
   padding: 1rem;
   flex-grow: 1;
 }
 
-.detail-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
 .think-session-grid {
   max-height: 18.5rem;
   overflow-y: scroll;
+
   /* Add left padding to scrollbar */
   &::-webkit-scrollbar-thumb {
     padding-left: 0.5rem;
@@ -51,4 +46,10 @@
 
 .action-items-scroll-area {
   flex-grow: 1;
+}
+
+/* Tab selector styles */
+.mantine-6z64bn[data-active],
+.mantine-6z64bn[data-active]:hover {
+  border-color: var(--tab-selector-color);
 }

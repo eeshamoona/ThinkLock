@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import WeekViewStripCalendar from "../../components/week-strip-calendar/WeekStripCalendar";
 import { getAllThinkSessionsByDate } from "../../services/thinkSessionAPICallerService";
-import { Button, Paper, ScrollArea, SimpleGrid, Text } from "@mantine/core";
+import {
+  Button,
+  Paper,
+  ScrollArea,
+  SimpleGrid,
+  Text,
+  useMantineTheme,
+} from "@mantine/core";
 import ThinkSessionCard from "../../components/think_session/ThinkSessionItem";
 import "./studyOverviewPage.scss";
 import { ThinkSession } from "../../utils/models/thinksession.model";
@@ -12,13 +19,19 @@ import ActionItemCard from "../../components/action_item/ActionItemCard";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 import AddActionItemModal from "../../components/add_action_item_modal/AddActionItemModal";
 import { useModals } from "@mantine/modals";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { startOfDay } from "date-fns";
 
 const StudyOverviewPage = () => {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(
+    startOfDay(new Date())
+  );
+  const [activeTab, setActiveTab] = useState<string | null>("actionItems");
   const [thinkSessions, setThinkSessions] = useState<ThinkSession[]>([]);
   const [selectedThinkSession, setSelectedThinkSession] =
     useState<ThinkSession | null>(null);
   const modals = useModals();
+  const theme = useMantineTheme();
 
   const getThinkSessionsWithDate = async (date: Date) => {
     const thinkSessions = await getAllThinkSessionsByDate(date);
@@ -60,18 +73,49 @@ const StudyOverviewPage = () => {
     });
   };
 
-  const [activeTab, setActiveTab] = useState<string | null>("plan");
-
   const changeTab = (tab: string) => {
     setActiveTab(tab);
   };
 
+  const colorName = hexToColorNameMap[
+    selectedThinkSession?.thinkfolder_color as string
+  ] as any;
+
+  const tabColorExpanded =
+    theme.colorScheme === "dark" && colorName === "dark"
+      ? "white"
+      : `${selectedThinkSession?.thinkfolder_color as string}`;
+
+  document.documentElement.style.setProperty(
+    "--tab-selector-color",
+    `${tabColorExpanded}`
+  );
+
   const getBackgroundColor = () => {
     if (selectedThinkSession?.thinkfolder_color) {
-      const colorName =
-        hexToColorNameMap[selectedThinkSession?.thinkfolder_color];
-      return `var(--mantine-color-${colorName}-0)`;
+      return theme.colorScheme === "dark"
+        ? `var(--mantine-color-dark-8)`
+        : `var(--mantine-color-${colorName}-0)`;
     }
+  };
+
+  const onDragEnd = (result: any) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const items = Array.from(selectedThinkSession?.action_items || []);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    // Update the order of the action items in the selected think session
+    setSelectedThinkSession((prevThinkSession) => {
+      if (!prevThinkSession) return null;
+      return {
+        ...prevThinkSession,
+        action_items: items,
+      };
+    });
   };
 
   return (
@@ -121,6 +165,7 @@ const StudyOverviewPage = () => {
                 keepMounted={false}
                 h={"100%"}
                 onTabChange={setActiveTab}
+                color={colorName}
               >
                 <Tabs.List grow id="tab-list">
                   <Tabs.Tab
@@ -150,46 +195,57 @@ const StudyOverviewPage = () => {
                   pt="md"
                   className="action-items-tab"
                 >
-                  <ScrollArea
-                    h={"12rem"}
-                    pt={"0.5rem"}
-                    offsetScrollbars
-                    className="action-items-scroll-area"
-                    hidden={selectedThinkSession?.action_items?.length === 0}
-                  >
-                    <Stack
-                      spacing={"0.5rem"}
-                      p={"0.5rem"}
+                  <DragDropContext onDragEnd={onDragEnd}>
+                    <ScrollArea
+                      h={"12.5rem"}
+                      mt={"0.5rem"}
+                      offsetScrollbars
+                      className="action-items-scroll-area"
                       bg={getBackgroundColor()}
                       hidden={selectedThinkSession?.action_items?.length === 0}
                     >
-                      {selectedThinkSession?.action_items?.map(
-                        (actionItem, index) => (
-                          <ActionItemCard
-                            index={index}
-                            key={actionItem.id}
-                            id={actionItem.id.toString()}
-                            title={actionItem.title}
-                            description={actionItem.description}
-                            completed={actionItem.completed}
-                            draggable={false}
-                            thinkfolderColor={
-                              selectedThinkSession?.thinkfolder_color as string
-                            }
-                          />
-                        )
-                      )}
-                    </Stack>
-                  </ScrollArea>
-                  <Button
-                    mt={"1rem"}
-                    mb={0}
-                    pb={0}
-                    fullWidth
-                    onClick={handleActionItemAdded}
-                  >
-                    Add Action Item
-                  </Button>
+                      <Droppable
+                        droppableId={`action-item-think-session-${selectedThinkSession?.id}`}
+                        direction="vertical"
+                      >
+                        {(provided) => (
+                          <Stack
+                            spacing={"0.5rem"}
+                            p={"0.5rem"}
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                          >
+                            {selectedThinkSession?.action_items?.map(
+                              (actionItem, index) => (
+                                <ActionItemCard
+                                  id={`${actionItem.id}`}
+                                  index={index}
+                                  key={actionItem.id}
+                                  title={actionItem.title}
+                                  description={actionItem.description}
+                                  completed={actionItem.completed}
+                                  draggable={true}
+                                  thinkfolderColor={
+                                    selectedThinkSession?.thinkfolder_color as string
+                                  }
+                                />
+                              )
+                            )}
+                            {provided.placeholder}
+                          </Stack>
+                        )}
+                      </Droppable>
+                    </ScrollArea>
+                    <Button
+                      mt={"0.5rem"}
+                      mb={0}
+                      pb={0}
+                      fullWidth
+                      onClick={handleActionItemAdded}
+                    >
+                      Add Action Item
+                    </Button>
+                  </DragDropContext>
                 </Tabs.Panel>
                 <Tabs.Panel value="scribbles" pt="md">
                   <Text>{"Scribbles"}</Text>
