@@ -1,19 +1,18 @@
 import React, { useState, useRef } from "react";
 import { format, startOfWeek, addDays, isToday } from "date-fns";
-import { Button, Group, Text, Popover, ActionIcon, Grid } from "@mantine/core";
+import { Button, Group, Text, Popover, Grid } from "@mantine/core";
 import {
   ChevronRight,
   ChevronLeft,
   ChevronDown,
   Plus,
-  Space,
 } from "tabler-icons-react";
 import { MonthPicker } from "@mantine/dates";
-import { TbCalendarBolt } from "react-icons/tb";
 import "./weekStripCalendar.scss";
 import { useModals } from "@mantine/modals";
 import AddThinkSessionModal from "../add_think_session_modal/AddThinkSessionModal";
 import { startOfDay } from "date-fns";
+import { IconCalendarBolt } from "@tabler/icons-react";
 
 interface DayCardProps {
   day: Date;
@@ -30,9 +29,8 @@ const DayCard = ({ day, isSelected, onClick }: DayCardProps) => {
       w={"3rem"}
       h={"3rem"}
       onClick={onClick}
-      className={`day-card`}
     >
-      <div className="day-info">
+      <div>
         <Text size="xs" weight={700}>
           {format(day, "EE")}
         </Text>
@@ -80,7 +78,7 @@ const WeekViewStripCalendar = ({
 
   return (
     <Group position="apart">
-      <Group className="week-view-strip-calendar">
+      <Group spacing={"1rem"}>
         {/* Month Picker */}
         <Popover position="bottom-start" offset={10}>
           <Popover.Target>
@@ -109,7 +107,6 @@ const WeekViewStripCalendar = ({
           variant="light"
           p={0}
           onClick={goToPreviousWeek}
-          className="nav-button"
           onKeyDown={handleKeyDown}
           ref={navLeftRef}
         >
@@ -117,7 +114,7 @@ const WeekViewStripCalendar = ({
         </Button>
 
         {/* Week Strip */}
-        <Grid className="week-strip" grow columns={7}>
+        <Grid grow columns={7}>
           {Array.from({ length: 7 }, (_, index) => {
             const day = addDays(startOfWeek(currentDate), index);
             const isSelected =
@@ -146,7 +143,6 @@ const WeekViewStripCalendar = ({
           variant="light"
           p={0}
           onClick={goToNextWeek}
-          className="nav-button"
           onKeyDown={handleKeyDown}
           ref={navRightRef}
         >
@@ -158,22 +154,24 @@ const WeekViewStripCalendar = ({
           color="violet"
           variant="light"
           h={"3rem"}
+          size="xs"
           onClick={() => {
             const today = startOfDay(new Date());
             setCurrentDate(today);
             setSelectedDate(today);
             onDayClick(today);
           }}
-          className="nav-button"
         >
-          <TbCalendarBolt />
+          <IconCalendarBolt />
         </Button>
       </Group>
 
+      {/* Add Think Session Button */}
       <Button
         color="blue"
         variant="light"
         h={"3rem"}
+        size="xs"
         onClick={() =>
           modals.openModal({
             title: "Add Think Session",
