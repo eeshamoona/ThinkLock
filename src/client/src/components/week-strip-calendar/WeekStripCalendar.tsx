@@ -1,11 +1,12 @@
 import React, { useState, useRef } from "react";
 import { format, startOfWeek, addDays, isToday } from "date-fns";
-import { Button, Group, Text, Popover, ActionIcon } from "@mantine/core";
+import { Button, Group, Text, Popover, ActionIcon, Grid } from "@mantine/core";
 import {
   ChevronRight,
   ChevronLeft,
   ChevronDown,
   Plus,
+  Space,
 } from "tabler-icons-react";
 import { MonthPicker } from "@mantine/dates";
 import { TbCalendarBolt } from "react-icons/tb";
@@ -78,36 +79,35 @@ const WeekViewStripCalendar = ({
   };
 
   return (
-    <Group className="week-view-strip-calendar">
-      {/* Month Picker */}
-      <Popover position="bottom-start" offset={10}>
-        <Popover.Target>
-          <Button
-            w={"8rem"}
-            h={"3rem"}
-            variant="light"
-            p={"0.5rem"}
-            rightIcon={<ChevronDown size={18} />}
-          >
-            <Text size="sm">{format(currentDate, "MMM yyyy")}</Text>
-          </Button>
-        </Popover.Target>
-        <Popover.Dropdown>
-          <MonthPicker
-            value={currentDate}
-            onChange={(date) => {
-              if (date) {
-                setCurrentDate(date as Date);
-              }
-            }}
-          />
-        </Popover.Dropdown>
-      </Popover>
-      <div className="week-view-container">
+    <Group position="apart">
+      <Group className="week-view-strip-calendar">
+        {/* Month Picker */}
+        <Popover position="bottom-start" offset={10}>
+          <Popover.Target>
+            <Button
+              h={"3rem"}
+              variant="light"
+              rightIcon={<ChevronDown size={18} />}
+            >
+              <Text size="sm">{format(currentDate, "MMM yyyy")}</Text>
+            </Button>
+          </Popover.Target>
+          <Popover.Dropdown>
+            <MonthPicker
+              value={currentDate}
+              onChange={(date) => {
+                if (date) {
+                  setCurrentDate(date as Date);
+                }
+              }}
+            />
+          </Popover.Dropdown>
+        </Popover>
         {/* Navigation Left */}
         <Button
           color="blue"
           variant="light"
+          p={0}
           onClick={goToPreviousWeek}
           className="nav-button"
           onKeyDown={handleKeyDown}
@@ -117,7 +117,7 @@ const WeekViewStripCalendar = ({
         </Button>
 
         {/* Week Strip */}
-        <Group className="week-strip" spacing={"0.5rem"}>
+        <Grid className="week-strip" grow columns={7}>
           {Array.from({ length: 7 }, (_, index) => {
             const day = addDays(startOfWeek(currentDate), index);
             const isSelected =
@@ -125,23 +125,26 @@ const WeekViewStripCalendar = ({
                 selectedDate.toDateString() === day.toDateString()) ||
               false;
             return (
-              <DayCard
-                key={index}
-                day={day}
-                isSelected={isSelected}
-                onClick={() => {
-                  setSelectedDate(day);
-                  onDayClick(day);
-                }}
-              />
+              <Grid.Col span={1} key={index} p={"0.3rem"}>
+                <DayCard
+                  key={index}
+                  day={day}
+                  isSelected={isSelected}
+                  onClick={() => {
+                    setSelectedDate(day);
+                    onDayClick(day);
+                  }}
+                />
+              </Grid.Col>
             );
           })}
-        </Group>
+        </Grid>
 
         {/* Navigation Right */}
         <Button
           color="blue"
           variant="light"
+          p={0}
           onClick={goToNextWeek}
           className="nav-button"
           onKeyDown={handleKeyDown}
@@ -149,14 +152,11 @@ const WeekViewStripCalendar = ({
         >
           <ChevronRight />
         </Button>
-      </div>
 
-      <Group spacing={"0.5rem"}>
         {/* Today Button */}
-        <ActionIcon
+        <Button
           color="violet"
           variant="light"
-          w={"3.5rem"}
           h={"3rem"}
           onClick={() => {
             const today = startOfDay(new Date());
@@ -167,29 +167,28 @@ const WeekViewStripCalendar = ({
           className="nav-button"
         >
           <TbCalendarBolt />
-        </ActionIcon>
-
-        <ActionIcon
-          color="blue"
-          variant="light"
-          w={"3.5rem"}
-          h={"3rem"}
-          onClick={() =>
-            modals.openModal({
-              title: "Add Think Session",
-              size: "md",
-              children: (
-                <AddThinkSessionModal
-                  thinkSessionDate={selectedDate as Date}
-                  successCallback={addSuccessCallback}
-                />
-              ),
-            })
-          }
-        >
-          <Plus />
-        </ActionIcon>
+        </Button>
       </Group>
+
+      <Button
+        color="blue"
+        variant="light"
+        h={"3rem"}
+        onClick={() =>
+          modals.openModal({
+            title: "Add Think Session",
+            size: "md",
+            children: (
+              <AddThinkSessionModal
+                thinkSessionDate={selectedDate as Date}
+                successCallback={addSuccessCallback}
+              />
+            ),
+          })
+        }
+      >
+        <Plus />
+      </Button>
     </Group>
   );
 };
