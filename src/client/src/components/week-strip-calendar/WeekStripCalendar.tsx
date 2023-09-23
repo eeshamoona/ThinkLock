@@ -29,6 +29,7 @@ const DayCard = ({ day, isSelected, onClick }: DayCardProps) => {
       w={"3rem"}
       h={"3rem"}
       onClick={onClick}
+      className="day-card"
     >
       <div>
         <Text size="xs" weight={700}>

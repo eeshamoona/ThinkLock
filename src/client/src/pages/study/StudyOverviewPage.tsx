@@ -8,9 +8,11 @@ import {
   useMantineTheme,
   Tabs,
   Stack,
+  ActionIcon,
+  Group,
 } from "@mantine/core";
 import { Droppable, DragDropContext } from "react-beautiful-dnd";
-import { startOfDay } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import { useModals } from "@mantine/modals";
 import WeekViewStripCalendar from "../../components/week-strip-calendar/WeekStripCalendar";
 import ThinkSessionCard from "../../components/think_session/ThinkSessionItem";
@@ -21,7 +23,10 @@ import { getAllActionItemsByThinkSessionId } from "../../services/actionItemAPIC
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 import { ThinkSession } from "../../utils/models/thinksession.model";
 import { ActionItem } from "../../utils/models/actionitem.model";
+import IconType from "../../utils/constants/iconType.constant";
+import * as allIcons from "tabler-icons-react";
 import "./studyOverviewPage.scss";
+import { TbArrowRight, TbClockFilled, TbMapPinFilled } from "react-icons/tb";
 
 const StudyOverviewPage = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(
@@ -113,6 +118,9 @@ const StudyOverviewPage = () => {
     selectedThinkSession?.thinkfolder_color as string
   ] as any;
 
+  const variantExpanded =
+    theme.colorScheme === "dark" && colorName === "dark" ? "filled" : "light";
+
   const tabColorExpanded =
     theme.colorScheme === "dark" && colorName === "dark"
       ? "white"
@@ -131,6 +139,22 @@ const StudyOverviewPage = () => {
     }
   }, [selectedThinkSession?.thinkfolder_color, theme.colorScheme, colorName]);
 
+  const Icon = (allIcons as IconType)[
+    selectedThinkSession?.thinkfolder_icon as string
+  ];
+
+  const thinkFolderColorExpanded =
+    theme.colorScheme === "dark" && colorName === "dark"
+      ? "#FFFFFFAA"
+      : `${selectedThinkSession?.thinkfolder_color}AA`;
+
+  const formatTime = (time: Date) => {
+    const formattedHours = time.getHours() % 12 || 12;
+    const formattedMinutes = time.getMinutes().toString().padStart(2, "0");
+    const ampm = time.getHours() >= 12 ? "PM" : "AM";
+    return `${formattedHours}:${formattedMinutes} ${ampm}`;
+  };
+
   return (
     <div className="study-overview-page-container">
       <Paper className="session-day-picker-container">
@@ -141,7 +165,7 @@ const StudyOverviewPage = () => {
           }}
           addSuccessCallback={getThinkSessionsOnDate}
         />
-        <ScrollArea h={"18rem"} offsetScrollbars>
+        <ScrollArea h={"18.6rem"} offsetScrollbars>
           <SimpleGrid
             spacing="sm"
             cols={2}
@@ -169,103 +193,162 @@ const StudyOverviewPage = () => {
       </Paper>
       <Paper className="session-detail-container">
         {selectedThinkSession ? (
-          <div className="detail-container">
-            <Text>{selectedThinkSession?.title}</Text>
-            <Text>{selectedThinkSession?.location}</Text>
-            <Paper className="detail-tabs-container">
-              <Tabs
-                value={activeTab}
-                keepMounted={false}
-                h={"100%"}
-                onTabChange={setActiveTab}
-                color={colorName}
-              >
-                <Tabs.List grow id="tab-list">
-                  <Tabs.Tab
-                    value="summary"
-                    onClick={() => setActiveTab("summary")}
-                  >
-                    Summary
-                  </Tabs.Tab>
-                  <Tabs.Tab
-                    value="actionItems"
-                    onClick={() => setActiveTab("actionItems")}
-                  >
-                    Action Items
-                  </Tabs.Tab>
-                  <Tabs.Tab
-                    value="scribbles"
-                    onClick={() => setActiveTab("scribbles")}
-                  >
-                    Scribbles
-                  </Tabs.Tab>
-                </Tabs.List>
-                <Tabs.Panel value="summary" pt="md">
-                  <Text>{selectedThinkSession?.summary}</Text>
-                </Tabs.Panel>
-                <Tabs.Panel
-                  value="actionItems"
-                  pt="md"
-                  className="action-items-tab"
+          <>
+            <div className="detail-container">
+              <div className="session-detail-info-container">
+                <ActionIcon
+                  color={colorName}
+                  size={45}
+                  variant={variantExpanded}
+                  radius="md"
                 >
-                  <DragDropContext onDragEnd={onDragEnd}>
-                    <ScrollArea
-                      h={"12.5rem"}
-                      mt={"0.5rem"}
-                      offsetScrollbars
-                      className="action-items-scroll-area"
-                      bg={getBackgroundColor()}
-                      hidden={selectedThinkSessionActionItems?.length === 0}
+                  {Icon && <Icon className="think-session-icon" />}
+                </ActionIcon>
+                <div className="location-time-container">
+                  <Text size={"lg"} weight={"500"}>
+                    {selectedThinkSession?.title}
+                  </Text>
+                  <Group position="apart">
+                    <div
+                      className={
+                        selectedThinkSession?.location
+                          ? "think-session-location"
+                          : "no-location"
+                      }
                     >
-                      <Droppable
-                        droppableId={`action-item-think-session-${selectedThinkSession?.id}`}
-                        direction="vertical"
+                      <TbMapPinFilled
+                        size={18}
+                        color={`${thinkFolderColorExpanded}`}
+                      />
+                      <Text size={"xs"} c="dimmed" className="location-text">
+                        {selectedThinkSession?.location}
+                      </Text>
+                    </div>
+                    <div className="think-session-location">
+                      <TbClockFilled
+                        size={18}
+                        color={`${thinkFolderColorExpanded}`}
+                      />
+                      <Text size={"xs"} c="dimmed">
+                        {format(
+                          new Date(selectedThinkSession.date),
+                          "EEE, MMM d"
+                        )}{" "}
+                        {` | `}
+                        {`${formatTime(
+                          new Date(selectedThinkSession?.start_time)
+                        )} - ${formatTime(
+                          new Date(selectedThinkSession?.end_time)
+                        )}`}
+                      </Text>
+                    </div>
+                  </Group>
+                </div>
+              </div>
+              <Paper className="detail-tabs-container">
+                <Tabs
+                  value={activeTab}
+                  keepMounted={false}
+                  h={"100%"}
+                  onTabChange={setActiveTab}
+                  color={colorName}
+                >
+                  <Tabs.List grow id="tab-list">
+                    <Tabs.Tab
+                      value="summary"
+                      onClick={() => setActiveTab("summary")}
+                    >
+                      Summary
+                    </Tabs.Tab>
+                    <Tabs.Tab
+                      value="actionItems"
+                      onClick={() => setActiveTab("actionItems")}
+                    >
+                      Action Items
+                    </Tabs.Tab>
+                    <Tabs.Tab
+                      value="scribbles"
+                      onClick={() => setActiveTab("scribbles")}
+                    >
+                      Scribbles
+                    </Tabs.Tab>
+                  </Tabs.List>
+                  <Tabs.Panel value="summary" pt="md">
+                    <Text>{selectedThinkSession?.summary}</Text>
+                  </Tabs.Panel>
+                  <Tabs.Panel
+                    value="actionItems"
+                    pt="md"
+                    className="action-items-tab"
+                  >
+                    <DragDropContext onDragEnd={onDragEnd}>
+                      <ScrollArea
+                        h={"13.75rem"}
+                        mt={"0.5rem"}
+                        pb={"1rem"}
+                        offsetScrollbars
+                        className="action-items-scroll-area"
+                        bg={getBackgroundColor()}
+                        hidden={selectedThinkSessionActionItems?.length === 0}
                       >
-                        {(provided) => (
-                          <Stack
-                            spacing={"0.5rem"}
-                            p={"0.5rem"}
-                            ref={provided.innerRef}
-                            {...provided.droppableProps}
-                          >
-                            {selectedThinkSessionActionItems?.map(
-                              (actionItem, index) => (
-                                <ActionItemCard
-                                  id={`${actionItem.id}`}
-                                  index={index}
-                                  key={actionItem.id}
-                                  title={actionItem.title}
-                                  description={actionItem.description}
-                                  completed={actionItem.completed}
-                                  draggable={true}
-                                  thinkfolderColor={
-                                    selectedThinkSession?.thinkfolder_color as string
-                                  }
-                                />
-                              )
-                            )}
-                            {provided.placeholder}
-                          </Stack>
-                        )}
-                      </Droppable>
-                    </ScrollArea>
-                    <Button
-                      mt={"0.5rem"}
-                      mb={0}
-                      pb={0}
-                      fullWidth
-                      onClick={handleActionItemAdded}
-                    >
-                      Add Action Item
-                    </Button>
-                  </DragDropContext>
-                </Tabs.Panel>
-                <Tabs.Panel value="scribbles" pt="md">
-                  <Text>{"Scribbles"}</Text>
-                </Tabs.Panel>
-              </Tabs>
-            </Paper>
-          </div>
+                        <Droppable
+                          droppableId={`action-item-think-session-${selectedThinkSession?.id}`}
+                          direction="vertical"
+                        >
+                          {(provided) => (
+                            <Stack
+                              spacing={"0.5rem"}
+                              p={"0.5rem"}
+                              ref={provided.innerRef}
+                              {...provided.droppableProps}
+                            >
+                              {selectedThinkSessionActionItems?.map(
+                                (actionItem, index) => (
+                                  <ActionItemCard
+                                    id={`${actionItem.id}`}
+                                    index={index}
+                                    key={actionItem.id}
+                                    title={actionItem.title}
+                                    description={actionItem.description}
+                                    completed={actionItem.completed}
+                                    draggable={true}
+                                    thinkfolderColor={
+                                      selectedThinkSession?.thinkfolder_color as string
+                                    }
+                                  />
+                                )
+                              )}
+                              {provided.placeholder}
+                              <Button
+                                onClick={handleActionItemAdded}
+                                variant="default"
+                                fullWidth
+                                className="add-action-item-button"
+                              >
+                                Add Action Item
+                              </Button>
+                            </Stack>
+                          )}
+                        </Droppable>
+                      </ScrollArea>
+                    </DragDropContext>
+                  </Tabs.Panel>
+                  <Tabs.Panel value="scribbles" pt="md">
+                    <Text>{"Scribbles"}</Text>
+                  </Tabs.Panel>
+                </Tabs>
+              </Paper>
+            </div>
+            <Button
+              variant="subtle"
+              mt={"1rem"}
+              mb={"auto"}
+              onClick={() => {}}
+              rightIcon={<TbArrowRight size={18} />}
+            >
+              Enter Think Session
+            </Button>
+          </>
         ) : (
           <div className="no-session-container">
             <Text size={20} weight={200}>

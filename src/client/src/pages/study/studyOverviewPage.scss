@@ -53,3 +53,33 @@
 .mantine-6z64bn[data-active]:hover {
   border-color: var(--tab-selector-color);
 }
+
+.session-detail-info-container {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.location-time-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.think-session-location {
+  display: flex;
+  flex-direction: row;
+  gap: 0.3rem;
+  align-items: center;
+  margin: -0.1rem 0 0 -0.1rem;
+}
+
+.no-location {
+  display: none;
+}
+
+.add-action-item-button {
+  background-color: transparent;
+  border: 1px dashed rgba(0, 0, 0, 0.3);
+}
