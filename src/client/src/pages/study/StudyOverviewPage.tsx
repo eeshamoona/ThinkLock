@@ -27,6 +27,7 @@ import IconType from "../../utils/constants/iconType.constant";
 import * as allIcons from "tabler-icons-react";
 import "./studyOverviewPage.scss";
 import { TbArrowRight, TbClockFilled, TbMapPinFilled } from "react-icons/tb";
+import { IconPlus } from "@tabler/icons-react";
 
 const StudyOverviewPage = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(
@@ -283,10 +284,9 @@ const StudyOverviewPage = () => {
                   >
                     <DragDropContext onDragEnd={onDragEnd}>
                       <ScrollArea
-                        h={"13.75rem"}
+                        h={"13.25rem"}
                         mt={"0.5rem"}
-                        pb={"1rem"}
-                        offsetScrollbars
+                        pb={"0.5rem"}
                         className="action-items-scroll-area"
                         bg={getBackgroundColor()}
                         hidden={selectedThinkSessionActionItems?.length === 0}
@@ -322,7 +322,8 @@ const StudyOverviewPage = () => {
                               <Button
                                 onClick={handleActionItemAdded}
                                 variant="default"
-                                fullWidth
+                                h={"3rem"}
+                                leftIcon={<IconPlus size={"1rem"} />}
                                 className="add-action-item-button"
                               >
                                 Add Action Item
@@ -341,8 +342,8 @@ const StudyOverviewPage = () => {
             </div>
             <Button
               variant="subtle"
-              mt={"1rem"}
-              mb={"auto"}
+              mt={"auto"}
+              mb={"0"}
               onClick={() => {}}
               rightIcon={<TbArrowRight size={18} />}
             >
@@ -351,7 +352,7 @@ const StudyOverviewPage = () => {
           </>
         ) : (
           <div className="no-session-container">
-            <Text size={20} weight={200}>
+            <Text c="dimmed" size={20} weight={200}>
               Click on a think session to see more details
             </Text>
           </div>

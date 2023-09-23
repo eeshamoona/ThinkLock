@@ -33,7 +33,7 @@
   display: flex;
   height: 100%;
   align-items: center;
-  width: 12rem;
+  width: 14rem;
   text-align: center;
   align-self: center;
 }
@@ -81,5 +81,6 @@
 
 .add-action-item-button {
   background-color: transparent;
-  border: 1px dashed rgba(0, 0, 0, 0.3);
+  border: 1px dashed var(--tab-selector-color);
+  margin: 0 1rem;
 }
