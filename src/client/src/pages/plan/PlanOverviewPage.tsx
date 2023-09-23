@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import "./planOverviewPage.scss";
+import React, { useCallback, useEffect, useState } from "react";
 import ThinkFolderCard from "../../components/think_folder/ThinkFolderCard";
 import { ThinkFolder } from "../../utils/models/thinkfolder.model";
 import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
@@ -16,6 +15,7 @@ import AddActionItemModal from "../../components/add_action_item_modal/AddAction
 import { useModals } from "@mantine/modals";
 import { useMantineTheme } from "@mantine/core";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import "./planOverviewPage.scss";
 
 enum ModalOptions {
   ThinkSession,
@@ -30,7 +30,6 @@ const PlanOverviewPage = () => {
   const [showFolderDetails, setShowFolderDetails] = useState<boolean>(false);
   const [actionItems, setActionItems] = useState<any[]>([]);
   const [thinkSessions, setThinkSessions] = useState<any[]>([]);
-  const [updateDataFlag, setUpdateDataFlag] = useState<boolean>(false);
   const modals = useModals();
   const theme = useMantineTheme();
 
@@ -61,12 +60,16 @@ const PlanOverviewPage = () => {
             selectedFolder ? (
               <AddThinkSessionModal
                 thinkFolderId={selectedFolder.id.toString()}
+                successCallback={refreshThinkSessions}
               />
             ) : (
               <AddThinkSessionModal />
             )
           ) : selectedFolder ? (
-            <AddActionItemModal thinkFolderId={selectedFolder.id.toString()} />
+            <AddActionItemModal
+              thinkFolderId={selectedFolder.id.toString()}
+              successCallback={refreshActionItems}
+            />
           ) : (
             <AddActionItemModal />
           )}
@@ -77,7 +80,7 @@ const PlanOverviewPage = () => {
     });
   };
 
-  const onDragEnd = (result: any) => {
+  const onDragEnd = async (result: any) => {
     if (!result.destination) return; // Drop outside of droppable area
 
     const destination = result.destination.droppableId.split("-")[3];
@@ -86,12 +89,35 @@ const PlanOverviewPage = () => {
 
     if (destination === source) return; // No change in order
 
-    setUpdateDataFlag(!updateDataFlag);
+    // Temporarily remove action item from list
+    const newActionItems = actionItems.filter(
+      (actionItem) => actionItem.id !== parseInt(actionItemId)
+    );
 
-    updateActionItem(actionItemId, {
-      thinksession_id: destination,
-    });
+    setActionItems(newActionItems);
+    await updateActionItem(actionItemId, { thinksession_id: destination });
+    await refreshActionItems();
   };
+
+  const refreshActionItems = useCallback(async () => {
+    if (!selectedFolder) return;
+    const actionItemsRes = await getActionItemsWithNullThinkSessionId(
+      selectedFolder?.id
+    );
+    if (typeof actionItemsRes !== "string") {
+      setActionItems(actionItemsRes as any[]);
+    }
+  }, [selectedFolder]);
+
+  const refreshThinkSessions = useCallback(async () => {
+    if (!selectedFolder) return;
+    const thinkSessionsRes = await getAllThinkSessionsByThinkFolderId(
+      selectedFolder?.id
+    );
+    if (typeof thinkSessionsRes !== "string") {
+      setThinkSessions(thinkSessionsRes as any[]);
+    }
+  }, [selectedFolder]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,21 +127,11 @@ const PlanOverviewPage = () => {
           setFolders(res as ThinkFolder[]);
         }
       } else {
-        const [actionItemsRes, thinkSessionsRes] = await Promise.all([
-          getActionItemsWithNullThinkSessionId(selectedFolder.id),
-          getAllThinkSessionsByThinkFolderId(selectedFolder.id),
-        ]);
-        if (typeof actionItemsRes !== "string") {
-          setActionItems(actionItemsRes as any[]);
-        }
-        if (typeof thinkSessionsRes !== "string") {
-          setThinkSessions(thinkSessionsRes as any[]);
-        }
+        await Promise.all([refreshActionItems(), refreshThinkSessions()]);
       }
     };
-
     fetchData();
-  }, [selectedFolder, modals, updateDataFlag]);
+  }, [selectedFolder, refreshActionItems, refreshThinkSessions]);
 
   return (
     <div className="plan-page-container">

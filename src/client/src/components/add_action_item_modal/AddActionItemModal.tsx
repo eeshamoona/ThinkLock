@@ -14,11 +14,13 @@ import ThinkFolderSelectItem from "../think_folder/ThinkFolderSelectItem";
 interface AddActionItemModalProps {
   thinkSessionId?: string;
   thinkFolderId?: string;
+  successCallback?: () => Promise<void>;
 }
 
 const AddActionItemModal = ({
   thinkSessionId,
   thinkFolderId,
+  successCallback,
 }: AddActionItemModalProps) => {
   const [thinkFolders, setThinkFolders] = useState<ThinkFolder[]>([]);
 
@@ -70,6 +72,7 @@ const AddActionItemModal = ({
               "Success",
               `Action Item Created ID:${actionItemId as string} `
             );
+            if (successCallback) await successCallback();
             closeAllModals();
           } else {
             showErrorNotification("Error", "Action Item Creation Failed");

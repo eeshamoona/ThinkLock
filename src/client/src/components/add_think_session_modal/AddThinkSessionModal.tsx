@@ -24,10 +24,12 @@ import ThinkFolderSelectItem from "../think_folder/ThinkFolderSelectItem";
 interface AddThinkSessionModalProps {
   thinkFolderId?: string;
   thinkSessionDate?: Date;
+  successCallback?: () => Promise<void>;
 }
 const AddThinkSessionModal = ({
   thinkFolderId,
   thinkSessionDate,
+  successCallback,
 }: AddThinkSessionModalProps) => {
   const newThinkSessionForm = useForm({
     initialValues: {
@@ -89,6 +91,7 @@ const AddThinkSessionModal = ({
         "Success",
         `Think Session Created ID:${thinkSessionId as string} `
       );
+      if (successCallback) await successCallback();
       closeAllModals();
     } else {
       showErrorNotification("Error", "Action Item Creation Failed");

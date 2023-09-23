@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import WeekViewStripCalendar from "../../components/week-strip-calendar/WeekStripCalendar";
-import { getAllThinkSessionsByDate } from "../../services/thinkSessionAPICallerService";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Button,
   Paper,
@@ -8,74 +6,108 @@ import {
   SimpleGrid,
   Text,
   useMantineTheme,
+  Tabs,
+  Stack,
 } from "@mantine/core";
-import ThinkSessionCard from "../../components/think_session/ThinkSessionItem";
-import "./studyOverviewPage.scss";
-import { ThinkSession } from "../../utils/models/thinksession.model";
-import { getAllActionItemsByThinkSessionId } from "../../services/actionItemAPICallerService";
-import { ActionItem } from "../../utils/models/actionitem.model";
-import { Tabs, Stack } from "@mantine/core";
-import ActionItemCard from "../../components/action_item/ActionItemCard";
-import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
-import AddActionItemModal from "../../components/add_action_item_modal/AddActionItemModal";
-import { useModals } from "@mantine/modals";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { Droppable, DragDropContext } from "react-beautiful-dnd";
 import { startOfDay } from "date-fns";
+import { useModals } from "@mantine/modals";
+import WeekViewStripCalendar from "../../components/week-strip-calendar/WeekStripCalendar";
+import ThinkSessionCard from "../../components/think_session/ThinkSessionItem";
+import ActionItemCard from "../../components/action_item/ActionItemCard";
+import AddActionItemModal from "../../components/add_action_item_modal/AddActionItemModal";
+import { getAllThinkSessionsByDate } from "../../services/thinkSessionAPICallerService";
+import { getAllActionItemsByThinkSessionId } from "../../services/actionItemAPICallerService";
+import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
+import { ThinkSession } from "../../utils/models/thinksession.model";
+import { ActionItem } from "../../utils/models/actionitem.model";
+import "./studyOverviewPage.scss";
 
 const StudyOverviewPage = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(
     startOfDay(new Date())
   );
-  const [activeTab, setActiveTab] = useState<string | null>("actionItems");
   const [thinkSessions, setThinkSessions] = useState<ThinkSession[]>([]);
   const [selectedThinkSession, setSelectedThinkSession] =
     useState<ThinkSession | null>(null);
+  const [selectedThinkSessionActionItems, setSelectedThinkSessionActionItems] =
+    useState<ActionItem[]>([]);
+  const [activeTab, setActiveTab] = useState<string | null>("actionItems");
   const modals = useModals();
   const theme = useMantineTheme();
 
-  const getThinkSessionsWithDate = async (date: Date) => {
-    const thinkSessions = await getAllThinkSessionsByDate(date);
+  const getThinkSessionsOnDate = useCallback(async () => {
+    const thinkSessions = await getAllThinkSessionsByDate(selectedDate);
     if (typeof thinkSessions !== "string") {
       setThinkSessions(thinkSessions);
     }
-  };
+  }, [selectedDate]);
 
-  const handleOnSessionClick = async (id: string) => {
-    const thinkSession = thinkSessions.find(
-      (thinkSession) => thinkSession.id.toString() === id
+  const refreshSelectedThinkSessionActionItems = useCallback(async () => {
+    const actionItems = await getAllActionItemsByThinkSessionId(
+      selectedThinkSession?.id as number
     );
-    if (!thinkSession) return;
+    if (typeof actionItems !== "string") {
+      setSelectedThinkSessionActionItems(actionItems);
+    }
+  }, [selectedThinkSession]);
 
-    const actionItems = await getAllActionItemsByThinkSessionId(parseInt(id));
-    if (typeof actionItems === "string") return;
+  const handleOnSessionClick = useCallback(
+    async (id: string) => {
+      const thinkSession = thinkSessions.find(
+        (thinkSession) => thinkSession.id.toString() === id
+      );
+      if (!thinkSession) return;
 
-    setSelectedThinkSession({
-      ...thinkSession,
-      action_items: actionItems as unknown as ActionItem[],
-    });
-  };
+      setSelectedThinkSession(thinkSession);
 
-  useEffect(() => {
-    getThinkSessionsWithDate(selectedDate);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+      const actionItems = await getAllActionItemsByThinkSessionId(
+        thinkSession.id
+      );
+      if (typeof actionItems !== "string") {
+        setSelectedThinkSessionActionItems(actionItems);
+      }
+    },
+    [thinkSessions]
+  );
 
-  const handleActionItemAdded = async () => {
+  const handleActionItemAdded = useCallback(() => {
     modals.openModal({
       title: "Add Think Session",
       size: "lg",
       children: (
         <AddActionItemModal
-          thinkSessionId={selectedThinkSession?.id.toString()}
-          thinkFolderId={selectedThinkSession?.thinkfolder_id.toString()}
+          thinkSessionId={selectedThinkSession?.id?.toString()}
+          thinkFolderId={selectedThinkSession?.thinkfolder_id?.toString()}
+          successCallback={refreshSelectedThinkSessionActionItems}
         />
       ),
     });
-  };
+  }, [
+    modals,
+    refreshSelectedThinkSessionActionItems,
+    selectedThinkSession?.id,
+    selectedThinkSession?.thinkfolder_id,
+  ]);
 
-  const changeTab = (tab: string) => {
-    setActiveTab(tab);
-  };
+  useEffect(() => {
+    getThinkSessionsOnDate();
+  }, [selectedDate, getThinkSessionsOnDate]);
+
+  const onDragEnd = useCallback(
+    (result: any) => {
+      if (!result.destination) {
+        return;
+      }
+
+      const items = Array.from(selectedThinkSessionActionItems || []);
+      const [reorderedItem] = items.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reorderedItem);
+
+      setSelectedThinkSessionActionItems(items);
+    },
+    [selectedThinkSessionActionItems]
+  );
 
   const colorName = hexToColorNameMap[
     selectedThinkSession?.thinkfolder_color as string
@@ -91,32 +123,13 @@ const StudyOverviewPage = () => {
     `${tabColorExpanded}`
   );
 
-  const getBackgroundColor = () => {
+  const getBackgroundColor = useCallback(() => {
     if (selectedThinkSession?.thinkfolder_color) {
       return theme.colorScheme === "dark"
         ? `var(--mantine-color-dark-8)`
         : `var(--mantine-color-${colorName}-0)`;
     }
-  };
-
-  const onDragEnd = (result: any) => {
-    if (!result.destination) {
-      return;
-    }
-
-    const items = Array.from(selectedThinkSession?.action_items || []);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    // Update the order of the action items in the selected think session
-    setSelectedThinkSession((prevThinkSession) => {
-      if (!prevThinkSession) return null;
-      return {
-        ...prevThinkSession,
-        action_items: items,
-      };
-    });
-  };
+  }, [selectedThinkSession?.thinkfolder_color, theme.colorScheme, colorName]);
 
   return (
     <div className="study-overview-page-container">
@@ -125,8 +138,8 @@ const StudyOverviewPage = () => {
           initialDate={selectedDate}
           onDayClick={(date) => {
             setSelectedDate(date);
-            getThinkSessionsWithDate(date);
           }}
+          addSuccessCallback={getThinkSessionsOnDate}
         />
         <ScrollArea h={"18rem"} offsetScrollbars>
           <SimpleGrid
@@ -170,19 +183,19 @@ const StudyOverviewPage = () => {
                 <Tabs.List grow id="tab-list">
                   <Tabs.Tab
                     value="summary"
-                    onClick={() => changeTab("summary")}
+                    onClick={() => setActiveTab("summary")}
                   >
                     Summary
                   </Tabs.Tab>
                   <Tabs.Tab
                     value="actionItems"
-                    onClick={() => changeTab("actionItems")}
+                    onClick={() => setActiveTab("actionItems")}
                   >
                     Action Items
                   </Tabs.Tab>
                   <Tabs.Tab
                     value="scribbles"
-                    onClick={() => changeTab("scribbles")}
+                    onClick={() => setActiveTab("scribbles")}
                   >
                     Scribbles
                   </Tabs.Tab>
@@ -202,7 +215,7 @@ const StudyOverviewPage = () => {
                       offsetScrollbars
                       className="action-items-scroll-area"
                       bg={getBackgroundColor()}
-                      hidden={selectedThinkSession?.action_items?.length === 0}
+                      hidden={selectedThinkSessionActionItems?.length === 0}
                     >
                       <Droppable
                         droppableId={`action-item-think-session-${selectedThinkSession?.id}`}
@@ -215,7 +228,7 @@ const StudyOverviewPage = () => {
                             ref={provided.innerRef}
                             {...provided.droppableProps}
                           >
-                            {selectedThinkSession?.action_items?.map(
+                            {selectedThinkSessionActionItems?.map(
                               (actionItem, index) => (
                                 <ActionItemCard
                                   id={`${actionItem.id}`}

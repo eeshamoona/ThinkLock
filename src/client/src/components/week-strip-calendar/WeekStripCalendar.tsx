@@ -44,11 +44,13 @@ const DayCard = ({ day, isSelected, onClick }: DayCardProps) => {
 interface WeekViewStripCalendarProps {
   initialDate: Date;
   onDayClick: (date: Date) => void;
+  addSuccessCallback?: () => Promise<void>;
 }
 
 const WeekViewStripCalendar = ({
   initialDate,
   onDayClick,
+  addSuccessCallback,
 }: WeekViewStripCalendarProps) => {
   const [currentDate, setCurrentDate] = useState(initialDate);
   const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate);
@@ -177,7 +179,10 @@ const WeekViewStripCalendar = ({
               title: "Add Think Session",
               size: "md",
               children: (
-                <AddThinkSessionModal thinkSessionDate={selectedDate as Date} />
+                <AddThinkSessionModal
+                  thinkSessionDate={selectedDate as Date}
+                  successCallback={addSuccessCallback}
+                />
               ),
             })
           }
