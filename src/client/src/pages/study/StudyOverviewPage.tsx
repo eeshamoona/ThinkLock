@@ -26,8 +26,9 @@ import { ActionItem } from "../../utils/models/actionitem.model";
 import IconType from "../../utils/constants/iconType.constant";
 import * as allIcons from "tabler-icons-react";
 import "./studyOverviewPage.scss";
-import { TbArrowRight, TbClockFilled, TbMapPinFilled } from "react-icons/tb";
+import { TbClockFilled, TbMapPinFilled } from "react-icons/tb";
 import { IconPlus } from "@tabler/icons-react";
+import HoldStartButton from "../../components/hold_start_button/HoldStartButton";
 
 const StudyOverviewPage = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(
@@ -340,15 +341,12 @@ const StudyOverviewPage = () => {
                 </Tabs>
               </Paper>
             </div>
-            <Button
-              variant="subtle"
-              mt={"auto"}
-              mb={"0"}
-              onClick={() => {}}
-              rightIcon={<TbArrowRight size={18} />}
-            >
-              Enter Think Session
-            </Button>
+            <HoldStartButton
+              folderColor={selectedThinkSession?.thinkfolder_color as string}
+              onSuccess={() => {
+                console.log("Start Session ", selectedThinkSession);
+              }}
+            />
           </>
         ) : (
           <div className="no-session-container">
