@@ -10,13 +10,10 @@ import {
   Stack,
   ActionIcon,
   Group,
-  Card,
-  Progress,
 } from "@mantine/core";
 import { Droppable, DragDropContext } from "react-beautiful-dnd";
 import { format, startOfDay } from "date-fns";
 import { useModals } from "@mantine/modals";
-import { Carousel } from "@mantine/carousel";
 import WeekViewStripCalendar from "../../components/week-strip-calendar/WeekStripCalendar";
 import ThinkSessionCard from "../../components/think_session/ThinkSessionItem";
 import ActionItemCard from "../../components/action_item/ActionItemCard";
@@ -32,6 +29,7 @@ import "./studyOverviewPage.scss";
 import { TbClockFilled, TbMapPinFilled } from "react-icons/tb";
 import { IconPlus } from "@tabler/icons-react";
 import HoldStartButton from "../../components/hold_start_button/HoldStartButton";
+import ObjectivesSlideshow from "../../components/objectives_slideshow/ObjectivesSlideshow";
 
 const StudyOverviewPage = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(
@@ -162,37 +160,13 @@ const StudyOverviewPage = () => {
 
   return (
     <div className="study-overview-page-container">
-      <Carousel
-        withIndicators
-        height={200}
-        slideSize="33.333333%"
-        slideGap="sm"
-        controlsOffset="xs"
-        controlSize={24}
-        loop
-        slidesToScroll={3}
-      >
-        <Carousel.Slide>
-          <Card
-            withBorder
-            radius="md"
-            padding="xl"
-            bg="var(--mantine-color-body"
-          >
-            <Text fz="xs" tt="uppercase" fw={700} c="dimmed">
-              Monthly goal
-            </Text>
-            <Text fz="lg" fw={500}>
-              $5.431 / $10.000
-            </Text>
-            <Progress value={54.31} mt="md" size="lg" radius="xl" />
-          </Card>
-        </Carousel.Slide>
-        <Carousel.Slide>2</Carousel.Slide>
-        <Carousel.Slide>3</Carousel.Slide>
-        <Carousel.Slide>4</Carousel.Slide>
-      </Carousel>
-      <Group>
+      <div className="objective-overview-container">
+        <Text size={24} fw={300} ml={"1rem"} mt={"1rem"}>
+          Welcome Back, Eesha
+        </Text>
+        <ObjectivesSlideshow />
+      </div>
+      <Group className="session-overview-container">
         <Paper className="session-day-picker-container">
           <WeekViewStripCalendar
             initialDate={selectedDate}
@@ -201,7 +175,7 @@ const StudyOverviewPage = () => {
             }}
             addSuccessCallback={getThinkSessionsOnDate}
           />
-          <ScrollArea h={"18.6rem"} offsetScrollbars>
+          <ScrollArea h={"22rem"} offsetScrollbars>
             <SimpleGrid
               spacing="sm"
               cols={2}
@@ -319,7 +293,7 @@ const StudyOverviewPage = () => {
                     >
                       <DragDropContext onDragEnd={onDragEnd}>
                         <ScrollArea
-                          h={"13.25rem"}
+                          h={"15.5rem"}
                           mt={"0.5rem"}
                           pb={"0.5rem"}
                           className="action-items-scroll-area"

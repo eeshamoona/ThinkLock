@@ -78,7 +78,7 @@ const WeekViewStripCalendar = ({
   };
 
   return (
-    <Group position="apart">
+    <Group position="apart" mb={"0.5rem"}>
       <Group spacing={"1rem"}>
         {/* Month Picker */}
         <Popover position="bottom-start" offset={10}>

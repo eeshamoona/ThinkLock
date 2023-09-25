@@ -1,0 +1,23 @@
+.objective-slide {
+  align-self: center;
+}
+
+.objective-card {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding: var(--mantine-spacing-xl);
+  padding-top: calc(var(--mantine-spacing-xl) * 2);
+}
+
+.objective-icon {
+  position: absolute;
+  top: -1.33rem;
+  left: calc(50% - 2rem);
+}
+
+.objective-title {
+  font-family:
+    Greycliff CF,
+    var(--mantine-font-family);
+  line-height: 1;
+}
