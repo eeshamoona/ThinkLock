@@ -9,10 +9,7 @@ interface HoldButtonProps {
   folderColor?: string;
 }
 
-const HoldStartButton: React.FC<HoldButtonProps> = ({
-  onSuccess,
-  folderColor,
-}) => {
+const HoldStartButton = ({ onSuccess, folderColor }: HoldButtonProps) => {
   const [countdown, setCountdown] = useState(3);
   const [holding, setHolding] = useState(false);
   const theme = useMantineTheme();
@@ -55,8 +52,8 @@ const HoldStartButton: React.FC<HoldButtonProps> = ({
   return (
     <Button
       variant="subtle"
-      mt={"0.5rem"}
-      mb={"auto"}
+      mt={"auto"}
+      mb={"0"}
       color={colorName}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
