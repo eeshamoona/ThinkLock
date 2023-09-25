@@ -44,6 +44,7 @@ const AppLayout = () => {
             value="plan"
             icon={<IconChecklist size="1.25rem" />}
             className="tab"
+            fw={700}
             onClick={() => changeTab("plan")}
           >
             Plan
@@ -52,6 +53,7 @@ const AppLayout = () => {
             value="study"
             icon={<IconBulb size="1.25rem" />}
             className="tab"
+            fw={700}
             onClick={() => changeTab("study")}
           >
             Study
@@ -60,6 +62,7 @@ const AppLayout = () => {
             value="review"
             icon={<IconCheckbox size="1.25rem" />}
             className="tab"
+            fw={700}
             onClick={() => changeTab("review")}
           >
             Review

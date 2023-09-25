@@ -161,7 +161,7 @@ const StudyOverviewPage = () => {
   return (
     <div className="study-overview-page-container">
       <div className="objective-overview-container">
-        <Text size={24} fw={300} ml={"1rem"} mt={"1rem"}>
+        <Text size={28} fw={600} ml={"1rem"} mt={"1rem"}>
           Welcome Back, Eesha
         </Text>
         <ObjectivesSlideshow />
@@ -175,13 +175,13 @@ const StudyOverviewPage = () => {
             }}
             addSuccessCallback={getThinkSessionsOnDate}
           />
-          <ScrollArea h={"22rem"} offsetScrollbars>
+          <ScrollArea h={"21.5rem"} offsetScrollbars>
             <SimpleGrid
               spacing="sm"
               cols={2}
               p={"1rem"}
               pb={0}
-              breakpoints={[{ maxWidth: "sm", cols: 1 }]}
+              breakpoints={[{ maxWidth: "lg", cols: 1 }]}
             >
               {thinkSessions?.map((thinkSession) => (
                 <ThinkSessionCard
@@ -298,7 +298,6 @@ const StudyOverviewPage = () => {
                           pb={"0.5rem"}
                           className="action-items-scroll-area"
                           bg={getBackgroundColor()}
-                          hidden={selectedThinkSessionActionItems?.length === 0}
                         >
                           <Droppable
                             droppableId={`action-item-think-session-${selectedThinkSession?.id}`}
