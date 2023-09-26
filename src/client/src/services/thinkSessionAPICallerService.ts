@@ -7,7 +7,7 @@ export const addThinkSession = async (
   thinkSession: Pick<
     ThinkSession,
     "thinkfolder_id" | "title" | "location" | "date" | "start_time" | "end_time"
-  >
+  >,
 ): Promise<number | string> =>
   axios
     .post("/thinksessions/create", thinkSession)
@@ -22,7 +22,7 @@ export const getAllThinkSessions = async (): Promise<ThinkSession[] | string> =>
 
 export const getThinkSessionHeatmapData = async (
   thinkFolderId: number,
-  year: number
+  year: number,
 ): Promise<HeatmapDataResponse | string> =>
   axios
     .get(`/heatmap/${thinkFolderId}/${year}`)
@@ -30,7 +30,7 @@ export const getThinkSessionHeatmapData = async (
     .catch((err) => `${err}`);
 
 export const getThinkSessionById = async (
-  thinkSessionId: number
+  thinkSessionId: number,
 ): Promise<ThinkSession | string> =>
   axios
     .get(`/thinksessions/${thinkSessionId}`)
@@ -38,7 +38,7 @@ export const getThinkSessionById = async (
     .catch((err) => `${err}`);
 
 export const getAllThinkSessionsByThinkFolderId = async (
-  thinkFolderId: number
+  thinkFolderId: number,
 ): Promise<ThinkSession[] | string> =>
   axios
     .get(`/thinksessions/all/${thinkFolderId}`)
@@ -47,13 +47,13 @@ export const getAllThinkSessionsByThinkFolderId = async (
       return thinkSessions.sort(
         (a, b) =>
           new Date(a.start_time).getUTCDate() -
-          new Date(b.start_time).getUTCDate()
+          new Date(b.start_time).getUTCDate(),
       );
     })
     .catch((err) => `${err}`);
 
 export const getAllThinkSessionsByDate = async (
-  date: Date
+  date: Date,
 ): Promise<ThinkSession[] | string> => {
   const response = await axios.get(`/thinksessions/all/date/${date}`);
   const thinkSessions: ThinkSession[] = response.data.thinksessions;
@@ -71,11 +71,11 @@ export const getAllThinkSessionsByDate = async (
         thinkfolder_color: thinkFolder.color,
         thinkfolder_icon: thinkFolder.icon,
       };
-    })
+    }),
   );
   thinkSessionsWithFolderInfo.sort(
     (a, b) =>
-      new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
+      new Date(a.start_time).getTime() - new Date(b.start_time).getTime(),
   );
   return thinkSessionsWithFolderInfo;
 };

@@ -16,6 +16,7 @@ import { useModals } from "@mantine/modals";
 import { useMantineTheme } from "@mantine/core";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import "./planOverviewPage.scss";
+import Heatmap from "../../components/heatmap/Heatmap";
 
 enum ModalOptions {
   ThinkSession,
@@ -236,54 +237,70 @@ const PlanOverviewPage = () => {
             </Droppable>
           </Paper>
         </div>
-        <div
-          className={
-            showFolderDetails
-              ? "think-folders-think-session container"
-              : "hidden"
-          }
-        >
-          <div className="think-session-header">
-            <Text size="lg" weight={700}>
-              Think Sessions
-            </Text>
-            <ActionIcon
-              color={
-                hexToColorNameMap[selectedFolder?.color as string] || "gray"
-              }
-              size="lg"
-              variant="light"
-              onClick={() => openModal(ModalOptions.ThinkSession)}
+        {showFolderDetails ? (
+          <div className={"think-folders-think-session container"}>
+            <div className="think-session-header">
+              <Text size="lg" weight={700}>
+                Think Sessions
+              </Text>
+              <ActionIcon
+                color={
+                  hexToColorNameMap[selectedFolder?.color as string] || "gray"
+                }
+                size="lg"
+                variant="light"
+                onClick={() => openModal(ModalOptions.ThinkSession)}
+              >
+                <Plus size="1.75rem" />
+              </ActionIcon>
+            </div>
+            <Paper
+              p="md"
+              className="action-item-list-container"
+              style={{
+                backgroundColor:
+                  theme.colorScheme === "light"
+                    ? `${selectedFolder?.color}11`
+                    : "",
+              }}
             >
-              <Plus size="1.75rem" />
-            </ActionIcon>
+              {thinkSessions?.map((thinkSession) => (
+                <ThinkSessionItem
+                  id={thinkSession.id}
+                  key={thinkSession.id}
+                  title={thinkSession.title}
+                  location={thinkSession.location}
+                  thinkfolderColor={selectedFolder?.color as string}
+                  date={thinkSession.date}
+                  start_time={new Date(thinkSession.start_time)}
+                  end_time={new Date(thinkSession.end_time)}
+                  thinkfolderIcon={selectedFolder?.icon as string}
+                  isDroppable={true}
+                />
+              ))}
+            </Paper>
           </div>
-          <Paper
-            p="md"
-            className="action-item-list-container"
-            style={{
-              backgroundColor:
-                theme.colorScheme === "light"
-                  ? `${selectedFolder?.color}11`
-                  : "",
-            }}
-          >
-            {thinkSessions?.map((thinkSession) => (
-              <ThinkSessionItem
-                id={thinkSession.id}
-                key={thinkSession.id}
-                title={thinkSession.title}
-                location={thinkSession.location}
-                thinkfolderColor={selectedFolder?.color as string}
-                date={thinkSession.date}
-                start_time={new Date(thinkSession.start_time)}
-                end_time={new Date(thinkSession.end_time)}
-                thinkfolderIcon={selectedFolder?.icon as string}
-                isDroppable={true}
-              />
-            ))}
-          </Paper>
-        </div>
+        ) : (
+          <Heatmap
+            heatmapData={[
+              {
+                date: "2023-04-20T00:00:00.000Z",
+                total_hours: 4,
+              },
+              {
+                date: "2023-09-18T00:00:00.000Z",
+                total_hours: 4,
+              },
+              {
+                date: "2023-09-22T00:00:00.000Z",
+                total_hours: 2,
+              },
+            ]}
+            max={4}
+            thinkfolder_id={"1"}
+            thinkfolder_color={"#FF0000"}
+          />
+        )}
       </DragDropContext>
     </div>
   );
