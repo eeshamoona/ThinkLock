@@ -1,6 +1,7 @@
 import dbPromise from "../utils/database";
 import { ThinkSession } from "../models/thinksession.model";
 import { SuccessResponse, FailureResponse } from "../utils/responses";
+import { HeatmapData } from "../models/heatmapdata.model";
 
 export async function getAllThinkSessions(): Promise<
   ThinkSession[] | FailureResponse
@@ -83,4 +84,28 @@ export async function getAllThinkSessionsByDate(
   } catch (error) {
     return new FailureResponse(500, `${error}`);
   }
+}
+
+export async function getThinkSessionHeatMapByYear(
+  year: number,
+  thinkfolder_id: number
+): Promise<HeatmapData[]> {
+  const db = await dbPromise;
+
+  const startDate = `${year}-01-01T00:00:00.000Z`;
+  const endDate = `${year}-12-31T23:59:59.999Z`;
+
+  const query = `
+  SELECT date, SUM(
+    CAST(strftime('%s', end_time) AS REAL) - CAST(strftime('%s', start_time) AS REAL)
+  ) / 3600 AS total_hours
+  FROM thinksession
+  WHERE thinkfolder_id = ? 
+    AND date BETWEEN ? AND ?
+  GROUP BY date`;
+
+  const params = [thinkfolder_id, startDate, endDate];
+  const rows = await db.all<HeatmapData[]>(query, params);
+
+  return rows;
 }

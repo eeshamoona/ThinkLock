@@ -6,8 +6,10 @@ import {
   getThinkSessionById,
   getAllThinkSessionsByThinkFolderId,
   getAllThinkSessionsByDate,
+  getThinkSessionHeatMapByYear,
 } from "../../controllers/thinksession.controller";
 import { ThinkSession } from "../../models/thinksession.model";
+import { HeatmapData } from "../../models/heatmapdata.model";
 
 const thinkSessionsRouter: Router = express.Router();
 
@@ -39,6 +41,25 @@ thinkSessionsRouter.get("/all/:think_folder_id", async (req, res) => {
       res.status(thinksessions.status).send({ error: thinksessions.error });
     } else {
       res.status(200).send({ thinksessions: thinksessions });
+    }
+  } catch (error) {
+    res.status(500).send({ error: `${error}` });
+  }
+});
+
+thinkSessionsRouter.get("/heatmap/:thinkfolder_id/:year", async (req, res) => {
+  try {
+    const heatmapData: HeatmapData[] | FailureResponse =
+      await getThinkSessionHeatMapByYear(
+        parseInt(req.params.year),
+        parseInt(req.params.thinkfolder_id)
+      );
+    if (heatmapData instanceof FailureResponse) {
+      res.status(heatmapData.status).send({ error: heatmapData.error });
+    } else {
+      res.status(200).send({
+        heatmapData: heatmapData,
+      });
     }
   } catch (error) {
     res.status(500).send({ error: `${error}` });
