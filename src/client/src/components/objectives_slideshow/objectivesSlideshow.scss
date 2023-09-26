@@ -1,18 +1,37 @@
 .objective-slide {
   align-self: center;
+  margin-top: 2rem;
 }
 
 .objective-card {
-  margin-left: 1rem;
-  margin-right: 1rem;
-  padding: var(--mantine-spacing-xl);
-  padding-top: calc(var(--mantine-spacing-xl) * 2);
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  padding: 1rem;
+  padding-top: 2.5rem;
+}
+
+.objective-icon-container {
+  position: absolute;
+  top: -1.25rem;
+  left: calc(50% - 2rem);
+  transform: rotate(45deg);
 }
 
 .objective-icon {
-  position: absolute;
-  top: -1.33rem;
-  left: calc(50% - 2rem);
+  transform: rotate(-45deg);
+}
+
+.progress-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.progress {
+  flex: 1;
 }
 
 .objective-title {

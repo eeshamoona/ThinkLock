@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  justify-content: center;
 }
 
 .session-day-picker-container {
@@ -19,14 +20,13 @@
   border-radius: 0.5rem;
   padding: 1rem;
   min-width: 30%;
-  height: fill-available;
+  height: stretch;
 }
 
 .think-session-grid {
   max-height: 18.5rem;
   overflow-y: scroll;
 
-  /* Add left padding to scrollbar */
   &::-webkit-scrollbar-thumb {
     padding-left: 0.5rem;
   }
@@ -48,7 +48,6 @@
 }
 
 .action-items-scroll-area {
-  flex-grow: 1;
   border-radius: 0.5rem;
 }
 
@@ -73,7 +72,6 @@
 
 .think-session-location {
   display: flex;
-  flex-direction: row;
   gap: 0.3rem;
   align-items: center;
   margin: -0.1rem 0 0 -0.1rem;
@@ -84,7 +82,7 @@
 }
 
 .add-action-item-button {
-  background-color: transparent;
+  background: transparent;
   border: 1px dashed var(--tab-selector-color);
   margin: 0 1rem;
 }

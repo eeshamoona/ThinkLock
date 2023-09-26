@@ -161,7 +161,7 @@ const StudyOverviewPage = () => {
   return (
     <div className="study-overview-page-container">
       <div className="objective-overview-container">
-        <Text size={28} fw={600} ml={"1rem"} mt={"1rem"}>
+        <Text size={24} fw={400} m={"1rem"}>
           Welcome Back, Eesha
         </Text>
         <ObjectivesSlideshow />
@@ -293,7 +293,7 @@ const StudyOverviewPage = () => {
                     >
                       <DragDropContext onDragEnd={onDragEnd}>
                         <ScrollArea
-                          h={"15.5rem"}
+                          h={"15rem"}
                           mt={"0.5rem"}
                           pb={"0.5rem"}
                           className="action-items-scroll-area"
