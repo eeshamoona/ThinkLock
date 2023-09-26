@@ -1,11 +1,15 @@
 import chroma from "chroma-js";
 
-export default function generateShades(brightestColor: any, numShade: number) {
-  const colorScale = chroma.scale(["white", brightestColor]).mode("lab");
+export default function generateShades(
+  brightestColor: string,
+  numShades: number,
+  startColor: string,
+) {
+  const colorScale = chroma.scale([startColor, brightestColor]).mode("lab");
   const shades = [];
 
-  for (let i = 0; i < numShade; i++) {
-    const shade = colorScale(i / (numShade - 1)).hex();
+  for (let i = 0; i < numShades; i++) {
+    const shade = colorScale(i / (numShades - 1)).hex();
     shades.push(shade);
   }
 

@@ -284,20 +284,23 @@ const PlanOverviewPage = () => {
           <Heatmap
             heatmapData={[
               {
-                date: "2023-04-20T00:00:00.000Z",
-                total_hours: 4,
+                date: "2023-04-08",
+                total_hours: 3.5,
               },
               {
-                date: "2023-09-18T00:00:00.000Z",
-                total_hours: 4,
+                date: "2023-09-19T00:00:00.000Z",
+                total_hours: 1,
               },
               {
-                date: "2023-09-22T00:00:00.000Z",
-                total_hours: 2,
+                date: "2023-09-25T00:00:00.000Z",
+                total_hours: 9,
+              },
+              {
+                date: "2023-09-26T00:00:00.000Z",
+                total_hours: 4,
               },
             ]}
-            max={4}
-            thinkfolder_id={"1"}
+            max={9}
             thinkfolder_color={"#FF0000"}
           />
         )}

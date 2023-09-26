@@ -1,74 +1,51 @@
 import React from "react";
 import { HeatmapData } from "../../utils/models/heatmapdata.model";
-import { Paper, SimpleGrid, Tooltip } from "@mantine/core";
+import {
+  Button,
+  Paper,
+  SimpleGrid,
+  Stack,
+  Tooltip,
+  useMantineTheme,
+} from "@mantine/core";
 import generateShades from "../../utils/heatmapColors";
 import "./heatmap.scss";
 
 interface HeatmapProps {
   heatmapData: HeatmapData[];
   max: number;
-  thinkfolder_id: string;
+  numOfShades?: number;
   thinkfolder_color: string;
 }
+
+const getDaysInYear = (year: number) => {
+  const date = new Date(year, 0, 1);
+  const days: Date[] = [];
+  while (date.getFullYear() === year) {
+    days.push(new Date(date));
+    date.setDate(date.getDate() + 1);
+  }
+  return days;
+};
 
 const Heatmap = ({
   heatmapData,
   max,
-  thinkfolder_id,
+  numOfShades,
   thinkfolder_color,
 }: HeatmapProps) => {
-  //get color scale given thinkfolder_color
-  const shades = generateShades(thinkfolder_color, 8);
-  function getShade(value: number) {
-    switch (true) {
-      case value <= max * 0.125:
-        return shades[0];
-      case value <= max * 0.25:
-        return shades[1];
-      case value <= max * 0.375:
-        return shades[2];
-      case value <= max * 0.5:
-        return shades[3];
-      case value <= max * 0.625:
-        return shades[4];
-      case value <= max * 0.75:
-        return shades[5];
-      case value <= max * 0.875:
-        return shades[6];
-      case value <= max:
-        return shades[7];
-      default:
-        return shades[0];
-    }
-  }
+  const theme = useMantineTheme();
+  const shadeNumber = numOfShades ?? 8;
+  const backgroundrgba =
+    theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[1];
+  const shades = generateShades(thinkfolder_color, shadeNumber, backgroundrgba);
 
-  // render cells in a simple grid for the year (52 weeks x 7 days)
-
-  //create function to get all the days in the year to loop through
-  const getDaysInYear = (year: number) => {
-    const date = new Date(year, 0, 1);
-    const days: any[] = [];
-    while (date.getFullYear() === year) {
-      //only push if date is in the past
-      if (date < new Date()) {
-        days.push(new Date(date));
-      }
-      date.setDate(date.getDate() + 1);
-    }
-
-    // add count to days based on heatmapData
-    heatmapData.forEach((data) => {
-      const date = new Date(
-        data.date.toString().replace(/-/g, "/").replace(/T.+/, "")
-      );
-      const index = days.findIndex(
-        (day) => day.toISOString() === date.toISOString()
-      );
-      console.log(index);
-      days[index]["total_hours"] = data.total_hours;
-    });
-    return days;
+  const getShade = (hours: number) => {
+    const index = Math.floor((hours / max) * (shadeNumber - 1));
+    return shades[index];
   };
+
+  const days = getDaysInYear(new Date().getFullYear());
 
   return (
     <Paper className="heatmap-container">
@@ -78,28 +55,51 @@ const Heatmap = ({
         spacing={"0"}
         w={"fit-content"}
       >
-        {getDaysInYear(new Date().getFullYear()).map((data, index) => {
-          const formattedDate = new Date(data).toLocaleDateString("en-us", {
+        {days.map((day, index) => {
+          const formattedDate = day.toLocaleDateString("en-us", {
             weekday: "long",
             year: "numeric",
             month: "short",
             day: "numeric",
           });
+          const totalHours = heatmapData.find(
+            (data) =>
+              data.date.split("T")[0] === day.toISOString().split("T")[0]
+          )?.total_hours;
+          const shade = getShade(totalHours ?? 0);
           return (
             <Tooltip
-              label={`${data.total_hours ?? 0} hours on ${formattedDate}`}
+              key={index}
+              label={`${totalHours ?? 0} hours on ${formattedDate}`}
             >
-              <div
+              <Button
                 key={index}
+                variant="default"
                 className="heatmap-cell"
-                style={{
-                  backgroundColor: `${getShade(data.total_hours)}`,
-                }}
-              ></div>
+                style={{ backgroundColor: shade }}
+              ></Button>
             </Tooltip>
           );
         })}
       </SimpleGrid>
+
+      <Stack className="heatmap-legend" spacing={"0"} w={"fit-content"}>
+        {shades.map((shade, index) => {
+          const startHours = Math.floor((index / 8) * max);
+          const endHours = Math.floor(((index + 1) / 8) * max);
+          const label =
+            index === 0 ? `0 hours` : `${startHours} to ${endHours} hours`;
+          return (
+            <Tooltip key={index} label={`${shade} - ${label}`}>
+              <div
+                key={index}
+                className="heatmap-legend-cell"
+                style={{ backgroundColor: shade }}
+              ></div>
+            </Tooltip>
+          );
+        })}
+      </Stack>
     </Paper>
   );
 };
