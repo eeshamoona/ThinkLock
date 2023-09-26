@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ThinkSession } from "../utils/models/thinksession.model";
 import { getThinkFolderById } from "./thinkFolderAPICallerService";
-import { HeatmapData } from "../utils/models/heatmapdata.model";
+import { HeatmapDataResponse } from "../utils/models/heatmapdata.model";
 
 export const addThinkSession = async (
   thinkSession: Pick<
@@ -23,10 +23,10 @@ export const getAllThinkSessions = async (): Promise<ThinkSession[] | string> =>
 export const getThinkSessionHeatmapData = async (
   thinkFolderId: number,
   year: number
-): Promise<HeatmapData[] | string> =>
+): Promise<HeatmapDataResponse | string> =>
   axios
     .get(`/heatmap/${thinkFolderId}/${year}`)
-    .then((response) => response.data.heatmapData)
+    .then((response) => response.data)
     .catch((err) => `${err}`);
 
 export const getThinkSessionById = async (

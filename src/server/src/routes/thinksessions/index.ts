@@ -57,8 +57,16 @@ thinkSessionsRouter.get("/heatmap/:thinkfolder_id/:year", async (req, res) => {
     if (heatmapData instanceof FailureResponse) {
       res.status(heatmapData.status).send({ error: heatmapData.error });
     } else {
+      let maxHours = 0;
+      heatmapData.forEach((entry) => {
+        if (entry.total_hours > maxHours) {
+          maxHours = entry.total_hours;
+        }
+      });
+
       res.status(200).send({
         heatmapData: heatmapData,
+        max_hours: maxHours,
       });
     }
   } catch (error) {
