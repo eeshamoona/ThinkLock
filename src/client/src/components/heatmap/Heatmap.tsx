@@ -49,44 +49,73 @@ const Heatmap = ({
 
   return (
     <Paper className="heatmap-container">
-      <SimpleGrid
-        cols={7}
-        className="heatmap-grid"
+      <div className="heatmap">
+        <div className="days">
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+            <div key={day} className="heatmap-label">
+              {day}
+            </div>
+          ))}
+        </div>
+
+        <div className="heatmap-and-month-container">
+          <div className="months">
+            {Array.from({ length: 12 }, (_, i) => {
+              const date = new Date(0);
+              date.setUTCMonth(i + 1);
+              return date.toLocaleString("default", { month: "short" });
+            }).map((month) => (
+              <div key={month} className="heatmap-label">
+                {month}
+              </div>
+            ))}
+          </div>
+
+          <SimpleGrid
+            cols={7}
+            className="heatmap-grid"
+            spacing={"0"}
+            pl={"0.3rem"}
+            w={"fit-content"}
+          >
+            {days.map((day, index) => {
+              const formattedDate = day.toLocaleDateString("en-us", {
+                weekday: "short",
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              });
+              const totalHours = heatmapData.find(
+                (data) =>
+                  data.date.split("T")[0] === day.toISOString().split("T")[0]
+              )?.total_hours;
+              const shade = getShade(totalHours ?? 0);
+              return (
+                <Tooltip
+                  key={index}
+                  label={`${totalHours ?? 0} hours on ${formattedDate}`}
+                >
+                  <Button
+                    key={index}
+                    variant="default"
+                    className="heatmap-cell"
+                    style={{ backgroundColor: shade }}
+                  ></Button>
+                </Tooltip>
+              );
+            })}
+          </SimpleGrid>
+        </div>
+      </div>
+      <Stack
+        className="heatmap-legend"
         spacing={"0"}
         w={"fit-content"}
+        mt="0.8rem"
       >
-        {days.map((day, index) => {
-          const formattedDate = day.toLocaleDateString("en-us", {
-            weekday: "long",
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          });
-          const totalHours = heatmapData.find(
-            (data) =>
-              data.date.split("T")[0] === day.toISOString().split("T")[0]
-          )?.total_hours;
-          const shade = getShade(totalHours ?? 0);
-          return (
-            <Tooltip
-              key={index}
-              label={`${totalHours ?? 0} hours on ${formattedDate}`}
-            >
-              <Button
-                key={index}
-                variant="default"
-                className="heatmap-cell"
-                style={{ backgroundColor: shade }}
-              ></Button>
-            </Tooltip>
-          );
-        })}
-      </SimpleGrid>
-
-      <Stack className="heatmap-legend" spacing={"0"} w={"fit-content"}>
         {shades.map((shade, index) => {
-          const startHours = Math.floor((index / 8) * max);
-          const endHours = Math.floor(((index + 1) / 8) * max);
+          const startHours = Math.floor((index / shadeNumber) * max);
+          const endHours = Math.floor(((index + 1) / shadeNumber) * max);
           const label =
             index === 0 ? `0 hours` : `${startHours} to ${endHours} hours`;
           return (
@@ -103,5 +132,4 @@ const Heatmap = ({
     </Paper>
   );
 };
-
 export default Heatmap;
