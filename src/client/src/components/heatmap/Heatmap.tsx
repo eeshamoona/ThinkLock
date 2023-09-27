@@ -52,7 +52,7 @@ const Heatmap = ({
       <div className="heatmap">
         <div className="days">
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-            <div key={day} className="heatmap-label">
+            <div key={day} className="heatmap-day-label">
               {day}
             </div>
           ))}
@@ -65,7 +65,7 @@ const Heatmap = ({
               date.setUTCMonth(i + 1);
               return date.toLocaleString("default", { month: "short" });
             }).map((month) => (
-              <div key={month} className="heatmap-label">
+              <div key={month} className="heatmap-month-label">
                 {month}
               </div>
             ))}
@@ -119,7 +119,7 @@ const Heatmap = ({
           const label =
             index === 0 ? `0 hours` : `${startHours} to ${endHours} hours`;
           return (
-            <Tooltip key={index} label={`${shade} - ${label}`}>
+            <Tooltip key={index} label={`${label}`}>
               <div
                 key={index}
                 className="heatmap-legend-cell"
