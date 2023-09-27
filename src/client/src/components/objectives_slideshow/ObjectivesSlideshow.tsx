@@ -1,7 +1,14 @@
 import React from "react";
 import { Carousel } from "@mantine/carousel";
 import { Paper, ThemeIcon, Progress, Text, ActionIcon } from "@mantine/core";
-import { IconSwimming } from "@tabler/icons-react";
+import { RiLightbulbFlashFill } from "react-icons/ri";
+import {
+  TbHexagonNumber1,
+  TbHexagonNumber2,
+  TbHexagonNumber3,
+  TbHexagonNumber4,
+  TbHexagonNumber5,
+} from "react-icons/tb";
 import "./objectivesSlideshow.scss";
 
 interface ObjectiveSlideProps {
@@ -14,7 +21,7 @@ const ObjectiveSlide = ({ title, subtitle, progress }: ObjectiveSlideProps) => {
   return (
     <Paper radius="md" className={"objective-card"}>
       <ThemeIcon className={"objective-icon-container"} size={"2.5rem"}>
-        <IconSwimming stroke={1.5} className="objective-icon" />
+        <RiLightbulbFlashFill className="objective-icon" />
       </ThemeIcon>
 
       <Text ta="center" fw={700} className={"objective-title"}>
@@ -25,11 +32,11 @@ const ObjectiveSlide = ({ title, subtitle, progress }: ObjectiveSlideProps) => {
       </Text>
       <div className="progress-container">
         <ActionIcon>
-          <IconSwimming className="current-level-icon" />
+          <TbHexagonNumber2 className="current-level-icon" />
         </ActionIcon>
         <Progress value={progress} className="progress" />
         <ActionIcon>
-          <IconSwimming className="next-level=icon" />
+          <TbHexagonNumber3 className="next-level-icon" />
         </ActionIcon>
       </div>
     </Paper>

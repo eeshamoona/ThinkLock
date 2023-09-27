@@ -17,8 +17,15 @@
   transform: rotate(45deg);
 }
 
+.current-level-icon {
+  font-size: 1.5rem;
+}
+.next-level-icon {
+  font-size: 1.5rem;
+}
 .objective-icon {
   transform: rotate(-45deg);
+  font-size: 1.5rem;
 }
 
 .progress-container {

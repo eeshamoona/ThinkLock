@@ -10,6 +10,7 @@ import {
 } from "@mantine/core";
 import generateShades from "../../utils/heatmapColors";
 import "./heatmap.scss";
+import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 
 interface HeatmapProps {
   heatmapData: HeatmapData[];
@@ -36,9 +37,18 @@ const Heatmap = ({
 }: HeatmapProps) => {
   const theme = useMantineTheme();
   const shadeNumber = numOfShades ?? 8;
+  const colorName = hexToColorNameMap[thinkfolder_color];
+  const expandedThinkFolderColor =
+    theme.colorScheme === "dark" && colorName === "dark"
+      ? "#FFFFFF"
+      : `${thinkfolder_color}`;
   const backgroundrgba =
     theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[1];
-  const shades = generateShades(thinkfolder_color, shadeNumber, backgroundrgba);
+  const shades = generateShades(
+    expandedThinkFolderColor,
+    shadeNumber,
+    backgroundrgba
+  );
 
   const getShade = (hours: number) => {
     const index = Math.floor((hours / max) * (shadeNumber - 1));

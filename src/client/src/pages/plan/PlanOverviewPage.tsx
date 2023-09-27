@@ -4,7 +4,6 @@ import { ThinkFolder } from "../../utils/models/thinkfolder.model";
 import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
 import { ActionIcon, Paper, Text } from "@mantine/core";
 import { ArrowLeft, Plus } from "tabler-icons-react";
-import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 import ActionItemCard from "../../components/action_item/ActionItemCard";
 import { getActionItemsWithNullThinkSessionId } from "../../services/actionItemAPICallerService";
 import {
@@ -21,6 +20,7 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import "./planOverviewPage.scss";
 import Heatmap from "../../components/heatmap/Heatmap";
 import { HeatmapData } from "../../utils/models/heatmapdata.model";
+import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 
 enum ModalOptions {
   ThinkSession,
@@ -35,87 +35,29 @@ const PlanOverviewPage = () => {
   const [showFolderDetails, setShowFolderDetails] = useState<boolean>(false);
   const [actionItems, setActionItems] = useState<any[]>([]);
   const [thinkSessions, setThinkSessions] = useState<any[]>([]);
-  const [heatmapData, setHeatmapData] = useState<HeatmapData[]>([]);
-  const [heatmapMax, setHeatmapMax] = useState<number>(0);
+  const [heatmapData, setHeatmapData] = useState<{
+    [folderId: string]: HeatmapData[];
+  }>({});
+  const [heatmapMax, setHeatmapMax] = useState<{ [folderId: string]: number }>(
+    {}
+  );
   const modals = useModals();
   const theme = useMantineTheme();
 
-  const handleFolderClick = (folder: ThinkFolder) => {
+  const handleFolderClick = useCallback((folder: ThinkFolder) => {
     setSelectedFolder(folder);
     setShowFolderDetails(true);
-  };
+  }, []);
 
-  const handleFolderHover = (folder: ThinkFolder) => {
+  const handleFolderHover = useCallback((folder: ThinkFolder) => {
     setSelectedFolder(folder);
     setShowFolderDetails(false);
-    getThinkSessionHeatmapData(folder.id, 2023).then((res) => {
-      if (typeof res !== "string") {
-        setHeatmapData(res.heatmapData as HeatmapData[]);
-        setHeatmapMax(res.max_hours as number);
-      }
-    });
-  };
+  }, []);
 
-  const handleBackClick = () => {
+  const handleBackClick = useCallback(() => {
     setSelectedFolder(null);
     setShowFolderDetails(false);
-  };
-
-  const openModal = (content: ModalOptions) => {
-    modals.openModal({
-      title: (
-        <div>
-          <Text size="lg" weight={700}>
-            {content === ModalOptions.ThinkSession
-              ? "Add Think Session"
-              : "Add Action Item"}
-          </Text>
-        </div>
-      ),
-      children: (
-        <>
-          {content === ModalOptions.ThinkSession ? (
-            selectedFolder ? (
-              <AddThinkSessionModal
-                thinkFolderId={selectedFolder.id.toString()}
-                successCallback={refreshThinkSessions}
-              />
-            ) : (
-              <AddThinkSessionModal />
-            )
-          ) : selectedFolder ? (
-            <AddActionItemModal
-              thinkFolderId={selectedFolder.id.toString()}
-              successCallback={refreshActionItems}
-            />
-          ) : (
-            <AddActionItemModal />
-          )}
-        </>
-      ),
-      sx: { borderRadius: "1rem" },
-      size: content === ModalOptions.ThinkSession ? "md" : "lg",
-    });
-  };
-
-  const onDragEnd = async (result: any) => {
-    if (!result.destination) return; // Drop outside of droppable area
-
-    const destination = result.destination.droppableId.split("-")[3];
-    const source = result.source.droppableId.split("-")[3];
-    const actionItemId = result.draggableId.split("-")[3];
-
-    if (destination === source) return; // No change in order
-
-    // Temporarily remove action item from list
-    const newActionItems = actionItems.filter(
-      (actionItem) => actionItem.id !== parseInt(actionItemId)
-    );
-
-    setActionItems(newActionItems);
-    await updateActionItem(actionItemId, { thinksession_id: destination });
-    await refreshActionItems();
-  };
+  }, []);
 
   const refreshActionItems = useCallback(async () => {
     if (!selectedFolder) return;
@@ -150,6 +92,86 @@ const PlanOverviewPage = () => {
     };
     fetchData();
   }, [selectedFolder, refreshActionItems, refreshThinkSessions]);
+
+  useEffect(() => {
+    //Get all heatmap data and save it to state
+    folders.forEach((folder) => {
+      getThinkSessionHeatmapData(folder.id, 2023).then((res) => {
+        if (typeof res !== "string") {
+          setHeatmapData((prevState) => ({
+            ...prevState,
+            [folder.id]: res.heatmapData as HeatmapData[],
+          }));
+          setHeatmapMax((prevState) => ({
+            ...prevState,
+            [folder.id]: res.max_hours as number,
+          }));
+        }
+      });
+    });
+  }, [folders]);
+
+  const openModal = useCallback(
+    (content: ModalOptions) => {
+      modals.openModal({
+        title: (
+          <div>
+            <Text size="lg" weight={700}>
+              {content === ModalOptions.ThinkSession
+                ? "Add Think Session"
+                : "Add Action Item"}
+            </Text>
+          </div>
+        ),
+        children: (
+          <>
+            {content === ModalOptions.ThinkSession ? (
+              selectedFolder ? (
+                <AddThinkSessionModal
+                  thinkFolderId={selectedFolder.id.toString()}
+                  successCallback={refreshThinkSessions}
+                />
+              ) : (
+                <AddThinkSessionModal />
+              )
+            ) : selectedFolder ? (
+              <AddActionItemModal
+                thinkFolderId={selectedFolder.id.toString()}
+                successCallback={refreshActionItems}
+              />
+            ) : (
+              <AddActionItemModal />
+            )}
+          </>
+        ),
+        sx: { borderRadius: "1rem" },
+        size: content === ModalOptions.ThinkSession ? "md" : "lg",
+      });
+    },
+    [modals, refreshActionItems, refreshThinkSessions, selectedFolder]
+  );
+
+  const onDragEnd = useCallback(
+    async (result: any) => {
+      if (!result.destination) return; // Drop outside of droppable area
+
+      const destination = result.destination.droppableId.split("-")[3];
+      const source = result.source.droppableId.split("-")[3];
+      const actionItemId = result.draggableId.split("-")[3];
+
+      if (destination === source) return; // No change in order
+
+      // Temporarily remove action item from list
+      const newActionItems = actionItems.filter(
+        (actionItem) => actionItem.id !== parseInt(actionItemId)
+      );
+
+      setActionItems(newActionItems);
+      await updateActionItem(actionItemId, { thinksession_id: destination });
+      await refreshActionItems();
+    },
+    [actionItems, refreshActionItems]
+  );
 
   return (
     <div className="plan-page-container">
@@ -301,11 +323,14 @@ const PlanOverviewPage = () => {
             </Paper>
           </div>
         ) : (
-          <Heatmap
-            heatmapData={heatmapData}
-            max={heatmapMax}
-            thinkfolder_color={selectedFolder ? selectedFolder.color : "red"}
-          />
+          selectedFolder && (
+            <Heatmap
+              numOfShades={6}
+              heatmapData={heatmapData[selectedFolder.id] || []}
+              max={heatmapMax[selectedFolder.id] || 0}
+              thinkfolder_color={selectedFolder ? selectedFolder.color : "red"}
+            />
+          )
         )}
       </DragDropContext>
     </div>
