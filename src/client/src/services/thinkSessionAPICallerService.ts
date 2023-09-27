@@ -25,7 +25,7 @@ export const getThinkSessionHeatmapData = async (
   year: number,
 ): Promise<HeatmapDataResponse | string> =>
   axios
-    .get(`/heatmap/${thinkFolderId}/${year}`)
+    .get(`/thinksessions/heatmap/${thinkFolderId}/${year}`)
     .then((response) => response.data)
     .catch((err) => `${err}`);
 

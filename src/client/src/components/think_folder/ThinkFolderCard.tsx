@@ -12,6 +12,7 @@ interface ThinkFolderProps {
   folderIcon: string;
   onClick?: any;
   hoverActive?: boolean;
+  onHover?: any;
 }
 
 const ThinkFolderCard = ({
@@ -21,6 +22,7 @@ const ThinkFolderCard = ({
   folderIcon,
   onClick,
   hoverActive,
+  onHover,
 }: ThinkFolderProps) => {
   const getColorFromHex = () => {
     if (folderColor) {
@@ -38,6 +40,9 @@ const ThinkFolderCard = ({
   }, [folderColor, hoverActive, hoverColor]);
 
   const handleMouseEnter = () => {
+    if (onHover) {
+      onHover();
+    }
     if (hoverActive) {
       if (folderColor) {
         document.documentElement.style.setProperty(

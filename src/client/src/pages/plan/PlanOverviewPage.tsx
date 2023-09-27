@@ -7,7 +7,10 @@ import { ArrowLeft, Plus } from "tabler-icons-react";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 import ActionItemCard from "../../components/action_item/ActionItemCard";
 import { getActionItemsWithNullThinkSessionId } from "../../services/actionItemAPICallerService";
-import { getAllThinkSessionsByThinkFolderId } from "../../services/thinkSessionAPICallerService";
+import {
+  getAllThinkSessionsByThinkFolderId,
+  getThinkSessionHeatmapData,
+} from "../../services/thinkSessionAPICallerService";
 import { updateActionItem } from "../../services/actionItemAPICallerService";
 import ThinkSessionItem from "../../components/think_session/ThinkSessionItem";
 import AddThinkSessionModal from "../../components/add_think_session_modal/AddThinkSessionModal";
@@ -17,6 +20,7 @@ import { useMantineTheme } from "@mantine/core";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import "./planOverviewPage.scss";
 import Heatmap from "../../components/heatmap/Heatmap";
+import { HeatmapData } from "../../utils/models/heatmapdata.model";
 
 enum ModalOptions {
   ThinkSession,
@@ -31,12 +35,25 @@ const PlanOverviewPage = () => {
   const [showFolderDetails, setShowFolderDetails] = useState<boolean>(false);
   const [actionItems, setActionItems] = useState<any[]>([]);
   const [thinkSessions, setThinkSessions] = useState<any[]>([]);
+  const [heatmapData, setHeatmapData] = useState<HeatmapData[]>([]);
+  const [heatmapMax, setHeatmapMax] = useState<number>(0);
   const modals = useModals();
   const theme = useMantineTheme();
 
   const handleFolderClick = (folder: ThinkFolder) => {
     setSelectedFolder(folder);
     setShowFolderDetails(true);
+  };
+
+  const handleFolderHover = (folder: ThinkFolder) => {
+    setSelectedFolder(folder);
+    setShowFolderDetails(false);
+    getThinkSessionHeatmapData(folder.id, 2023).then((res) => {
+      if (typeof res !== "string") {
+        setHeatmapData(res.heatmapData as HeatmapData[]);
+        setHeatmapMax(res.max_hours as number);
+      }
+    });
   };
 
   const handleBackClick = () => {
@@ -171,6 +188,9 @@ const PlanOverviewPage = () => {
                 folderIcon={folder.icon}
                 onClick={() => handleFolderClick(folder)}
                 hoverActive={true}
+                onHover={() => {
+                  handleFolderHover(folder);
+                }}
               />
             ))}
           </Paper>
@@ -282,26 +302,9 @@ const PlanOverviewPage = () => {
           </div>
         ) : (
           <Heatmap
-            heatmapData={[
-              {
-                date: "2023-04-08",
-                total_hours: 3.5,
-              },
-              {
-                date: "2023-09-19T00:00:00.000Z",
-                total_hours: 1,
-              },
-              {
-                date: "2023-09-25T00:00:00.000Z",
-                total_hours: 9,
-              },
-              {
-                date: "2023-09-26T00:00:00.000Z",
-                total_hours: 4,
-              },
-            ]}
-            max={9}
-            thinkfolder_color={"#FF0000"}
+            heatmapData={heatmapData}
+            max={heatmapMax}
+            thinkfolder_color={selectedFolder ? selectedFolder.color : "red"}
           />
         )}
       </DragDropContext>
