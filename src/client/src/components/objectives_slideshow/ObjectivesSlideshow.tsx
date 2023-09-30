@@ -2,13 +2,7 @@ import React from "react";
 import { Carousel } from "@mantine/carousel";
 import { Paper, ThemeIcon, Progress, Text, ActionIcon } from "@mantine/core";
 import { RiLightbulbFlashFill } from "react-icons/ri";
-import {
-  TbHexagonNumber1,
-  TbHexagonNumber2,
-  TbHexagonNumber3,
-  TbHexagonNumber4,
-  TbHexagonNumber5,
-} from "react-icons/tb";
+import { TbHexagonNumber2, TbHexagonNumber3 } from "react-icons/tb";
 import "./objectivesSlideshow.scss";
 
 interface ObjectiveSlideProps {

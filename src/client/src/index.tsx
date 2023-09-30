@@ -11,6 +11,8 @@ import {
   ColorScheme,
 } from "@mantine/core";
 import { useHotkeys, useLocalStorage } from "@mantine/hooks";
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

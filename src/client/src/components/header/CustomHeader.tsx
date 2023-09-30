@@ -20,7 +20,7 @@ import {
 import AddButton from "../add_button/AddButton";
 
 interface HeaderProps {
-  changeTabCallback: (tab: string) => void;
+  changeTabCallback?: (tab: string) => void;
 }
 
 const Header = ({ changeTabCallback }: HeaderProps) => {

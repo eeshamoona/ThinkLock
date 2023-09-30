@@ -22,7 +22,7 @@ enum AddOptions {
 }
 
 interface AddButtonProps {
-  changeTabCallback: (tab: string) => void;
+  changeTabCallback?: (tab: string) => void;
 }
 
 const AddButton = ({ changeTabCallback }: AddButtonProps) => {
@@ -30,23 +30,31 @@ const AddButton = ({ changeTabCallback }: AddButtonProps) => {
   const theme = useMantineTheme();
 
   const openAddThinkSessionModal = () => {
-    changeTabCallback("study");
-    openModal(AddOptions.ThinkSession);
+    if (changeTabCallback) {
+      changeTabCallback("study");
+      openModal(AddOptions.ThinkSession);
+    }
   };
 
   const openAddReviewSetModal = () => {
-    changeTabCallback("review");
-    openModal(AddOptions.ReviewSet);
+    if (changeTabCallback) {
+      changeTabCallback("review");
+      openModal(AddOptions.ReviewSet);
+    }
   };
 
   const openAddThinkFolderModel = () => {
-    changeTabCallback("plan");
-    openModal(AddOptions.ThinkFolder);
+    if (changeTabCallback) {
+      changeTabCallback("plan");
+      openModal(AddOptions.ThinkFolder);
+    }
   };
 
   const openAddActionItemModal = () => {
-    changeTabCallback("plan");
-    openModal(AddOptions.ActionItem);
+    if (changeTabCallback) {
+      changeTabCallback("plan");
+      openModal(AddOptions.ActionItem);
+    }
   };
 
   const getModalContent = (modalContent: AddOptions | null) => {
