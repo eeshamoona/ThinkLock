@@ -6,6 +6,7 @@ import {
   Menu,
   Text,
   Button,
+  Space,
 } from "@mantine/core";
 import GridLayout from "react-grid-layout";
 import CustomHeader from "../../components/header/CustomHeader";
@@ -17,6 +18,7 @@ import {
   IconSearch,
   IconArrowsLeftRight,
   IconTrash,
+  IconLayoutGridAdd,
 } from "@tabler/icons-react";
 import "./studyboardpage.scss";
 
@@ -24,7 +26,7 @@ const StudyBoardPage = () => {
   const [layout, setLayout] = useState<GridLayout.Layout[]>([
     {
       w: 3,
-      h: 20,
+      h: 16,
       x: 0,
       y: 0,
       i: "a",
@@ -32,7 +34,7 @@ const StudyBoardPage = () => {
       static: false,
     },
     {
-      w: 4,
+      w: 7,
       h: 9,
       x: 3,
       y: 0,
@@ -41,8 +43,8 @@ const StudyBoardPage = () => {
       static: false,
     },
     {
-      w: 4,
-      h: 8,
+      w: 7,
+      h: 7,
       x: 3,
       y: 9,
       i: "c",
@@ -51,8 +53,8 @@ const StudyBoardPage = () => {
     },
     {
       w: 2,
-      h: 3,
-      x: 7,
+      h: 1,
+      x: 10,
       y: 0,
       i: "d",
       moved: false,
@@ -61,6 +63,7 @@ const StudyBoardPage = () => {
   ]);
 
   const theme = useMantineTheme();
+  const screenWidth = window.innerWidth;
 
   return (
     <div
@@ -80,12 +83,12 @@ const StudyBoardPage = () => {
         className="studyboard-layout"
         layout={layout}
         cols={12}
-        rowHeight={30}
-        width={1405}
-        style={{ zIndex: "0" }}
+        rowHeight={39}
+        containerPadding={[8, 8]}
+        width={screenWidth}
         onLayoutChange={(layout) => setLayout(layout)}
       >
-        <Card key="a">
+        <Card key="a" className="grid-item-container">
           <Prism
             colorScheme={theme.colorScheme}
             language="json"
@@ -95,40 +98,51 @@ const StudyBoardPage = () => {
             {JSON.stringify(layout, null, 2)}
           </Prism>
         </Card>
-        <Card key="b">Something A</Card>
-        <Card key="c">Something B</Card>
-        <Card key="d" style={{ zIndex: "-1" }}>
-          <Menu shadow="md" width={200}>
+        <Card key="b" className="grid-item-container">
+          Something A
+        </Card>
+        <Card key="c" className="grid-item-container">
+          Something B
+        </Card>
+        <Card key="d" className="grid-item-container">
+          <Menu shadow="md" trigger="hover" openDelay={100} closeDelay={400}>
             <Menu.Target>
-              <Button>Toggle menu</Button>
+              <Button fullWidth h={"100%"}>
+                <IconLayoutGridAdd size={"1rem"} />
+                {layout.find((item) => item.i === "d" && item.w > 1) ? (
+                  <>
+                    <Space w={"0.5rem"} />
+                    <Text>Add Widget</Text>
+                  </>
+                ) : (
+                  ""
+                )}
+              </Button>
             </Menu.Target>
 
-            <Menu.Dropdown>
-              <Menu.Label>Application</Menu.Label>
-              <Menu.Item icon={<IconSettings size={14} />}>Settings</Menu.Item>
+            <Menu.Dropdown
+              style={{
+                position: "fixed",
+              }}
+            >
+              <Menu.Label>Study Widgets</Menu.Label>
+              <Menu.Item icon={<IconSettings size={14} />}>
+                Flashcards
+              </Menu.Item>
               <Menu.Item icon={<IconMessageCircle size={14} />}>
-                Messages
+                Notes
               </Menu.Item>
-              <Menu.Item icon={<IconPhoto size={14} />}>Gallery</Menu.Item>
-              <Menu.Item
-                icon={<IconSearch size={14} />}
-                rightSection={
-                  <Text size="xs" variant="outline">
-                    ⌘K
-                  </Text>
-                }
-              >
-                Search
-              </Menu.Item>
+              <Menu.Item icon={<IconPhoto size={14} />}>PDF</Menu.Item>
+              <Menu.Item icon={<IconSearch size={14} />}>Timer</Menu.Item>
 
               <Menu.Divider />
 
-              <Menu.Label>Danger zone</Menu.Label>
+              <Menu.Label>Extra Widgets</Menu.Label>
               <Menu.Item icon={<IconArrowsLeftRight size={14} />}>
-                Transfer my data
+                Video Player
               </Menu.Item>
-              <Menu.Item color="red" icon={<IconTrash size={14} />}>
-                Delete my account
+              <Menu.Item icon={<IconTrash size={14} />}>
+                Code Playground
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
