@@ -1,4 +1,30 @@
 .grid-item-container {
   padding: 0;
   overflow: scroll;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-item-drag-handle {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  flex: none;
+}
+
+.grid-item-content {
+  flex: auto;
+  overflow-y: auto;
+}
+
+.action-item-container {
+  height: 100%;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+//Found svg filter for lightening the resize handle: https://codepen.io/sosuke/pen/Pjoqqp
+.react-resizable-handle {
+  filter: invert(63%) sepia(9%) saturate(136%) hue-rotate(182deg)
+    brightness(91%) contrast(85%);
 }
