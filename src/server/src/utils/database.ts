@@ -52,9 +52,25 @@ const dbPromise = (async (): Promise<Database> => {
         duration INTEGER,
         notes TEXT,
         summary TEXT,
+        layout TEXT,
         FOREIGN KEY (thinkfolder_id) REFERENCES thinkfolder(id)
     )`);
     loggerInstance.success("Table created: thinksession");
+
+    await db.run(`CREATE TABLE IF NOT EXISTS notesWidget (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        thinksession_id INTEGER NOT NULL,
+        note TEXT NOT NULL,
+        FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
+    )`);
+    loggerInstance.success("Table created: notes");
+
+    await db.run(`CREATE TABLE IF NOT EXISTS flashcardsWidget(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        thinksession_id INTEGER NOT NULL,
+        flashcards TEXT NOT NULL,
+        FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
+    )`);
 
     return db;
   } catch (error) {

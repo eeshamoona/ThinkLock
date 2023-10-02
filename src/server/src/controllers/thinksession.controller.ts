@@ -109,3 +109,87 @@ export async function getThinkSessionHeatMapByYear(
 
   return rows;
 }
+
+export async function updateThinkSession(
+  id: number,
+  request: Partial<ThinkSession>
+): Promise<SuccessResponse | FailureResponse> {
+  try {
+    const db = await dbPromise;
+    const {
+      thinkfolder_id,
+      title,
+      location,
+      date,
+      start_time,
+      end_time,
+      duration,
+      notes,
+      summary,
+      layout,
+    } = request;
+    const params = [];
+    let query = "UPDATE thinksession SET ";
+
+    if (thinkfolder_id !== undefined) {
+      query += "thinkfolder_id = ?, ";
+      params.push(thinkfolder_id);
+    }
+
+    if (title !== undefined) {
+      query += "title = ?, ";
+      params.push(title);
+    }
+
+    if (location !== undefined) {
+      query += "location = ?, ";
+      params.push(location);
+    }
+
+    if (date !== undefined) {
+      query += "date = ?, ";
+      params.push(date);
+    }
+
+    if (start_time !== undefined) {
+      query += "start_time = ?, ";
+      params.push(start_time);
+    }
+
+    if (end_time !== undefined) {
+      query += "end_time = ?, ";
+      params.push(end_time);
+    }
+
+    if (duration !== undefined) {
+      query += "duration = ?, ";
+      params.push(duration);
+    }
+
+    if (notes !== undefined) {
+      query += "notes = ?, ";
+      params.push(notes);
+    }
+
+    if (summary !== undefined) {
+      query += "summary = ?, ";
+      params.push(summary);
+    }
+
+    if (layout !== undefined) {
+      query += "layout = ?, ";
+      params.push(layout);
+    }
+
+    query = query.slice(0, -2);
+
+    query += " WHERE id = ?";
+    params.push(id);
+
+    await db.run(query, params);
+
+    return new SuccessResponse(200, `thinksession ${id} updated`);
+  } catch (error) {
+    return new FailureResponse(500, `${error}`);
+  }
+}

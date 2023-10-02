@@ -34,7 +34,7 @@ const StudyBoardPage = () => {
       h: 3,
       x: 0,
       y: 0,
-      i: "a",
+      i: "code-2",
       moved: false,
       static: false,
     },
@@ -43,7 +43,7 @@ const StudyBoardPage = () => {
       h: 13,
       x: 0,
       y: 3,
-      i: "b",
+      i: "notes-3",
       moved: false,
       static: false,
     },
@@ -52,7 +52,7 @@ const StudyBoardPage = () => {
       h: 13,
       x: 4,
       y: 3,
-      i: "c",
+      i: "flashcards-2",
       moved: false,
       static: false,
     },
@@ -61,7 +61,7 @@ const StudyBoardPage = () => {
       h: 1,
       x: 9,
       y: 3,
-      i: "d",
+      i: "add-widget-1",
       moved: false,
       static: false,
     },
@@ -70,7 +70,7 @@ const StudyBoardPage = () => {
       h: 6,
       x: 9,
       y: 4,
-      i: "e",
+      i: "action-items-1",
       moved: false,
       static: false,
     },
@@ -103,10 +103,12 @@ const StudyBoardPage = () => {
         width={screenWidth}
         onLayoutChange={(layout) => setLayout(layout)}
       >
-        <Card key="a" className="grid-item-container">
+        <Card key="code-2" className="grid-item-container">
           <ActionIcon
             c="dimmed"
             className=" grid-item-drag grid-item-drag-handle"
+            onDoubleClickCapture={() => console.log("Code Actions Opened")}
+            onBlur={() => console.log("Mouse Left")}
           >
             <IconEqual />
           </ActionIcon>
@@ -120,7 +122,7 @@ const StudyBoardPage = () => {
             {JSON.stringify(layout, null, 2)}
           </Prism>
         </Card>
-        <Card key="b" className="grid-item-container">
+        <Card key="notes-3" className="grid-item-container">
           <ActionIcon
             c="dimmed"
             className=" grid-item-drag grid-item-drag-handle"
@@ -131,7 +133,7 @@ const StudyBoardPage = () => {
             <Text>Notes Section</Text>
           </div>
         </Card>
-        <Card key="c" className="grid-item-container">
+        <Card key="flashcards-2" className="grid-item-container">
           <ActionIcon
             c="dimmed"
             className=" grid-item-drag grid-item-drag-handle"
@@ -142,7 +144,10 @@ const StudyBoardPage = () => {
             <Text>Flashcard Section</Text>
           </div>
         </Card>
-        <Card key="d" className=" grid-item-drag grid-item-container">
+        <Card
+          key="add-widget-1"
+          className=" grid-item-drag grid-item-container"
+        >
           <Menu shadow="md" trigger="hover" openDelay={100} closeDelay={400}>
             <Menu.Target>
               <Button fullWidth h={"100%"}>
@@ -181,7 +186,7 @@ const StudyBoardPage = () => {
             </Menu.Dropdown>
           </Menu>
         </Card>
-        <Card key="e" className="grid-item-container">
+        <Card key="action-items-1" className="grid-item-container">
           <ActionIcon
             c="dimmed"
             className="grid-item-drag grid-item-drag-handle"

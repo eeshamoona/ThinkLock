@@ -9,4 +9,5 @@ export class ThinkSession {
   location!: string;
   notes?: string;
   summary?: string;
+  layout?: any[];
 }

@@ -5,6 +5,7 @@ import thinkSessionsRouter from "./routes/thinksessions";
 import { Logger } from "./utils/logger";
 import dbPromise from "./utils/database";
 import { Router } from "express";
+import widgetsRouter from "./routes/widgets";
 
 const app: Express = express();
 
@@ -19,6 +20,7 @@ app.get("/", (req: Request, res: Response) => {
   app.use("/thinkfolders", router);
   app.use("/actionitems", actionItemsRouter);
   app.use("/thinksessions", thinkSessionsRouter);
+  app.use("/widgets", widgetsRouter);
 })();
 
 export default app;

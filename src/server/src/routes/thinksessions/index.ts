@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { FailureResponse } from "../../utils/responses";
+import { FailureResponse, SuccessResponse } from "../../utils/responses";
 import {
   createThinkSession,
   getAllThinkSessions,
@@ -7,6 +7,7 @@ import {
   getAllThinkSessionsByThinkFolderId,
   getAllThinkSessionsByDate,
   getThinkSessionHeatMapByYear,
+  updateThinkSession,
 } from "../../controllers/thinksession.controller";
 import { ThinkSession } from "../../models/thinksession.model";
 import { HeatmapData } from "../../models/heatmapdata.model";
@@ -112,6 +113,20 @@ thinkSessionsRouter.post("/create", async (req, res) => {
       res.status(thinksession_id.status).send({ error: thinksession_id.error });
     } else {
       res.status(200).send({ thinksession_id: thinksession_id });
+    }
+  } catch (error) {
+    res.status(500).send({ error: `${error}` });
+  }
+});
+
+thinkSessionsRouter.put("/update/:id", async (req, res) => {
+  try {
+    const thinkSessionId: SuccessResponse | FailureResponse =
+      await updateThinkSession(parseInt(req.params.id), req.body);
+    if (thinkSessionId instanceof FailureResponse) {
+      res.status(thinkSessionId.status).send({ error: thinkSessionId.error });
+    } else {
+      res.status(200).send({ response: thinkSessionId });
     }
   } catch (error) {
     res.status(500).send({ error: `${error}` });
