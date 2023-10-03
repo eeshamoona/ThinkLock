@@ -79,3 +79,12 @@ export const getAllThinkSessionsByDate = async (
   );
   return thinkSessionsWithFolderInfo;
 };
+
+export const updateThinkSession = async (
+  thinkSessionId: number,
+  thinkSession: Partial<ThinkSession>,
+): Promise<string> =>
+  axios
+    .put(`/thinksessions/update/${thinkSessionId}`, thinkSession)
+    .then((response) => response.data.response)
+    .catch((err) => `${err}`);

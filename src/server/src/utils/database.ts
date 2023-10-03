@@ -1,6 +1,7 @@
 import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
 import { Logger } from "./logger";
+import { log } from "console";
 
 const DB_NAME: string = "db.sqlite";
 const loggerInstance: Logger = new Logger();
@@ -49,9 +50,6 @@ const dbPromise = (async (): Promise<Database> => {
         date TEXT NOT NULL,
         start_time TEXT NOT NULL,
         end_time TEXT NOT NULL,
-        duration INTEGER,
-        notes TEXT,
-        summary TEXT,
         layout TEXT,
         FOREIGN KEY (thinkfolder_id) REFERENCES thinkfolder(id)
     )`);
@@ -71,6 +69,7 @@ const dbPromise = (async (): Promise<Database> => {
         flashcards TEXT NOT NULL,
         FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
     )`);
+    loggerInstance.success("Table created: flashcards");
 
     return db;
   } catch (error) {

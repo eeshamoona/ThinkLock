@@ -6,9 +6,7 @@ export interface ThinkSession {
   location: string;
   start_time: Date;
   end_time: Date;
-  duration?: number;
-  notes?: string;
-  summary?: string;
   thinkfolder_icon?: string;
   thinkfolder_color?: string;
+  layout?: string;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Header,
@@ -12,7 +12,6 @@ import {
 } from "@mantine/core";
 import GridLayout from "react-grid-layout";
 import CustomHeader from "../../components/header/CustomHeader";
-import { Prism } from "@mantine/prism";
 import {
   IconCards,
   IconNotes,
@@ -26,55 +25,60 @@ import {
 } from "@tabler/icons-react";
 import "./studyboardpage.scss";
 import ActionItemCard from "../../components/action_item/ActionItemCard";
+import { useParams } from "react-router-dom";
+import {
+  getThinkSessionById,
+  updateThinkSession,
+} from "../../services/thinkSessionAPICallerService";
+import { ThinkSession } from "../../utils/models/thinksession.model";
+import { getAllActionItemsByThinkSessionId } from "../../services/actionItemAPICallerService";
+import { ActionItem } from "../../utils/models/actionitem.model";
+import { getThinkFolderById } from "../../services/thinkFolderAPICallerService";
 
 const StudyBoardPage = () => {
-  const [layout, setLayout] = useState<GridLayout.Layout[]>([
-    {
-      w: 12,
-      h: 3,
-      x: 0,
-      y: 0,
-      i: "code-2",
-      moved: false,
-      static: false,
-    },
-    {
-      w: 4,
-      h: 13,
-      x: 0,
-      y: 3,
-      i: "notes-3",
-      moved: false,
-      static: false,
-    },
-    {
-      w: 5,
-      h: 13,
-      x: 4,
-      y: 3,
-      i: "flashcards-2",
-      moved: false,
-      static: false,
-    },
-    {
-      w: 3,
-      h: 1,
-      x: 9,
-      y: 3,
-      i: "add-widget-1",
-      moved: false,
-      static: false,
-    },
-    {
-      w: 3,
-      h: 6,
-      x: 9,
-      y: 4,
-      i: "action-items-1",
-      moved: false,
-      static: false,
-    },
-  ]);
+  const { id } = useParams<{ id: string }>();
+  const [thinkSession, setThinkSession] = useState<ThinkSession>(
+    {} as ThinkSession
+  );
+  const [actionItems, setActionItems] = useState<ActionItem[]>([]);
+
+  useEffect(() => {
+    console.log("Study Board Page ID: ", id);
+    if (!id) return;
+
+    const fetchThinkSession = async () => {
+      const res = await getThinkSessionById(parseInt(id));
+      if (typeof res === "string") {
+        console.log("No Think Session Found");
+      } else {
+        const thinkFolderRes = await getThinkFolderById(res.thinkfolder_id);
+        if (typeof thinkFolderRes === "string") {
+          console.log("No Think Folder Found");
+        } else {
+          const thinkSessionWithFolder = {
+            ...res,
+            thinkfolder_color: thinkFolderRes?.color,
+          };
+          setThinkSession(thinkSessionWithFolder);
+        }
+      }
+    };
+    fetchThinkSession();
+
+    const fetchActionItems = async () => {
+      if (!id) return;
+      const actionItems = await getAllActionItemsByThinkSessionId(parseInt(id));
+      if (typeof actionItems !== "string") {
+        setActionItems(actionItems);
+      }
+    };
+    fetchActionItems();
+  }, [id]);
+
+  const handleLayoutChanged = (layout: any) => {
+    console.log("Layout Changed: ", layout);
+    updateThinkSession(thinkSession.id, { layout: JSON.stringify(layout) });
+  };
 
   const theme = useMantineTheme();
   const screenWidth = window.innerWidth;
@@ -96,32 +100,13 @@ const StudyBoardPage = () => {
         draggableHandle=".grid-item-drag"
         useCSSTransforms={false}
         className="studyboard-layout"
-        layout={layout}
+        layout={thinkSession.layout ? JSON.parse(thinkSession.layout) : []}
         cols={12}
         rowHeight={39}
         containerPadding={[8, 8]}
         width={screenWidth}
-        onLayoutChange={(layout) => setLayout(layout)}
+        onLayoutChange={handleLayoutChanged}
       >
-        <Card key="code-2" className="grid-item-container">
-          <ActionIcon
-            c="dimmed"
-            className=" grid-item-drag grid-item-drag-handle"
-            onDoubleClickCapture={() => console.log("Code Actions Opened")}
-            onBlur={() => console.log("Mouse Left")}
-          >
-            <IconEqual />
-          </ActionIcon>
-          <Prism
-            colorScheme={theme.colorScheme}
-            language="json"
-            copyLabel="Copy code to clipboard"
-            copiedLabel="Code copied to clipboard"
-            className="grid-item-content"
-          >
-            {JSON.stringify(layout, null, 2)}
-          </Prism>
-        </Card>
         <Card key="notes-3" className="grid-item-container">
           <ActionIcon
             c="dimmed"
@@ -150,16 +135,10 @@ const StudyBoardPage = () => {
         >
           <Menu shadow="md" trigger="hover" openDelay={100} closeDelay={400}>
             <Menu.Target>
-              <Button fullWidth h={"100%"}>
+              <Button fullWidth h={"100%"} p={"0.5rem"}>
                 <IconLayoutGridAdd size={"1rem"} />
-                {layout.find((item) => item.i === "d" && item.w > 1) ? (
-                  <>
-                    <Space w={"0.5rem"} />
-                    <Text>Add Widget</Text>
-                  </>
-                ) : (
-                  ""
-                )}
+                <Space w={"0.5rem"} />
+                Add Widget
               </Button>
             </Menu.Target>
 
@@ -203,24 +182,18 @@ const StudyBoardPage = () => {
             }}
           >
             <Stack spacing={"0.5rem"}>
-              <ActionItemCard
-                id="action-item-1"
-                title={"Action Item 1"}
-                description={"This is a description"}
-                completed={false}
-                draggable={false}
-                index={0}
-                thinkfolderColor="blue"
-              />
-              <ActionItemCard
-                id="action-item-2"
-                title={"Action Item 2"}
-                description={"This is a description"}
-                completed={false}
-                draggable={false}
-                index={1}
-                thinkfolderColor="pink"
-              />
+              {actionItems?.map((actionItem, index) => (
+                <ActionItemCard
+                  id={`${actionItem.id}`}
+                  index={index}
+                  key={actionItem.id}
+                  title={actionItem.title}
+                  description={actionItem.description}
+                  completed={actionItem.completed}
+                  draggable={false}
+                  thinkfolderColor={thinkSession.thinkfolder_color as string}
+                />
+              ))}
               <Button
                 onClick={() => console.log("Add Action Item")}
                 variant="default"

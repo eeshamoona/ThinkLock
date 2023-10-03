@@ -37,9 +37,19 @@ export async function createThinkSession(
   thinksession: Partial<ThinkSession>
 ): Promise<number | FailureResponse> {
   try {
+    //Create a default layout for the thinksession
+    const defaultLayout = {
+      x: 0,
+      y: 0,
+      w: 10,
+      h: 5,
+      i: "add-widget",
+      moved: false,
+      static: false,
+    };
     const db = await dbPromise;
     const query =
-      "INSERT INTO thinksession (thinkfolder_id, title, location, date, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?)";
+      "INSERT INTO thinksession (thinkfolder_id, title, location, date, start_time, end_time, layout) VALUES (?, ?, ?, ?, ?, ?, ?)";
     const params = [
       thinksession.thinkfolder_id,
       thinksession.title,
@@ -47,6 +57,7 @@ export async function createThinkSession(
       thinksession.date,
       thinksession.start_time,
       thinksession.end_time,
+      JSON.stringify([defaultLayout]),
     ];
     const res = await db.run(query, params);
     if (!res.lastID) {
@@ -123,9 +134,6 @@ export async function updateThinkSession(
       date,
       start_time,
       end_time,
-      duration,
-      notes,
-      summary,
       layout,
     } = request;
     const params = [];
@@ -159,21 +167,6 @@ export async function updateThinkSession(
     if (end_time !== undefined) {
       query += "end_time = ?, ";
       params.push(end_time);
-    }
-
-    if (duration !== undefined) {
-      query += "duration = ?, ";
-      params.push(duration);
-    }
-
-    if (notes !== undefined) {
-      query += "notes = ?, ";
-      params.push(notes);
-    }
-
-    if (summary !== undefined) {
-      query += "summary = ?, ";
-      params.push(summary);
     }
 
     if (layout !== undefined) {

@@ -30,6 +30,7 @@ import { TbClockFilled, TbMapPinFilled } from "react-icons/tb";
 import { IconPlus } from "@tabler/icons-react";
 import HoldStartButton from "../../components/hold_start_button/HoldStartButton";
 import ObjectivesSlideshow from "../../components/objectives_slideshow/ObjectivesSlideshow";
+import { useNavigate } from "react-router-dom";
 
 const StudyOverviewPage = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(
@@ -43,6 +44,7 @@ const StudyOverviewPage = () => {
   const [activeTab, setActiveTab] = useState<string | null>("actionItems");
   const modals = useModals();
   const theme = useMantineTheme();
+  const navigate = useNavigate();
 
   const getThinkSessionsOnDate = useCallback(async () => {
     const thinkSessions = await getAllThinkSessionsByDate(selectedDate);
@@ -97,6 +99,14 @@ const StudyOverviewPage = () => {
     selectedThinkSession?.id,
     selectedThinkSession?.thinkfolder_id,
   ]);
+
+  const openThinkSession = useCallback(
+    (id: number) => () => {
+      console.log("Opening think session with id: ", id);
+      navigate(`/thinksession/${id}`);
+    },
+    [navigate]
+  );
 
   useEffect(() => {
     getThinkSessionsOnDate();
@@ -284,7 +294,7 @@ const StudyOverviewPage = () => {
                       </Tabs.Tab>
                     </Tabs.List>
                     <Tabs.Panel value="summary" pt="md">
-                      <Text>{selectedThinkSession?.summary}</Text>
+                      <Text>{"Some summary info"}</Text>
                     </Tabs.Panel>
                     <Tabs.Panel
                       value="actionItems"
@@ -350,9 +360,7 @@ const StudyOverviewPage = () => {
               </div>
               <HoldStartButton
                 folderColor={selectedThinkSession?.thinkfolder_color as string}
-                onSuccess={() => {
-                  console.log("Start Session ", selectedThinkSession);
-                }}
+                onSuccess={openThinkSession(selectedThinkSession.id)}
               />
             </>
           ) : (
