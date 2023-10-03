@@ -8,10 +8,10 @@ import {
   IconListDetails,
 } from "@tabler/icons-react";
 import { useModals } from "@mantine/modals";
-import AddThinkFolderModal from "../add_think_folder_modal/AddThinkFolderModal";
-import AddThinkSessionModal from "../add_think_session_modal/AddThinkSessionModal";
-import AddReviewSetModal from "../add_review_set_modal/AddReviewSetModal";
-import AddActionItemModal from "../add_action_item_modal/AddActionItemModal";
+import AddThinkFolderModal from "../Modals/AddThinkFolder/AddThinkFolderModal";
+import AddThinkSessionModal from "../Modals/AddThinkSession/AddThinkSessionModal";
+import AddReviewSetModal from "../Modals/AddReviewSet/AddReviewSetModal";
+import AddActionItemModal from "../Modals/AddActionItem/AddActionItemModal";
 import { useMantineTheme } from "@mantine/core";
 
 enum AddOptions {

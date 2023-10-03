@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./thinkFolderCard.scss";
 import { ThemeIcon, Text } from "@mantine/core";
 import * as allIcons from "tabler-icons-react";
-import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
-import IconType from "../../utils/constants/iconType.constant";
+import { hexToColorNameMap } from "../../../utils/constants/hexCodeToColor.constant";
+import IconType from "../../../utils/constants/iconType.constant";
 
 interface ThinkFolderProps {
   folderColor: string;

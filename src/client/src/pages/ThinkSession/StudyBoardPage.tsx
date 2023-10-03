@@ -11,7 +11,7 @@ import {
   ActionIcon,
 } from "@mantine/core";
 import GridLayout from "react-grid-layout";
-import CustomHeader from "../../components/header/CustomHeader";
+import CustomHeader from "../../components/Header/CustomHeader";
 import {
   IconCards,
   IconNotes,
@@ -24,7 +24,7 @@ import {
   IconEqual,
 } from "@tabler/icons-react";
 import "./studyboardpage.scss";
-import ActionItemCard from "../../components/action_item/ActionItemCard";
+import ActionItemCard from "../../components/Objects/ActionItem/ActionItemCard";
 import { useParams } from "react-router-dom";
 import {
   getThinkSessionById,
@@ -34,7 +34,7 @@ import { ThinkSession } from "../../utils/models/thinksession.model";
 import { getAllActionItemsByThinkSessionId } from "../../services/actionItemAPICallerService";
 import { ActionItem } from "../../utils/models/actionitem.model";
 import { getThinkFolderById } from "../../services/thinkFolderAPICallerService";
-import NotesWidget from "../../components/notes_widget/NotesWidget";
+import NotesWidget from "../../components/Widgets/NotesWidget/NotesWidget";
 
 const StudyBoardPage = () => {
   const { id } = useParams<{ id: string }>();

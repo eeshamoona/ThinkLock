@@ -14,12 +14,12 @@ import {
   ActionIcon,
 } from "@mantine/core";
 import { IconFolder } from "@tabler/icons-react";
-import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
-import { ThinkFolder } from "../../utils/models/thinkfolder.model";
-import { addThinkSession } from "../../services/thinkSessionAPICallerService";
-import { showSuccessNotification } from "../../utils/notifications";
-import { showErrorNotification } from "../../utils/notifications";
-import ThinkFolderSelectItem from "../think_folder/ThinkFolderSelectItem";
+import { getAllThinkFolders } from "../../../services/thinkFolderAPICallerService";
+import { ThinkFolder } from "../../../utils/models/thinkfolder.model";
+import { addThinkSession } from "../../../services/thinkSessionAPICallerService";
+import { showSuccessNotification } from "../../../utils/notifications";
+import { showErrorNotification } from "../../../utils/notifications";
+import ThinkFolderSelectItem from "../../Objects/ThinkFolder/ThinkFolderSelectItem";
 
 interface AddThinkSessionModalProps {
   thinkFolderId?: string;

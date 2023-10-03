@@ -10,7 +10,7 @@ import {
 import { MonthPicker } from "@mantine/dates";
 import "./weekStripCalendar.scss";
 import { useModals } from "@mantine/modals";
-import AddThinkSessionModal from "../add_think_session_modal/AddThinkSessionModal";
+import AddThinkSessionModal from "../Modals/AddThinkSession/AddThinkSessionModal";
 import { startOfDay } from "date-fns";
 import { IconCalendarBolt } from "@tabler/icons-react";
 

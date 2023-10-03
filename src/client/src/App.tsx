@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import AppLayout from "./AppLayout";
-import StudyBoardPage from "./pages/studyboard/StudyBoardPage";
+import StudyBoardPage from "./pages/ThinkSession/StudyBoardPage";
 
 function App() {
   return (

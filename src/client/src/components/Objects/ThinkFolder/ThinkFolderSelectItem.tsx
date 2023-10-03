@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import * as allIcons from "tabler-icons-react";
-import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
-import IconType from "../../utils/constants/iconType.constant";
+import { hexToColorNameMap } from "../../../utils/constants/hexCodeToColor.constant";
+import IconType from "../../../utils/constants/iconType.constant";
 import { ThemeIcon, Group, Text } from "@mantine/core";
 
 interface ThinkFolderSelectItemProps

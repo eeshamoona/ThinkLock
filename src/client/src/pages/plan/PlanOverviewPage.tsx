@@ -1,24 +1,24 @@
 import React, { useCallback, useEffect, useState } from "react";
-import ThinkFolderCard from "../../components/think_folder/ThinkFolderCard";
+import ThinkFolderCard from "../../components/Objects/ThinkFolder/ThinkFolderCard";
 import { ThinkFolder } from "../../utils/models/thinkfolder.model";
 import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
 import { ActionIcon, Paper, Text } from "@mantine/core";
 import { ArrowLeft, Plus } from "tabler-icons-react";
-import ActionItemCard from "../../components/action_item/ActionItemCard";
+import ActionItemCard from "../../components/Objects/ActionItem/ActionItemCard";
 import { getActionItemsWithNullThinkSessionId } from "../../services/actionItemAPICallerService";
 import {
   getAllThinkSessionsByThinkFolderId,
   getThinkSessionHeatmapData,
 } from "../../services/thinkSessionAPICallerService";
 import { updateActionItem } from "../../services/actionItemAPICallerService";
-import ThinkSessionItem from "../../components/think_session/ThinkSessionItem";
-import AddThinkSessionModal from "../../components/add_think_session_modal/AddThinkSessionModal";
-import AddActionItemModal from "../../components/add_action_item_modal/AddActionItemModal";
+import ThinkSessionItem from "../../components/Objects/ThinkSession/ThinkSessionItem";
+import AddThinkSessionModal from "../../components/Modals/AddThinkSession/AddThinkSessionModal";
+import AddActionItemModal from "../../components/Modals/AddActionItem/AddActionItemModal";
 import { useModals } from "@mantine/modals";
 import { useMantineTheme } from "@mantine/core";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import "./planOverviewPage.scss";
-import Heatmap from "../../components/heatmap/Heatmap";
+import Heatmap from "../../components/Heatmap/Heatmap";
 import { HeatmapData } from "../../utils/models/heatmapdata.model";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 

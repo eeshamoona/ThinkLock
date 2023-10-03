@@ -2,9 +2,9 @@ import React from "react";
 import "./thinkSessionItem.scss";
 import { ActionIcon, Badge, Text, Card, useMantineTheme } from "@mantine/core";
 import * as allIcons from "tabler-icons-react";
-import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
+import { hexToColorNameMap } from "../../../utils/constants/hexCodeToColor.constant";
 import { TbMapPinFilled } from "react-icons/tb";
-import IconType from "../../utils/constants/iconType.constant";
+import IconType from "../../../utils/constants/iconType.constant";
 import { Droppable } from "react-beautiful-dnd";
 
 interface ThinkSessionProps {

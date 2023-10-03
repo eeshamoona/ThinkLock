@@ -4,12 +4,12 @@ import { isNotEmpty, useForm } from "@mantine/form";
 import { Button, Select, Space, TextInput, Textarea } from "@mantine/core";
 import { closeAllModals } from "@mantine/modals";
 import { IconFolder } from "@tabler/icons-react";
-import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
-import { ThinkFolder } from "../../utils/models/thinkfolder.model";
-import { addActionItem } from "../../services/actionItemAPICallerService";
-import { showSuccessNotification } from "../../utils/notifications";
-import { showErrorNotification } from "../../utils/notifications";
-import ThinkFolderSelectItem from "../think_folder/ThinkFolderSelectItem";
+import { getAllThinkFolders } from "../../../services/thinkFolderAPICallerService";
+import { ThinkFolder } from "../../../utils/models/thinkfolder.model";
+import { addActionItem } from "../../../services/actionItemAPICallerService";
+import { showSuccessNotification } from "../../../utils/notifications";
+import { showErrorNotification } from "../../../utils/notifications";
+import ThinkFolderSelectItem from "../../Objects/ThinkFolder/ThinkFolderSelectItem";
 
 interface AddActionItemModalProps {
   thinkSessionId?: string;

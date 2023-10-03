@@ -17,7 +17,7 @@ import {
   useMantineTheme,
   useMantineColorScheme,
 } from "@mantine/core";
-import AddButton from "../add_button/AddButton";
+import AddButton from "../AddButton/AddButton";
 import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {

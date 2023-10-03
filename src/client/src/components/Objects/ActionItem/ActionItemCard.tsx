@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./actionItemCard.scss";
 import { Card, Checkbox, Text } from "@mantine/core";
 import { RxDragHandleDots2 } from "react-icons/rx";
-import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
+import { hexToColorNameMap } from "../../../utils/constants/hexCodeToColor.constant";
 import { Draggable } from "react-beautiful-dnd";
 
 interface ActionItemProps {

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import "./appLayout.scss";
-import PlanOverviewPage from "./pages/plan/PlanOverviewPage";
+import PlanOverviewPage from "./pages/Plan/PlanOverviewPage";
 import { AppShell } from "@mantine/core";
-import CustomHeader from "./components/header/CustomHeader";
+import CustomHeader from "./components/Header/CustomHeader";
 import { Header } from "@mantine/core";
 import { Tabs } from "@mantine/core";
 import { IconChecklist, IconBulb, IconCheckbox } from "@tabler/icons-react";
-import StudyOverviewPage from "./pages/study/StudyOverviewPage";
+import StudyOverviewPage from "./pages/Study/StudyOverviewPage";
 
 const AppLayout = () => {
   const [activeTab, setActiveTab] = useState<string | null>("plan");

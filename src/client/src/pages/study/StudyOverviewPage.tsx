@@ -14,10 +14,10 @@ import {
 import { Droppable, DragDropContext } from "react-beautiful-dnd";
 import { format, startOfDay } from "date-fns";
 import { useModals } from "@mantine/modals";
-import WeekViewStripCalendar from "../../components/week-strip-calendar/WeekStripCalendar";
-import ThinkSessionCard from "../../components/think_session/ThinkSessionItem";
-import ActionItemCard from "../../components/action_item/ActionItemCard";
-import AddActionItemModal from "../../components/add_action_item_modal/AddActionItemModal";
+import WeekViewStripCalendar from "../../components/WeekStripCalendar/WeekStripCalendar";
+import ThinkSessionCard from "../../components/Objects/ThinkSession/ThinkSessionItem";
+import ActionItemCard from "../../components/Objects/ActionItem/ActionItemCard";
+import AddActionItemModal from "../../components/Modals/AddActionItem/AddActionItemModal";
 import { getAllThinkSessionsByDate } from "../../services/thinkSessionAPICallerService";
 import { getAllActionItemsByThinkSessionId } from "../../services/actionItemAPICallerService";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
@@ -28,8 +28,8 @@ import * as allIcons from "tabler-icons-react";
 import "./studyOverviewPage.scss";
 import { TbClockFilled, TbMapPinFilled } from "react-icons/tb";
 import { IconPlus } from "@tabler/icons-react";
-import HoldStartButton from "../../components/hold_start_button/HoldStartButton";
-import ObjectivesSlideshow from "../../components/objectives_slideshow/ObjectivesSlideshow";
+import HoldStartButton from "../../components/HoldStartButton/HoldStartButton";
+import ObjectivesSlideshow from "../../components/ObjectivesSlideshow/ObjectivesSlideshow";
 import { useNavigate } from "react-router-dom";
 
 const StudyOverviewPage = () => {
