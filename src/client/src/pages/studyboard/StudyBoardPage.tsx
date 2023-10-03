@@ -34,6 +34,7 @@ import { ThinkSession } from "../../utils/models/thinksession.model";
 import { getAllActionItemsByThinkSessionId } from "../../services/actionItemAPICallerService";
 import { ActionItem } from "../../utils/models/actionitem.model";
 import { getThinkFolderById } from "../../services/thinkFolderAPICallerService";
+import NotesWidget from "../../components/notes_widget/NotesWidget";
 
 const StudyBoardPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -115,7 +116,7 @@ const StudyBoardPage = () => {
             <IconEqual />
           </ActionIcon>
           <div className="grid-item-content">
-            <Text>Notes Section</Text>
+            <NotesWidget content="" />
           </div>
         </Card>
         <Card key="flashcards-2" className="grid-item-container">

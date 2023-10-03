@@ -18,6 +18,7 @@ import {
   useMantineColorScheme,
 } from "@mantine/core";
 import AddButton from "../add_button/AddButton";
+import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   changeTabCallback?: (tab: string) => void;
@@ -25,12 +26,13 @@ interface HeaderProps {
 
 const Header = ({ changeTabCallback }: HeaderProps) => {
   const theme = useMantineTheme();
+  const navigate = useNavigate();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
 
   return (
     <div id="header-container">
-      <UnstyledButton id="thinklock-header-logo">
+      <UnstyledButton id="thinklock-header-logo" onClick={() => navigate("/")}>
         <IconLockAccess id="lock-icon" size={"2.5rem"} />
         <h1 id="think-lock-title">ThinkLock</h1>
       </UnstyledButton>

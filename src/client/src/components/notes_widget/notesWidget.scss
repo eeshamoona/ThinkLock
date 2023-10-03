@@ -1,0 +1,18 @@
+.notes-widget-container {
+  display: flex;
+  flex-direction: column;
+  border: none;
+}
+
+.notes-widget-content {
+  flex: 1;
+}
+
+.notes-widget-toolbar {
+  border: none;
+  gap: 0.5rem;
+}
+
+.mantine-RichTextEditor-content {
+  height: 100%;
+}
