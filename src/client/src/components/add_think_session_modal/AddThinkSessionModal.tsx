@@ -73,7 +73,17 @@ const AddThinkSessionModal = ({
   };
 
   const onSubmit = async (values: any) => {
-    const dateString = values.date.toISOString().split("T")[0];
+    // Parse the date string into a Date object
+    const dateObj = new Date(values.date);
+
+    // Extract year, month, and day
+    const year = dateObj.getUTCFullYear();
+    const month = String(dateObj.getUTCMonth() + 1).padStart(2, "0"); // Months are 0-indexed in JavaScript
+    const day = String(dateObj.getUTCDate()).padStart(2, "0");
+
+    // Construct the desired formatted string with time set to 00:00:00.000Z
+    const dateString = `${year}-${month}-${day}`;
+
     const startTimeString = dateString + "T" + values.start_time + ":00";
     const endTimeString = dateString + "T" + values.end_time + ":00";
 
