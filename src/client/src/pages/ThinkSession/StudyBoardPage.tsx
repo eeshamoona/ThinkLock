@@ -42,6 +42,7 @@ const StudyBoardPage = () => {
     {} as ThinkSession
   );
   const [actionItems, setActionItems] = useState<ActionItem[]>([]);
+  const [layoutOptions, setLayoutOptions] = useState<any[]>([]); // [{type: id}
 
   useEffect(() => {
     console.log("Study Board Page ID: ", id);
@@ -61,6 +62,22 @@ const StudyBoardPage = () => {
             thinkfolder_color: thinkFolderRes?.color,
           };
           setThinkSession(thinkSessionWithFolder);
+
+          // Split out the layout i into a dictionary state of {type: id}
+          const layout = JSON.parse(res.layout as string);
+          if (layout.length > 0) {
+            const layoutOptions = layout.map((layoutItem: any) => {
+              const lastDashIndex = layoutItem.i.lastIndexOf("-");
+              const type = layoutItem.i.substring(0, lastDashIndex);
+              const id = layoutItem.i.substring(lastDashIndex + 1);
+
+              return {
+                type,
+                id,
+              };
+            });
+            setLayoutOptions(layoutOptions);
+          }
         }
       }
     };
@@ -108,32 +125,87 @@ const StudyBoardPage = () => {
         width={screenWidth}
         onLayoutChange={handleLayoutChanged}
       >
-        <Card key="notes-3" className="grid-item-container">
-          <ActionIcon
-            c="dimmed"
-            className=" grid-item-drag grid-item-drag-handle"
-          >
-            <IconEqual />
-          </ActionIcon>
-          <div className="grid-item-content">
-            <NotesWidget content="" />
-          </div>
-        </Card>
-        <Card key="flashcards-2" className="grid-item-container">
-          <ActionIcon
-            c="dimmed"
-            className=" grid-item-drag grid-item-drag-handle"
-          >
-            <IconEqual />
-          </ActionIcon>
-          <div className="grid-item-content">
-            <Text>Flashcard Section</Text>
-          </div>
-        </Card>
-        <Card
-          key="add-widget-1"
-          className=" grid-item-drag grid-item-container"
-        >
+        {layoutOptions.map((layoutOption) => {
+          const { type, id } = layoutOption;
+          switch (type) {
+            case "notes":
+              return (
+                <Card key={`${type}-${id}`} className="grid-item-container">
+                  <ActionIcon
+                    c="dimmed"
+                    className=" grid-item-drag grid-item-drag-handle"
+                  >
+                    <IconEqual />
+                  </ActionIcon>
+                  <div className="grid-item-content">
+                    <NotesWidget content="" />
+                  </div>
+                </Card>
+              );
+            case "flashcards":
+              return (
+                <Card key={`${type}-${id}`} className="grid-item-container">
+                  <ActionIcon
+                    c="dimmed"
+                    className=" grid-item-drag grid-item-drag-handle"
+                  >
+                    <IconEqual />
+                  </ActionIcon>
+                  <div className="grid-item-content">
+                    <Text>Flashcard Section</Text>
+                  </div>
+                </Card>
+              );
+            case "action-items":
+              return (
+                <Card key={`${type}-${id}`} className="grid-item-container">
+                  <ActionIcon
+                    c="dimmed"
+                    className="grid-item-drag grid-item-drag-handle"
+                  >
+                    <IconEqual />
+                  </ActionIcon>
+                  <div
+                    className="grid-item-content action-item-container"
+                    style={{
+                      backgroundColor:
+                        theme.colorScheme === "dark"
+                          ? theme.colors.dark[8]
+                          : theme.colors.gray[0],
+                    }}
+                  >
+                    <Stack spacing={"0.5rem"}>
+                      {actionItems?.map((actionItem, index) => (
+                        <ActionItemCard
+                          id={`${actionItem.id}`}
+                          index={index}
+                          key={actionItem.id}
+                          title={actionItem.title}
+                          description={actionItem.description}
+                          completed={actionItem.completed}
+                          draggable={false}
+                          thinkfolderColor={
+                            thinkSession.thinkfolder_color as string
+                          }
+                        />
+                      ))}
+                      <Button
+                        onClick={() => console.log("Add Action Item")}
+                        variant="default"
+                        h={"3rem"}
+                        leftIcon={<IconPlus size={"1rem"} />}
+                      >
+                        Add Action Item
+                      </Button>
+                    </Stack>
+                  </div>
+                </Card>
+              );
+            default:
+              return null;
+          }
+        })}
+        <Card key="add-widget" className=" grid-item-drag grid-item-container">
           <Menu shadow="md" trigger="hover" openDelay={100} closeDelay={400}>
             <Menu.Target>
               <Button fullWidth h={"100%"} p={"0.5rem"}>
@@ -150,7 +222,32 @@ const StudyBoardPage = () => {
             >
               <Menu.Label>Study Widgets</Menu.Label>
               <Menu.Item icon={<IconCards size={14} />}>Flashcards</Menu.Item>
-              <Menu.Item icon={<IconNotes size={14} />}>Notes</Menu.Item>
+              <Menu.Item
+                onClick={() => {
+                  //Add Notes to the layout in thinksession
+                  console.log("Add Notes");
+                  console.log(
+                    thinkSession.layout +
+                      " " +
+                      JSON.stringify({ i: "notes-3", x: 0, y: 0, w: 4, h: 4 })
+                  );
+                  console.log(layoutOptions + " " + layoutOptions.length);
+                  console.log(
+                    JSON.stringify([
+                      ...layoutOptions,
+                      { type: "notes", id: "3" },
+                    ])
+                  );
+
+                  //I will call a function here that will add a notes
+                  //table to the backend and also updates the
+                  //layout of the thinksession
+                  //I will also need to update the layoutOptions and thinkSession
+                }}
+                icon={<IconNotes size={14} />}
+              >
+                Notes
+              </Menu.Item>
               <Menu.Item icon={<IconFileTypePdf size={14} />}>PDF</Menu.Item>
               <Menu.Item icon={<IconAlarm size={14} />}>Timer</Menu.Item>
 
@@ -165,46 +262,6 @@ const StudyBoardPage = () => {
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
-        </Card>
-        <Card key="action-items-1" className="grid-item-container">
-          <ActionIcon
-            c="dimmed"
-            className="grid-item-drag grid-item-drag-handle"
-          >
-            <IconEqual />
-          </ActionIcon>
-          <div
-            className="grid-item-content action-item-container"
-            style={{
-              backgroundColor:
-                theme.colorScheme === "dark"
-                  ? theme.colors.dark[8]
-                  : theme.colors.gray[0],
-            }}
-          >
-            <Stack spacing={"0.5rem"}>
-              {actionItems?.map((actionItem, index) => (
-                <ActionItemCard
-                  id={`${actionItem.id}`}
-                  index={index}
-                  key={actionItem.id}
-                  title={actionItem.title}
-                  description={actionItem.description}
-                  completed={actionItem.completed}
-                  draggable={false}
-                  thinkfolderColor={thinkSession.thinkfolder_color as string}
-                />
-              ))}
-              <Button
-                onClick={() => console.log("Add Action Item")}
-                variant="default"
-                h={"3rem"}
-                leftIcon={<IconPlus size={"1rem"} />}
-              >
-                Add Action Item
-              </Button>
-            </Stack>
-          </div>
         </Card>
       </GridLayout>
     </div>

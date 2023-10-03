@@ -41,8 +41,8 @@ export async function createThinkSession(
     const defaultLayout = {
       x: 0,
       y: 0,
-      w: 10,
-      h: 5,
+      w: 3,
+      h: 1,
       i: "add-widget",
       moved: false,
       static: false,
