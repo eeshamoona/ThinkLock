@@ -133,7 +133,7 @@ const StudyBoardPage = () => {
                 <Card key={`${type}-${id}`} className="grid-item-container">
                   <ActionIcon
                     c="dimmed"
-                    className=" grid-item-drag grid-item-drag-handle"
+                    className="grid-item-drag grid-item-drag-handle"
                   >
                     <IconEqual />
                   </ActionIcon>
@@ -147,7 +147,7 @@ const StudyBoardPage = () => {
                 <Card key={`${type}-${id}`} className="grid-item-container">
                   <ActionIcon
                     c="dimmed"
-                    className=" grid-item-drag grid-item-drag-handle"
+                    className="grid-item-drag grid-item-drag-handle"
                   >
                     <IconEqual />
                   </ActionIcon>
@@ -205,7 +205,7 @@ const StudyBoardPage = () => {
               return null;
           }
         })}
-        <Card key="add-widget" className=" grid-item-drag grid-item-container">
+        <Card key="add-widget" className="grid-item-drag grid-item-container">
           <Menu shadow="md" trigger="hover" openDelay={100} closeDelay={400}>
             <Menu.Target>
               <Button fullWidth h={"100%"} p={"0.5rem"}>
