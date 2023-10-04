@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ThinkFolderCard from "../../components/Objects/ThinkFolder/ThinkFolderCard";
 import { ThinkFolder } from "../../utils/models/thinkfolder.model";
 import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
@@ -110,6 +110,11 @@ const PlanOverviewPage = () => {
       });
     });
   }, [folders]);
+
+  const memoizedHeatmapData = useMemo(() => {
+    if (!selectedFolder) return [];
+    return heatmapData[selectedFolder.id] || [];
+  }, [heatmapData, selectedFolder]);
 
   const openModal = useCallback(
     (content: ModalOptions) => {
@@ -326,7 +331,7 @@ const PlanOverviewPage = () => {
           selectedFolder && (
             <Heatmap
               numOfShades={6}
-              heatmapData={heatmapData[selectedFolder.id] || []}
+              heatmapData={memoizedHeatmapData}
               max={heatmapMax[selectedFolder.id] || 0}
               thinkfolder_color={selectedFolder ? selectedFolder.color : "red"}
             />

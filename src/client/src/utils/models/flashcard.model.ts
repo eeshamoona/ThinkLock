@@ -1,7 +1,10 @@
-export interface Flashcard {
-  id: number;
-  thinksession_id: number;
+import { Widget } from "./widget.model";
+
+export interface FlashcardData {
   front: string;
   back: string;
-  status: string;
+  id: number;
+}
+export interface Flashcards extends Widget {
+  flashcards: Array<FlashcardData>;
 }

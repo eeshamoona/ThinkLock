@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { RichTextEditor, Link } from "@mantine/tiptap";
 import { useEditor } from "@tiptap/react";
 import Highlight from "@tiptap/extension-highlight";
@@ -10,29 +10,49 @@ import SubScript from "@tiptap/extension-subscript";
 import Placeholder from "@tiptap/extension-placeholder";
 import "./notesWidget.scss";
 import { useMantineTheme } from "@mantine/core";
+import {
+  getNotes,
+  updateNotesWidget,
+} from "../../../services/widgetsAPICallerService";
 
 interface NotesWidgetProps {
-  content: string;
+  id: number;
 }
-const NotesWidget = ({ content }: NotesWidgetProps) => {
+const NotesWidget = ({ id }: NotesWidgetProps) => {
   const theme = useMantineTheme();
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      Link,
-      Superscript,
-      SubScript,
-      Highlight,
-      Placeholder.configure({ placeholder: "Start Typing..." }),
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
-    ],
-    content: content,
-    onBlur({ editor }) {
-      console.log(editor.getJSON());
-    },
-  });
 
+  const [content, setContent] = React.useState<string>("");
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      const res = await getNotes(id);
+      setContent(res);
+    };
+    fetchNotes();
+  }, [id]);
+
+  const editor = useEditor(
+    {
+      extensions: [
+        StarterKit,
+        Underline,
+        Link,
+        Superscript,
+        SubScript,
+        Highlight,
+        Placeholder.configure({ placeholder: "Start Typing..." }),
+        TextAlign.configure({ types: ["heading", "paragraph"] }),
+      ],
+      content: content,
+      onBlur({ editor }) {
+        const updatedContent = editor.getHTML().toString();
+        updateNotesWidget(id, updatedContent).then(() => {
+          setContent(updatedContent);
+        });
+      },
+    },
+    [content]
+  );
   return (
     <RichTextEditor
       editor={editor}

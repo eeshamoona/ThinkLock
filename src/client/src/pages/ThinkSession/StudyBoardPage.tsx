@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Card,
   Header,
@@ -35,6 +35,7 @@ import { getAllActionItemsByThinkSessionId } from "../../services/actionItemAPIC
 import { ActionItem } from "../../utils/models/actionitem.model";
 import { getThinkFolderById } from "../../services/thinkFolderAPICallerService";
 import NotesWidget from "../../components/Widgets/NotesWidget/NotesWidget";
+import { createNotesWidget } from "../../services/widgetsAPICallerService";
 
 const StudyBoardPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -42,59 +43,59 @@ const StudyBoardPage = () => {
     {} as ThinkSession
   );
   const [actionItems, setActionItems] = useState<ActionItem[]>([]);
-  const [layoutOptions, setLayoutOptions] = useState<any[]>([]); // [{type: id}
+  const [widgetLayout, setWidgetLayout] = useState<any[]>([]);
+
+  const fetchThinkSession = useCallback(async () => {
+    if (!id) return;
+    const res = await getThinkSessionById(parseInt(id));
+    if (typeof res === "string") {
+      console.log("No Think Session Found");
+    } else {
+      const thinkFolderRes = await getThinkFolderById(res.thinkfolder_id);
+      if (typeof thinkFolderRes === "string") {
+        console.log("No Think Folder Found");
+      } else {
+        const thinkSessionWithFolder = {
+          ...res,
+          thinkfolder_color: thinkFolderRes?.color,
+        };
+        setThinkSession(thinkSessionWithFolder);
+
+        // Get layout options
+        const layout = JSON.parse(res.layout as string);
+        if (layout.length > 0) {
+          const layoutOptions = layout.map((layoutItem: any) => {
+            const lastDashIndex = layoutItem.i.lastIndexOf("-");
+            const type = layoutItem.i.substring(0, lastDashIndex);
+            const id = layoutItem.i.substring(lastDashIndex + 1);
+
+            return {
+              type,
+              id,
+            };
+          });
+          setWidgetLayout(layoutOptions);
+        }
+      }
+    }
+  }, [id]);
+
+  const fetchActionItems = useCallback(async () => {
+    if (!id) return;
+    const actionItems = await getAllActionItemsByThinkSessionId(parseInt(id));
+    if (typeof actionItems !== "string") {
+      setActionItems(actionItems);
+    }
+  }, [id]);
 
   useEffect(() => {
     console.log("Study Board Page ID: ", id);
     if (!id) return;
-
-    const fetchThinkSession = async () => {
-      const res = await getThinkSessionById(parseInt(id));
-      if (typeof res === "string") {
-        console.log("No Think Session Found");
-      } else {
-        const thinkFolderRes = await getThinkFolderById(res.thinkfolder_id);
-        if (typeof thinkFolderRes === "string") {
-          console.log("No Think Folder Found");
-        } else {
-          const thinkSessionWithFolder = {
-            ...res,
-            thinkfolder_color: thinkFolderRes?.color,
-          };
-          setThinkSession(thinkSessionWithFolder);
-
-          // Split out the layout i into a dictionary state of {type: id}
-          const layout = JSON.parse(res.layout as string);
-          if (layout.length > 0) {
-            const layoutOptions = layout.map((layoutItem: any) => {
-              const lastDashIndex = layoutItem.i.lastIndexOf("-");
-              const type = layoutItem.i.substring(0, lastDashIndex);
-              const id = layoutItem.i.substring(lastDashIndex + 1);
-
-              return {
-                type,
-                id,
-              };
-            });
-            setLayoutOptions(layoutOptions);
-          }
-        }
-      }
-    };
     fetchThinkSession();
-
-    const fetchActionItems = async () => {
-      if (!id) return;
-      const actionItems = await getAllActionItemsByThinkSessionId(parseInt(id));
-      if (typeof actionItems !== "string") {
-        setActionItems(actionItems);
-      }
-    };
     fetchActionItems();
-  }, [id]);
+  }, [fetchActionItems, fetchThinkSession, id]);
 
   const handleLayoutChanged = (layout: any) => {
-    console.log("Layout Changed: ", layout);
     updateThinkSession(thinkSession.id, { layout: JSON.stringify(layout) });
   };
 
@@ -125,7 +126,7 @@ const StudyBoardPage = () => {
         width={screenWidth}
         onLayoutChange={handleLayoutChanged}
       >
-        {layoutOptions.map((layoutOption) => {
+        {widgetLayout.map((layoutOption) => {
           const { type, id } = layoutOption;
           switch (type) {
             case "notes":
@@ -138,7 +139,7 @@ const StudyBoardPage = () => {
                     <IconEqual />
                   </ActionIcon>
                   <div className="grid-item-content">
-                    <NotesWidget content="" />
+                    <NotesWidget id={id} />
                   </div>
                 </Card>
               );
@@ -224,25 +225,33 @@ const StudyBoardPage = () => {
               <Menu.Item icon={<IconCards size={14} />}>Flashcards</Menu.Item>
               <Menu.Item
                 onClick={() => {
-                  //Add Notes to the layout in thinksession
-                  console.log("Add Notes");
-                  console.log(
-                    thinkSession.layout +
-                      " " +
-                      JSON.stringify({ i: "notes-3", x: 0, y: 0, w: 4, h: 4 })
-                  );
-                  console.log(layoutOptions + " " + layoutOptions.length);
-                  console.log(
-                    JSON.stringify([
-                      ...layoutOptions,
-                      { type: "notes", id: "3" },
-                    ])
-                  );
-
-                  //I will call a function here that will add a notes
-                  //table to the backend and also updates the
-                  //layout of the thinksession
-                  //I will also need to update the layoutOptions and thinkSession
+                  createNotesWidget(thinkSession.id).then((res) => {
+                    if (
+                      widgetLayout.findIndex(
+                        (item) => item.i === `notes-${res}`
+                      ) !== -1
+                    ) {
+                      console.log("Widget already exists");
+                      return;
+                    } else {
+                      const notesWidgetLayout = {
+                        x: 0,
+                        y: 0,
+                        w: 7,
+                        h: 7,
+                        i: `notes-${res}`,
+                        moved: false,
+                        static: false,
+                      };
+                      updateThinkSession(thinkSession.id, {
+                        layout: JSON.stringify([
+                          ...JSON.parse(thinkSession.layout as string),
+                          notesWidgetLayout,
+                        ]),
+                      });
+                      fetchThinkSession();
+                    }
+                  });
                 }}
                 icon={<IconNotes size={14} />}
               >
