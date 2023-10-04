@@ -101,6 +101,7 @@ const AddActionItemModal = ({
         <div className="modal-buttons-container">
           <div className="additional-buttons-container">
             <Select
+              disabled={thinkSessionId !== undefined}
               placeholder="Think Folder"
               itemComponent={ThinkFolderSelectItem}
               searchable

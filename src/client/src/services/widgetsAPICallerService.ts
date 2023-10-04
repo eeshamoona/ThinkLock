@@ -4,7 +4,7 @@ import { FlashcardData } from "../utils/models/flashcard.model";
 const API_URL = "/widgets";
 
 export const createNotesWidget = async (
-  thinksession_id: number
+  thinksession_id: number,
 ): Promise<number> => {
   const response = await axios.post(`${API_URL}/notes/${thinksession_id}`);
   return response.data.notesId;
@@ -17,7 +17,7 @@ export const getNotes = async (id: number): Promise<string> => {
 
 export const updateNotesWidget = async (
   id: number,
-  note: string
+  note: string,
 ): Promise<string> => {
   const response = await axios.put(`${API_URL}/notes/${id}`, { note });
   return response.data;
@@ -34,7 +34,7 @@ export const getFlashcards = async (id: number): Promise<FlashcardData[]> => {
 };
 
 export const createFlashcardsWidget = async (
-  thinksession_id: number
+  thinksession_id: number,
 ): Promise<number> => {
   const response = await axios.post(`${API_URL}/flashcards/${thinksession_id}`);
   return response.data.flashcardsId;
@@ -42,7 +42,7 @@ export const createFlashcardsWidget = async (
 
 export const updateFlashcardsWidget = async (
   id: number,
-  flashcards: FlashcardData[]
+  flashcards: FlashcardData[],
 ): Promise<string> => {
   const response = await axios.put(`${API_URL}/flashcards/${id}`, {
     flashcards,

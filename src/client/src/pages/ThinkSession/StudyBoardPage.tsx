@@ -14,6 +14,7 @@ import GridLayout from "react-grid-layout";
 import CustomHeader from "../../components/Header/CustomHeader";
 import {
   IconCards,
+  IconListCheck,
   IconNotes,
   IconFileTypePdf,
   IconAlarm,
@@ -36,6 +37,10 @@ import { ActionItem } from "../../utils/models/actionitem.model";
 import { getThinkFolderById } from "../../services/thinkFolderAPICallerService";
 import NotesWidget from "../../components/Widgets/NotesWidget/NotesWidget";
 import { createNotesWidget } from "../../services/widgetsAPICallerService";
+import { useModals } from "@mantine/modals";
+
+import AddActionItemModal from "../../components/Modals/AddActionItem/AddActionItemModal";
+import { showErrorNotification } from "../../utils/notifications";
 
 const StudyBoardPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -45,15 +50,23 @@ const StudyBoardPage = () => {
   const [actionItems, setActionItems] = useState<ActionItem[]>([]);
   const [widgetLayout, setWidgetLayout] = useState<any[]>([]);
 
+  const modals = useModals();
+
   const fetchThinkSession = useCallback(async () => {
     if (!id) return;
     const res = await getThinkSessionById(parseInt(id));
     if (typeof res === "string") {
-      console.log("No Think Session Found");
+      showErrorNotification(
+        "Error",
+        "No Think Session Found. Please try again."
+      );
     } else {
       const thinkFolderRes = await getThinkFolderById(res.thinkfolder_id);
       if (typeof thinkFolderRes === "string") {
-        console.log("No Think Folder Found");
+        showErrorNotification(
+          "Error",
+          "No Think Folder Found. Please try again."
+        );
       } else {
         const thinkSessionWithFolder = {
           ...res,
@@ -62,19 +75,22 @@ const StudyBoardPage = () => {
         setThinkSession(thinkSessionWithFolder);
 
         // Get layout options
-        const layout = JSON.parse(res.layout as string);
-        if (layout.length > 0) {
-          const layoutOptions = layout.map((layoutItem: any) => {
-            const lastDashIndex = layoutItem.i.lastIndexOf("-");
-            const type = layoutItem.i.substring(0, lastDashIndex);
-            const id = layoutItem.i.substring(lastDashIndex + 1);
+        if (res.layout !== undefined) {
+          // Add a check to make sure that the res.layout property is not undefined
+          const layout = JSON.parse(res.layout as string);
+          if (layout.length > 0) {
+            const layoutOptions = layout.map((layoutItem: any) => {
+              const lastDashIndex = layoutItem.i.lastIndexOf("-");
+              const type = layoutItem.i.substring(0, lastDashIndex);
+              const id = layoutItem.i.substring(lastDashIndex + 1);
 
-            return {
-              type,
-              id,
-            };
-          });
-          setWidgetLayout(layoutOptions);
+              return {
+                type,
+                id,
+              };
+            });
+            setWidgetLayout(layoutOptions);
+          }
         }
       }
     }
@@ -89,15 +105,29 @@ const StudyBoardPage = () => {
   }, [id]);
 
   useEffect(() => {
-    console.log("Study Board Page ID: ", id);
-    if (!id) return;
     fetchThinkSession();
     fetchActionItems();
-  }, [fetchActionItems, fetchThinkSession, id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleLayoutChanged = (layout: any) => {
+    console.log(layout);
     updateThinkSession(thinkSession.id, { layout: JSON.stringify(layout) });
   };
+
+  const handleActionItemAdded = useCallback(() => {
+    modals.openModal({
+      title: "Add Think Session",
+      size: "lg",
+      children: (
+        <AddActionItemModal
+          thinkSessionId={thinkSession.id.toString()}
+          thinkFolderId={thinkSession.thinkfolder_id.toString()}
+          successCallback={fetchActionItems}
+        />
+      ),
+    });
+  }, [fetchActionItems, modals, thinkSession.id, thinkSession.thinkfolder_id]);
 
   const theme = useMantineTheme();
   const screenWidth = window.innerWidth;
@@ -191,7 +221,7 @@ const StudyBoardPage = () => {
                         />
                       ))}
                       <Button
-                        onClick={() => console.log("Add Action Item")}
+                        onClick={handleActionItemAdded}
                         variant="default"
                         h={"3rem"}
                         leftIcon={<IconPlus size={"1rem"} />}
@@ -222,16 +252,54 @@ const StudyBoardPage = () => {
               }}
             >
               <Menu.Label>Study Widgets</Menu.Label>
+              <Menu.Item
+                icon={<IconListCheck size={14} />}
+                onClick={() => {
+                  if (
+                    widgetLayout.findIndex(
+                      (item) => item.type === "action-items"
+                    ) !== -1
+                  ) {
+                    showErrorNotification(
+                      "Error",
+                      "Action Items Widget already exists"
+                    );
+                    return;
+                  } else {
+                    const actionItemsWidgetLayout = {
+                      x: 0,
+                      y: 0,
+                      w: 7,
+                      h: 7,
+                      i: `action-items-${thinkSession.id}`,
+                      moved: false,
+                      static: false,
+                    };
+                    updateThinkSession(thinkSession.id, {
+                      layout: JSON.stringify([
+                        ...JSON.parse(thinkSession.layout as string),
+                        actionItemsWidgetLayout,
+                      ]),
+                    });
+                    fetchThinkSession();
+                  }
+                }}
+              >
+                Action Items
+              </Menu.Item>
               <Menu.Item icon={<IconCards size={14} />}>Flashcards</Menu.Item>
               <Menu.Item
                 onClick={() => {
                   createNotesWidget(thinkSession.id).then((res) => {
                     if (
                       widgetLayout.findIndex(
-                        (item) => item.i === `notes-${res}`
+                        (item) => item.type === "notes"
                       ) !== -1
                     ) {
-                      console.log("Widget already exists");
+                      showErrorNotification(
+                        "Error",
+                        "Notes Widget already exists"
+                      );
                       return;
                     } else {
                       const notesWidgetLayout = {
