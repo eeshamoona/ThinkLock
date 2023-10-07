@@ -4,7 +4,6 @@ import {
   Header,
   useMantineTheme,
   Menu,
-  Text,
   Button,
   Space,
   Stack,
@@ -36,11 +35,15 @@ import { getAllActionItemsByThinkSessionId } from "../../services/actionItemAPIC
 import { ActionItem } from "../../utils/models/actionitem.model";
 import { getThinkFolderById } from "../../services/thinkFolderAPICallerService";
 import NotesWidget from "../../components/Widgets/NotesWidget/NotesWidget";
-import { createNotesWidget } from "../../services/widgetsAPICallerService";
+import {
+  createFlashcardsWidget,
+  createNotesWidget,
+} from "../../services/widgetsAPICallerService";
 import { useModals } from "@mantine/modals";
 
 import AddActionItemModal from "../../components/Modals/AddActionItem/AddActionItemModal";
 import { showErrorNotification } from "../../utils/notifications";
+import FlashcardsWidget from "../../components/Widgets/FlashcardsWidget/FlashcardsWidget";
 
 /**
  * Study Board Page displays a reactive grid layout of widgets
@@ -187,7 +190,7 @@ const StudyBoardPage = () => {
                     <IconEqual />
                   </ActionIcon>
                   <div className="grid-item-content">
-                    <Text>Flashcard Section</Text>
+                    <FlashcardsWidget id={id} />
                   </div>
                 </Card>
               );
@@ -291,7 +294,43 @@ const StudyBoardPage = () => {
               >
                 Action Items
               </Menu.Item>
-              <Menu.Item icon={<IconCards size={14} />}>Flashcards</Menu.Item>
+              <Menu.Item
+                onClick={() => {
+                  createFlashcardsWidget(thinkSession.id).then((res) => {
+                    if (
+                      widgetLayout.findIndex(
+                        (item) => item.type === "flashcards"
+                      ) !== -1
+                    ) {
+                      showErrorNotification(
+                        "Error",
+                        "Flashcards Widget already exists"
+                      );
+                      return;
+                    } else {
+                      const flashcardsWidgetLayout = {
+                        x: 0,
+                        y: 0,
+                        w: 7,
+                        h: 7,
+                        i: `flashcards-${res}`,
+                        moved: false,
+                        static: false,
+                      };
+                      updateThinkSession(thinkSession.id, {
+                        layout: JSON.stringify([
+                          ...JSON.parse(thinkSession.layout as string),
+                          flashcardsWidgetLayout,
+                        ]),
+                      });
+                      fetchThinkSession();
+                    }
+                  });
+                }}
+                icon={<IconCards size={14} />}
+              >
+                Flashcards
+              </Menu.Item>
               <Menu.Item
                 onClick={() => {
                   createNotesWidget(thinkSession.id).then((res) => {
