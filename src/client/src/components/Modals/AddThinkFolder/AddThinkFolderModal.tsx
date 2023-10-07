@@ -20,6 +20,11 @@ import IconSelector from "../../IconSelector/IconSelector";
 import { showErrorNotification } from "../../../utils/notifications";
 import { showSuccessNotification } from "../../../utils/notifications";
 
+/**
+ * Add Think Folder Modal component displays a modal to add a think folder
+ * OnSubmit, it calls the addThinkFolder API and closes the modal
+ * @returns
+ */
 const AddThinkFolderModal = () => {
   const newThinkFolderForm = useForm({
     initialValues: {

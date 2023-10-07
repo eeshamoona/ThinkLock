@@ -15,6 +15,18 @@ interface ActionItemProps {
   thinkfolderColor: string;
 }
 
+/**
+ * Action Item Card component that displays an action item
+ * If draggable is true, it will be wrapped in a Draggable component so must be used in a Droppable component
+ * @param id - id of the action item
+ * @param index - index of the action item
+ * @param title - title of the action item
+ * @param description - description of the action item
+ * @param completed - whether the action item is completed
+ * @param draggable - whether the action item is draggable
+ * @param thinkfolderColor - color of the thinkfolder
+ * @returns
+ */
 const ActionItemCard = ({
   id,
   index,
@@ -27,12 +39,13 @@ const ActionItemCard = ({
   const [isCompleted, setIsCompleted] = useState<boolean>(completed);
   const textClassName = isCompleted ? "textCompleted" : "textNotCompleted";
 
-  const getColorFromHex = () => {
+  function getColorFromHex(): string {
     if (thinkfolderColor) {
       return hexToColorNameMap[thinkfolderColor];
     }
     return "blue";
-  };
+  }
+
   if (draggable) {
     return (
       <Draggable draggableId={`action-item-id-${id}`} index={index} key={id}>

@@ -13,6 +13,15 @@ interface ThinkFolderSelectItemProps
   value: string;
 }
 
+/**
+ * Think Folder Select Item component that displays a think folder in the select dropdown
+ * @param color - color of the think folder
+ * @param icon - icon of the think folder
+ * @param label - label of the think folder
+ * @param description - description of the think folder
+ * @param value - value of the think folder
+ * @returns
+ */
 const ThinkFolderSelectItem = forwardRef<
   HTMLDivElement,
   ThinkFolderSelectItemProps

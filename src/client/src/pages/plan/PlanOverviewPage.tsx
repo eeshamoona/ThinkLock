@@ -27,6 +27,10 @@ enum ModalOptions {
   ActionItem,
 }
 
+/**
+ * Plan Overview Page displays think folders and their action items and think sessions
+ * @returns
+ */
 const PlanOverviewPage = () => {
   const [folders, setFolders] = useState<ThinkFolder[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<ThinkFolder | null>(

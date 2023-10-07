@@ -19,16 +19,14 @@ interface HeatmapProps {
   thinkfolder_color: string;
 }
 
-const getDaysInYear = (year: number) => {
-  const date = new Date(year, 0, 1);
-  const days: Date[] = [];
-  while (date.getFullYear() === year) {
-    days.push(new Date(date));
-    date.setDate(date.getDate() + 1);
-  }
-  return days;
-};
-
+/**
+ * Heatmap component that displays the heatmap of hours spent on a thinkfolder per day
+ * @param heatmapData - array of heatmap data
+ * @param max - maximum number of hours spent on a thinkfolder
+ * @param numOfShades - number of shades to generate
+ * @param thinkfolder_color - color of the thinkfolder
+ * @returns
+ */
 const Heatmap = ({
   heatmapData,
   max,
@@ -50,10 +48,20 @@ const Heatmap = ({
     backgroundrgba
   );
 
-  const getShade = (hours: number) => {
+  function getDaysInYear(year: number): Date[] {
+    const date = new Date(year, 0, 1);
+    const days: Date[] = [];
+    while (date.getFullYear() === year) {
+      days.push(new Date(date));
+      date.setDate(date.getDate() + 1);
+    }
+    return days;
+  }
+
+  function getShade(hours: number): string {
     const index = Math.floor((hours / max) * (shadeNumber - 1));
     return shades[index];
-  };
+  }
 
   const days = getDaysInYear(new Date().getFullYear());
 

@@ -25,39 +25,45 @@ interface AddButtonProps {
   changeTabCallback?: (tab: string) => void;
 }
 
+/**
+ * AddButton component that displays the add button and its options to add a think session,
+ * review set, think folder, or action item
+ * @param changeTabCallback - callback function to change the tab
+ * @returns
+ */
 const AddButton = ({ changeTabCallback }: AddButtonProps) => {
   const modals = useModals();
   const theme = useMantineTheme();
 
-  const openAddThinkSessionModal = () => {
+  function openAddThinkSessionModal() {
     if (changeTabCallback) {
       changeTabCallback("study");
       openModal(AddOptions.ThinkSession);
     }
-  };
+  }
 
-  const openAddReviewSetModal = () => {
+  function openAddReviewSetModal() {
     if (changeTabCallback) {
       changeTabCallback("review");
       openModal(AddOptions.ReviewSet);
     }
-  };
+  }
 
-  const openAddThinkFolderModel = () => {
+  function openAddThinkFolderModel() {
     if (changeTabCallback) {
       changeTabCallback("plan");
       openModal(AddOptions.ThinkFolder);
     }
-  };
+  }
 
-  const openAddActionItemModal = () => {
+  function openAddActionItemModal() {
     if (changeTabCallback) {
       changeTabCallback("plan");
       openModal(AddOptions.ActionItem);
     }
-  };
+  }
 
-  const getModalContent = (modalContent: AddOptions | null) => {
+  function getModalContent(modalContent: AddOptions | null) {
     switch (modalContent) {
       case AddOptions.ThinkSession:
         return <AddThinkSessionModal />;
@@ -70,9 +76,9 @@ const AddButton = ({ changeTabCallback }: AddButtonProps) => {
       default:
         return <div></div>;
     }
-  };
+  }
 
-  const getModalTitle = (modalContent: AddOptions | null) => {
+  function getModalTitle(modalContent: AddOptions | null) {
     switch (modalContent) {
       case AddOptions.ThinkSession:
         return (
@@ -101,9 +107,9 @@ const AddButton = ({ changeTabCallback }: AddButtonProps) => {
       default:
         return <div></div>;
     }
-  };
+  }
 
-  const getModalSize = (modalContent: AddOptions | null) => {
+  function getModalSize(modalContent: AddOptions | null) {
     switch (modalContent) {
       case AddOptions.ThinkSession:
         return "md";
@@ -116,16 +122,16 @@ const AddButton = ({ changeTabCallback }: AddButtonProps) => {
       default:
         return "md";
     }
-  };
+  }
 
-  const openModal = (content: AddOptions) => {
+  function openModal(content: AddOptions) {
     modals.openModal({
       title: getModalTitle(content),
       children: <>{getModalContent(content)}</>,
       sx: { borderRadius: "1rem" },
       size: getModalSize(content),
     });
-  };
+  }
 
   return (
     <>

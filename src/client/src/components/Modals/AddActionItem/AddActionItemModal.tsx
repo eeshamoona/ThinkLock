@@ -17,6 +17,15 @@ interface AddActionItemModalProps {
   successCallback?: () => Promise<void>;
 }
 
+/**
+ * Add Action Item Modal component displays a modal to add an action item
+ * Only the think folder id is required, but if the think session id is provided, thinkfolder will be disabled
+ * OnSubmit, it calls the addActionItem API and closes the modal
+ * @param thinkSessionId - id of the think session
+ * @param thinkFolderId - id of the think folder
+ * @param successCallback - callback function to trigger when the action item is created
+ * @returns
+ */
 const AddActionItemModal = ({
   thinkSessionId,
   thinkFolderId,
@@ -46,7 +55,13 @@ const AddActionItemModal = ({
     });
   }, []);
 
-  const getThinkFolderData = () => {
+  function getThinkFolderData(): {
+    value: string;
+    label: string;
+    color: string;
+    icon: string;
+    description: string;
+  }[] {
     return thinkFolders.map(({ id, name, color, icon, description }) => ({
       value: id.toString(),
       label: name,
@@ -54,7 +69,7 @@ const AddActionItemModal = ({
       icon,
       description,
     }));
-  };
+  }
 
   return (
     <div id="add-action-item-modal-container">

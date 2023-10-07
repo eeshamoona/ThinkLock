@@ -15,6 +15,18 @@ interface ThinkFolderProps {
   onHover?: any;
 }
 
+/**
+ * Think Folder Card component that displays a think folder
+ * If hoverActive is true, then onHover will be triggered
+ * @param folderColor - color of the think folder
+ * @param folderName - name of the think folder
+ * @param folderSubtitle - subtitle of the think folder
+ * @param folderIcon - icon of the think folder
+ * @param onClick - callback function to trigger when the think folder is clicked
+ * @param hoverActive - whether the think folder should have hover effects
+ * @param onHover - callback function to trigger when the think folder is hovered
+ * @returns
+ */
 const ThinkFolderCard = ({
   folderColor,
   folderName,
@@ -24,12 +36,12 @@ const ThinkFolderCard = ({
   hoverActive,
   onHover,
 }: ThinkFolderProps) => {
-  const getColorFromHex = () => {
+  function getColorFromHex(): string {
     if (folderColor) {
       return hexToColorNameMap[folderColor];
     }
     return "gray";
-  };
+  }
 
   const [hoverColor, setHoverColor] = useState(
     folderColor ? `${folderColor}22` : ""
@@ -39,7 +51,7 @@ const ThinkFolderCard = ({
     setHoverColor(folderColor ? `${folderColor}22` : "");
   }, [folderColor, hoverActive, hoverColor]);
 
-  const handleMouseEnter = () => {
+  function handleMouseEnter(): void {
     if (onHover) {
       onHover();
     }
@@ -51,9 +63,9 @@ const ThinkFolderCard = ({
         );
       }
     }
-  };
+  }
 
-  const handleMouseLeave = () => {
+  function handleMouseLeave(): void {
     if (hoverActive) {
       // Reset to default hover color when mouse leaves
       document.documentElement.style.setProperty(
@@ -61,13 +73,13 @@ const ThinkFolderCard = ({
         getColorFromHex()
       );
     }
-  };
+  }
 
-  const handleOnClick = () => {
+  function handleOnClick(): void {
     if (onClick) {
       onClick();
     }
-  };
+  }
 
   const Icon = (allIcons as IconType)[folderIcon];
 

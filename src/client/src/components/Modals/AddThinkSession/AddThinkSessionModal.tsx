@@ -26,6 +26,16 @@ interface AddThinkSessionModalProps {
   thinkSessionDate?: Date;
   successCallback?: () => Promise<void>;
 }
+
+/**
+ * Add Think Session Modal component displays a modal to add a think session
+ * Only the think folder id is required, but if the think session date is provided, date will be filled
+ * OnSubmit, it calls the addThinkSession API and closes the modal
+ * @param thinkFolderId - id of the think folder
+ * @param thinkSessionDate - date of the think session
+ * @param successCallback - callback function to trigger when the think session is created
+ * @returns
+ */
 const AddThinkSessionModal = ({
   thinkFolderId,
   thinkSessionDate,
@@ -62,7 +72,13 @@ const AddThinkSessionModal = ({
     });
   }, []);
 
-  const getThinkFolderData = () => {
+  function getThinkFolderData(): {
+    value: string;
+    label: string;
+    color: string;
+    icon: string;
+    description: string;
+  }[] {
     return thinkFolders.map(({ id, name, color, icon, description }) => ({
       value: id.toString(),
       label: name,
@@ -70,9 +86,9 @@ const AddThinkSessionModal = ({
       icon,
       description,
     }));
-  };
+  }
 
-  const onSubmit = async (values: any) => {
+  async function onSubmit(values: any): Promise<void> {
     // Parse the date string into a Date object
     const dateObj = new Date(values.date);
 
@@ -107,7 +123,7 @@ const AddThinkSessionModal = ({
       showErrorNotification("Error", "Action Item Creation Failed");
       console.log(values);
     }
-  };
+  }
 
   return (
     <div id="add-think-session-modal-container">

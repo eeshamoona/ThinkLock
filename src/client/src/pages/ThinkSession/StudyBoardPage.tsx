@@ -42,6 +42,10 @@ import { useModals } from "@mantine/modals";
 import AddActionItemModal from "../../components/Modals/AddActionItem/AddActionItemModal";
 import { showErrorNotification } from "../../utils/notifications";
 
+/**
+ * Study Board Page displays a reactive grid layout of widgets
+ * @returns
+ */
 const StudyBoardPage = () => {
   const { id } = useParams<{ id: string }>();
   const [thinkSession, setThinkSession] = useState<ThinkSession>(
@@ -110,10 +114,10 @@ const StudyBoardPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleLayoutChanged = (layout: any) => {
+  function handleLayoutChanged(layout: any) {
     console.log(layout);
     updateThinkSession(thinkSession.id, { layout: JSON.stringify(layout) });
-  };
+  }
 
   const handleActionItemAdded = useCallback(() => {
     modals.openModal({

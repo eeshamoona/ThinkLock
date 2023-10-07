@@ -14,6 +14,17 @@ interface IconPickerProps {
   color?: any;
 }
 
+/**
+ * Icon Selector component that displays a dropdown of all the icons in the tabler-icons-react library
+ * @param value - value of the icon
+ * @param onChange - callback function to trigger when the icon is changed
+ * @param checked - whether the icon is checked
+ * @param error - whether the icon has an error
+ * @param onFocus - callback function to trigger when the icon is focused
+ * @param onBlur - callback function to trigger when the icon is blurred
+ * @param color - color of the icon
+ * @returns
+ */
 const IconSelector = ({
   value,
   onChange,
@@ -22,11 +33,11 @@ const IconSelector = ({
 }: IconPickerProps) => {
   const [icon, setIcon] = useState(value || "");
 
-  const onIconChange = (selectedIcon: string | null) => {
+  function onIconChange(selectedIcon: string | null): void {
     if (!selectedIcon) return;
     setIcon(selectedIcon);
     onChange(selectedIcon);
-  };
+  }
 
   const Icon = (allIcons as IconType)[icon];
 

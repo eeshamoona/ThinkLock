@@ -24,6 +24,12 @@ interface HeaderProps {
   changeTabCallback?: (tab: string) => void;
 }
 
+/**
+ * Custom Header component that displays name of the app,
+ * search bar, add button, notification button, and user profile button
+ * @param changeTabCallback - callback function to change the tab
+ * @returns
+ */
 const Header = ({ changeTabCallback }: HeaderProps) => {
   const theme = useMantineTheme();
   const navigate = useNavigate();

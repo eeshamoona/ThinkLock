@@ -20,6 +20,13 @@ interface DayCardProps {
   onClick: () => void;
 }
 
+/**
+ * Day Card component that displays a day in the week strip calendar
+ * @param day - date of the day
+ * @param isSelected - whether the day is selected
+ * @param onClick - callback function to trigger when the day is clicked
+ * @returns
+ */
 const DayCard = ({ day, isSelected, onClick }: DayCardProps) => {
   return (
     <Button
@@ -47,6 +54,13 @@ interface WeekViewStripCalendarProps {
   addSuccessCallback?: () => Promise<void>;
 }
 
+/**
+ * Week View Strip Calendar component that displays a week strip calendar
+ * @param initialDate - initial date of the calendar
+ * @param onDayClick - callback function to trigger when a day is clicked
+ * @param addSuccessCallback - callback function to trigger when a think session is added
+ * @returns
+ */
 const WeekViewStripCalendar = ({
   initialDate,
   onDayClick,
@@ -59,23 +73,23 @@ const WeekViewStripCalendar = ({
   const modals = useModals();
 
   // Function to navigate to the previous week
-  const goToPreviousWeek = () => {
+  function goToPreviousWeek(): void {
     setCurrentDate((prevDate) => addDays(prevDate, -7));
-  };
+  }
 
   // Function to navigate to the next week
-  const goToNextWeek = () => {
+  function goToNextWeek(): void {
     setCurrentDate((prevDate) => addDays(prevDate, 7));
-  };
+  }
 
   // Handle keyboard navigation
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>): void {
     if (event.key === "ArrowLeft") {
       navLeftRef.current?.click();
     } else if (event.key === "ArrowRight") {
       navRightRef.current?.click();
     }
-  };
+  }
 
   return (
     <Group position="apart" mb={"0.5rem"}>

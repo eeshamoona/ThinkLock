@@ -9,6 +9,12 @@ interface HoldButtonProps {
   folderColor?: string;
 }
 
+/**
+ * Hold Start Button component that displays a button that requires the user
+ * to hold it for 3 seconds before it triggers the onSuccess callback
+ * @param onSuccess - callback function to trigger when the user holds the button for 3 seconds
+ * @returns
+ */
 const HoldStartButton = ({ onSuccess, folderColor }: HoldButtonProps) => {
   const [countdown, setCountdown] = useState(3);
   const [holding, setHolding] = useState(false);
@@ -38,16 +44,16 @@ const HoldStartButton = ({ onSuccess, folderColor }: HoldButtonProps) => {
     };
   }, [countdown, holding, onSuccess]);
 
-  const handleMouseDown = () => {
+  function handleMouseDown(): void {
     setHolding(true);
-  };
+  }
 
-  const handleMouseUp = () => {
+  function handleMouseUp(): void {
     if (countdown !== 0) {
       setCountdown(3);
     }
     setHolding(false);
-  };
+  }
 
   return (
     <Button

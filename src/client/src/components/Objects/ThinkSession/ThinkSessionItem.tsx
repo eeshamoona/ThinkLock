@@ -20,6 +20,22 @@ interface ThinkSessionProps {
   onClick?: (id: string) => void;
 }
 
+/**
+ * Think Session Item component that displays a think session
+ * If isDroppable is true, it will be wrapped in a Droppable
+ * component so it must be used in DragDropContext and Droppable components
+ * @param id - id of the think session
+ * @param title - title of the think session
+ * @param date - date of the think session
+ * @param start_time - start time of the think session
+ * @param end_time - end time of the think session
+ * @param location - location of the think session
+ * @param thinkfolderColor - color of the thinkfolder
+ * @param thinkfolderIcon - icon of the thinkfolder
+ * @param isDroppable - whether the think session is droppable
+ * @param onClick - callback function to trigger when the think session is clicked
+ * @returns
+ */
 const ThinkSessionItem = ({
   id,
   title,
@@ -37,12 +53,12 @@ const ThinkSessionItem = ({
   const theme = useMantineTheme();
   const darkMode = theme.colorScheme === "dark";
 
-  const formatTime = (time: Date) => {
+  function formatTime(time: Date): string {
     const formattedHours = time.getHours() % 12 || 12;
     const formattedMinutes = time.getMinutes().toString().padStart(2, "0");
     const ampm = time.getHours() >= 12 ? "PM" : "AM";
     return `${formattedHours}:${formattedMinutes} ${ampm}`;
-  };
+  }
 
   // Convert date to local date
   date = new Date(date.toString().replace(/-/g, "/").replace(/T.+/, ""));

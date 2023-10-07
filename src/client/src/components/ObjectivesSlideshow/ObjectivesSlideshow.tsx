@@ -11,6 +11,14 @@ interface ObjectiveSlideProps {
   progress: number;
 }
 
+/**
+ * Objective Slide component that displays the objective card with the title,
+ * subtitle, and progress towards the next level in the objective
+ * @param title - title of the objective
+ * @param subtitle - subtitle of the objective
+ * @param progress - progress towards the next level in the objective
+ * @returns
+ */
 const ObjectiveSlide = ({ title, subtitle, progress }: ObjectiveSlideProps) => {
   return (
     <Paper radius="md" className={"objective-card"}>
@@ -37,9 +45,15 @@ const ObjectiveSlide = ({ title, subtitle, progress }: ObjectiveSlideProps) => {
   );
 };
 
-interface ObjectivesSlideshowProps {}
+/**
+ * Objectives Slideshow component that displays the objectives slideshow
+ * using the Objective Slide component
+ * @param
+ * @returns
+ */
 
-const ObjectivesSlideshow = (props: ObjectivesSlideshowProps) => {
+//TODO: Add objectives from the database
+const ObjectivesSlideshow = () => {
   return (
     <Carousel
       slideSize="33.333333%"

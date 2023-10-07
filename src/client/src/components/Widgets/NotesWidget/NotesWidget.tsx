@@ -18,6 +18,11 @@ import {
 interface NotesWidgetProps {
   id: number;
 }
+/**
+ * Notes Widget component that displays a rich text editor
+ * @param id - id of the widget
+ * @returns
+ */
 const NotesWidget = ({ id }: NotesWidgetProps) => {
   const theme = useMantineTheme();
 

@@ -32,6 +32,10 @@ import HoldStartButton from "../../components/HoldStartButton/HoldStartButton";
 import ObjectivesSlideshow from "../../components/ObjectivesSlideshow/ObjectivesSlideshow";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Study Overview Page displays objectives and think sessions
+ * @returns
+ */
 const StudyOverviewPage = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(
     startOfDay(new Date())
