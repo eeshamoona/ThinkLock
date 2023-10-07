@@ -1,4 +1,4 @@
-import { Card, Textarea, ActionIcon, Group, Tooltip } from "@mantine/core";
+import { Card, Textarea, ActionIcon, Group } from "@mantine/core";
 import React, { useCallback, useRef, useState } from "react";
 import { RiCheckboxLine } from "react-icons/ri";
 import { RiEdit2Line } from "react-icons/ri";
@@ -21,67 +21,89 @@ const Flashcard = ({ front, back, id }: FlashcardProps) => {
   const actionButtonRef = useRef(null);
 
   const handleCardClick = (event: React.MouseEvent) => {
-    if (event.target !== actionButtonRef.current && !editable) {
+    if (!editable) {
       setIsFlipped(!isFlipped);
     }
   };
 
-  function handleSaveClick(): void {
-    setEditable(false);
-  }
-
-  function handleEditClick(): void {
-    setEditable(true);
-  }
-
   const getIcon = useCallback(
     () =>
       editable ? (
-        <Tooltip label={isFlipped ? "Save Back" : "Save Front"}>
-          <RiCheckboxLine size={"2rem"} />
-        </Tooltip>
+        <RiCheckboxLine />
       ) : actionItemHovered ? (
-        <RiEdit2Line size={"2rem"} />
+        <RiEdit2Line />
       ) : isFlipped ? (
-        <RiSendBackward size={"2rem"} />
+        <RiSendBackward />
       ) : (
-        <RiBringForward size={"2rem"} />
+        <RiBringForward />
       ),
     [editable, actionItemHovered, isFlipped]
   );
 
+  function handleSaveClick(event: React.MouseEvent): void {
+    event.stopPropagation();
+    setEditable(false);
+  }
+
+  function handleEditClick(event: React.MouseEvent): void {
+    event.stopPropagation();
+    setEditable(true);
+  }
+
   return (
     <div onClick={handleCardClick} className="flashcard-container">
-      <Card
-        shadow="sm"
-        className={`flashcard-card ${isFlipped ? "flipped" : ""}`}
-      >
-        <div className="flashcard-info">
+      <div className={`flashcard ${isFlipped ? "flipped" : ""}`}>
+        <Card className="flashcard-front">
+          <Group>
+            <ActionIcon
+              ref={actionButtonRef}
+              onMouseEnter={() => setActionItemHovered(true)}
+              onMouseLeave={() => setActionItemHovered(false)}
+              onClick={editable ? handleSaveClick : handleEditClick}
+              aria-label={editable ? "Save" : "Edit"}
+              className="flashcard-front-action-button"
+            >
+              {getIcon()}
+            </ActionIcon>
+          </Group>
           <Textarea
-            value={isFlipped ? backContent : frontContent}
+            variant="unstyled"
+            value={frontContent}
             onChange={(event) => {
-              if (isFlipped) {
+              setFrontContent(event.currentTarget.value);
+            }}
+            w={"100%"}
+            p={"sm"}
+            className={`flashcard-textarea-front ${editable ? "" : "static"}`}
+          />
+        </Card>
+        <Card className="flashcard-back">
+          <Group>
+            <ActionIcon
+              ref={actionButtonRef}
+              onMouseEnter={() => setActionItemHovered(true)}
+              onMouseLeave={() => setActionItemHovered(false)}
+              onClick={editable ? handleSaveClick : handleEditClick}
+              aria-label={editable ? "Save" : "Edit"}
+              className="flashcard-back-action-button"
+            >
+              {getIcon()}
+            </ActionIcon>
+          </Group>
+          <Textarea
+            variant="unstyled"
+            value={backContent}
+            onChange={(event) => {
+              if (editable) {
                 setBackContent(event.currentTarget.value);
-              } else {
-                setFrontContent(event.currentTarget.value);
               }
             }}
-            className="flashcard-textarea"
-            disabled={!editable}
+            w={"100%"}
+            p={"sm"}
+            className={`flashcard-textarea-back ${editable ? "" : "static"}`}
           />
-        </div>
-        <Group className="action-button-group">
-          <ActionIcon
-            onMouseEnter={() => setActionItemHovered(true)}
-            onMouseLeave={() => setActionItemHovered(false)}
-            onClick={editable ? handleSaveClick : handleEditClick}
-            aria-label={editable ? "Save" : "Edit"}
-            className="flashcard-action-button"
-          >
-            {getIcon()}
-          </ActionIcon>
-        </Group>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 };

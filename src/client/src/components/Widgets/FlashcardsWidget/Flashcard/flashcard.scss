@@ -1,26 +1,51 @@
 .flashcard-container {
+  perspective: 1000px;
+}
+
+.flashcard {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1000ms;
+  &.flipped {
+    transform: rotateY(180deg);
+  }
+}
+
+.flashcard-front,
+.flashcard-back {
   display: flex;
-  perspective: 1000px; // This gives a 3D effect to the flipping action
-  transition:
-    box-shadow 150ms ease,
-    transform 100ms ease;
-}
-
-.flashcard-container:hover {
-  transform: scale(1.05);
-}
-
-.flashcard-card {
+  justify-content: center;
+  align-items: center;
   padding: 0;
-  transform-style: preserve-3d; // Ensures the flip happens in 3D space
-  transition: transform 0.6s; // Duration of the flip animation
+  width: 100%;
+
+  position: absolute;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
-.flipped {
+.flashcard-back {
   transform: rotateY(180deg);
 }
 
-.flashcard-action-button {
+.flashcard-textarea-front,
+.flashcard-textarea-back {
+  border: none;
+
+  &.static {
+    .mantine-Textarea-input,
+    .mantine-Textarea-wrapper {
+      caret-color: transparent;
+    }
+    .mantine-Textarea-wrapper:hover,
+    .mantine-Textarea-input:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.flashcard-back-action-button,
+.flashcard-front-action-button {
   position: absolute;
   top: 10px;
   right: 10px;
