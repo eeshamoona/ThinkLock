@@ -1,4 +1,4 @@
-import { Card, Textarea, ActionIcon, Group, Tooltip } from "@mantine/core";
+import { Card, Textarea, ActionIcon, Group, Badge } from "@mantine/core";
 import React, { useCallback, useRef, useState } from "react";
 import { RiCheckboxLine } from "react-icons/ri";
 import { RiEdit2Line } from "react-icons/ri";
@@ -10,9 +10,10 @@ interface FlashcardProps {
   front: string;
   back: string;
   id: number;
+  thinkfolder_color: string;
 }
 
-const Flashcard = ({ front, back, id }: FlashcardProps) => {
+const Flashcard = ({ front, back, id, thinkfolder_color }: FlashcardProps) => {
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [editable, setEditable] = useState<boolean>(false);
   const [frontContent, setFrontContent] = useState<string>(front);
@@ -42,14 +43,14 @@ const Flashcard = ({ front, back, id }: FlashcardProps) => {
 
   const getTooltipLabel = useCallback(
     () =>
-      isFlipped
-        ? editable
-          ? "Save Back"
-          : "Edit Back"
-        : editable
-        ? "Save Front"
-        : "Edit Front",
-    [editable, isFlipped]
+      editable
+        ? "Save"
+        : actionItemHovered
+        ? "Edit"
+        : isFlipped
+        ? "Back"
+        : "Front",
+    [actionItemHovered, editable, isFlipped]
   );
 
   function handleSaveClick(event: React.MouseEvent): void {
@@ -67,21 +68,22 @@ const Flashcard = ({ front, back, id }: FlashcardProps) => {
       <div className={`flashcard ${isFlipped ? "flipped" : ""}`}>
         <Card withBorder={true} shadow="sm" className="flashcard-front">
           <Group>
-            <Tooltip.Floating
-              key="front-tooltip"
-              offset={18}
-              label={getTooltipLabel()}
+            <Badge
+              variant="light"
+              color={thinkfolder_color}
+              p={"xs"}
+              pr={0}
+              size="xs"
+              radius="xs"
+              ref={actionButtonRef}
+              onMouseEnter={() => setActionItemHovered(true)}
+              onMouseLeave={() => setActionItemHovered(false)}
+              onClick={editable ? handleSaveClick : handleEditClick}
+              className="flashcard-front-action-button"
+              rightSection={<ActionIcon>{getIcon()}</ActionIcon>}
             >
-              <ActionIcon
-                ref={actionButtonRef}
-                onMouseEnter={() => setActionItemHovered(true)}
-                onMouseLeave={() => setActionItemHovered(false)}
-                onClick={editable ? handleSaveClick : handleEditClick}
-                className="flashcard-front-action-button"
-              >
-                {getIcon()}
-              </ActionIcon>
-            </Tooltip.Floating>
+              {getTooltipLabel()}
+            </Badge>
           </Group>
           <Textarea
             variant="unstyled"
@@ -96,23 +98,22 @@ const Flashcard = ({ front, back, id }: FlashcardProps) => {
         </Card>
         <Card withBorder={true} shadow="sm" className="flashcard-back">
           <Group>
-            <Tooltip
-              key="back-tooltip"
-              color="blue"
-              position="right"
-              withArrow
-              label={getTooltipLabel()}
+            <Badge
+              ref={actionButtonRef}
+              onMouseEnter={() => setActionItemHovered(true)}
+              onMouseLeave={() => setActionItemHovered(false)}
+              onClick={editable ? handleSaveClick : handleEditClick}
+              variant="light"
+              p={"xs"}
+              pr={0}
+              radius="xs"
+              size="xs"
+              color={thinkfolder_color}
+              className="flashcard-back-action-button"
+              rightSection={<ActionIcon>{getIcon()}</ActionIcon>}
             >
-              <ActionIcon
-                ref={actionButtonRef}
-                onMouseEnter={() => setActionItemHovered(true)}
-                onMouseLeave={() => setActionItemHovered(false)}
-                onClick={editable ? handleSaveClick : handleEditClick}
-                className="flashcard-back-action-button"
-              >
-                {getIcon()}
-              </ActionIcon>
-            </Tooltip>
+              {getTooltipLabel()}
+            </Badge>
           </Group>
           <Textarea
             variant="unstyled"

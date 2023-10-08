@@ -7,8 +7,9 @@ import "./flashcardsWidget.scss";
 
 interface FlashcardsWidgetProps {
   id: number;
+  thinkfolder_color: string;
 }
-const FlashcardsWidget = ({ id }: FlashcardsWidgetProps) => {
+const FlashcardsWidget = ({ id, thinkfolder_color }: FlashcardsWidgetProps) => {
   const [flashcards, setFlashcards] = useState<FlashcardData[]>();
   const theme = useMantineTheme();
 
@@ -43,6 +44,7 @@ const FlashcardsWidget = ({ id }: FlashcardsWidgetProps) => {
               front={flashcard.front}
               back={flashcard.back}
               id={flashcard.id}
+              thinkfolder_color={thinkfolder_color}
             />
           );
         })}

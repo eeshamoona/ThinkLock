@@ -44,6 +44,7 @@ import { useModals } from "@mantine/modals";
 import AddActionItemModal from "../../components/Modals/AddActionItem/AddActionItemModal";
 import { showErrorNotification } from "../../utils/notifications";
 import FlashcardsWidget from "../../components/Widgets/FlashcardsWidget/FlashcardsWidget";
+import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 
 /**
  * Study Board Page displays a reactive grid layout of widgets
@@ -56,8 +57,9 @@ const StudyBoardPage = () => {
   );
   const [actionItems, setActionItems] = useState<ActionItem[]>([]);
   const [widgetLayout, setWidgetLayout] = useState<any[]>([]);
-
   const modals = useModals();
+  const theme = useMantineTheme();
+  const screenWidth = window.innerWidth;
 
   const typeToString: {} = {
     "action-items": "Action Items",
@@ -147,9 +149,6 @@ const StudyBoardPage = () => {
     });
   }, [fetchActionItems, modals, thinkSession.id, thinkSession.thinkfolder_id]);
 
-  const theme = useMantineTheme();
-  const screenWidth = window.innerWidth;
-
   return (
     <div
       style={{
@@ -209,7 +208,14 @@ const StudyBoardPage = () => {
                     <IconEqual />
                   </ActionIcon>
                   <div className="grid-item-content">
-                    <FlashcardsWidget id={id} />
+                    <FlashcardsWidget
+                      id={id}
+                      thinkfolder_color={
+                        hexToColorNameMap[
+                          thinkSession.thinkfolder_color as string
+                        ] || "gray"
+                      }
+                    />
                   </div>
                 </Card>
               );
