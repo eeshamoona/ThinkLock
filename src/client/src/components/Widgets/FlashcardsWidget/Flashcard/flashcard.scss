@@ -10,7 +10,7 @@
 .flashcard {
   position: relative;
   transform-style: preserve-3d;
-  transition: transform 1000ms;
+  transition: transform 0.6s ease;
 
   &.flipped {
     transform: rotateY(180deg);

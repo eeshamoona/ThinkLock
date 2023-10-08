@@ -62,9 +62,9 @@ const StudyBoardPage = () => {
   const screenWidth = window.innerWidth;
 
   const typeToString: {} = {
-    "action-items": "Action Items",
-    flashcards: "Flashcards",
-    notes: "Notes",
+    "action-items": "ACTION ITEMS",
+    flashcards: "FLASHCARDS",
+    notes: "NOTES",
   };
 
   const fetchThinkSession = useCallback(async () => {

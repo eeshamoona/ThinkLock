@@ -1,19 +1,25 @@
 import { Card, Textarea, ActionIcon, Group, Badge } from "@mantine/core";
 import React, { useCallback, useRef, useState } from "react";
-import { RiCheckboxLine } from "react-icons/ri";
-import { RiEdit2Line } from "react-icons/ri";
-import { RiBringForward } from "react-icons/ri";
-import { RiSendBackward } from "react-icons/ri";
+import { IconKey, IconCheck, IconEdit, IconLock } from "@tabler/icons-react";
 import "./flashcard.scss";
 
 interface FlashcardProps {
   front: string;
   back: string;
   id: number;
+  index: number;
   thinkfolder_color: string;
+  onSubmitCallback: (front: string, back: string, index: number) => void;
 }
 
-const Flashcard = ({ front, back, id, thinkfolder_color }: FlashcardProps) => {
+const Flashcard = ({
+  front,
+  back,
+  id,
+  index,
+  thinkfolder_color,
+  onSubmitCallback,
+}: FlashcardProps) => {
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [editable, setEditable] = useState<boolean>(false);
   const [frontContent, setFrontContent] = useState<string>(front);
@@ -21,24 +27,32 @@ const Flashcard = ({ front, back, id, thinkfolder_color }: FlashcardProps) => {
   const [actionItemHovered, setActionItemHovered] = useState(false);
   const actionButtonRef = useRef(null);
 
+  const [showBackText, setShowBackText] = useState<boolean>(false);
+
   const handleCardClick = (event: React.MouseEvent) => {
     if (!editable) {
+      // Start the fade-out transition
       setIsFlipped(!isFlipped);
+
+      // After a short delay, change the text
+      setTimeout(() => {
+        setShowBackText(!showBackText);
+      }, 300); // Match the duration of half the flip transition
     }
   };
 
   const getIcon = useCallback(
     () =>
       editable ? (
-        <RiCheckboxLine />
+        <IconCheck size={"0.85rem"} />
       ) : actionItemHovered ? (
-        <RiEdit2Line />
-      ) : isFlipped ? (
-        <RiSendBackward />
+        <IconEdit size={"0.85rem"} />
+      ) : showBackText ? (
+        <IconLock size={"0.85rem"} />
       ) : (
-        <RiBringForward />
+        <IconKey size={"0.85rem"} />
       ),
-    [editable, actionItemHovered, isFlipped]
+    [editable, actionItemHovered, showBackText]
   );
 
   const getTooltipLabel = useCallback(
@@ -47,14 +61,15 @@ const Flashcard = ({ front, back, id, thinkfolder_color }: FlashcardProps) => {
         ? "Save"
         : actionItemHovered
         ? "Edit"
-        : isFlipped
+        : showBackText
         ? "Back"
         : "Front",
-    [actionItemHovered, editable, isFlipped]
+    [actionItemHovered, editable, showBackText]
   );
 
   function handleSaveClick(event: React.MouseEvent): void {
     event.stopPropagation();
+    onSubmitCallback(frontContent, backContent, index);
     setEditable(false);
   }
 
@@ -73,13 +88,13 @@ const Flashcard = ({ front, back, id, thinkfolder_color }: FlashcardProps) => {
               color={thinkfolder_color}
               p={"xs"}
               pr={0}
-              size="xs"
+              size="sm"
               radius="xs"
               ref={actionButtonRef}
               onMouseEnter={() => setActionItemHovered(true)}
               onMouseLeave={() => setActionItemHovered(false)}
               onClick={editable ? handleSaveClick : handleEditClick}
-              className="flashcard-front-action-button"
+              className={`flashcard-front-action-button `}
               rightSection={<ActionIcon>{getIcon()}</ActionIcon>}
             >
               {getTooltipLabel()}
@@ -107,9 +122,9 @@ const Flashcard = ({ front, back, id, thinkfolder_color }: FlashcardProps) => {
               p={"xs"}
               pr={0}
               radius="xs"
-              size="xs"
+              size="sm"
               color={thinkfolder_color}
-              className="flashcard-back-action-button"
+              className={`flashcard-back-action-button `}
               rightSection={<ActionIcon>{getIcon()}</ActionIcon>}
             >
               {getTooltipLabel()}

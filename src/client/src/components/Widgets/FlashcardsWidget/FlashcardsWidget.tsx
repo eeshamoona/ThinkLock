@@ -1,6 +1,9 @@
 import { Paper, SimpleGrid, useMantineTheme } from "@mantine/core";
-import React, { useEffect, useState } from "react";
-import { getFlashcards } from "../../../services/widgetsAPICallerService";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  getFlashcards,
+  updateFlashcardsWidget,
+} from "../../../services/widgetsAPICallerService";
 import { FlashcardData } from "../../../utils/models/flashcard.model";
 import Flashcard from "./Flashcard/Flashcard";
 import "./flashcardsWidget.scss";
@@ -13,13 +16,24 @@ const FlashcardsWidget = ({ id, thinkfolder_color }: FlashcardsWidgetProps) => {
   const [flashcards, setFlashcards] = useState<FlashcardData[]>();
   const theme = useMantineTheme();
 
-  useEffect(() => {
-    const fetchFlashcards = async () => {
-      const res = await getFlashcards(id);
-      setFlashcards(res);
-    };
-    fetchFlashcards();
+  const fetchFlashcards = useCallback(async () => {
+    const res = await getFlashcards(id);
+    setFlashcards(res);
   }, [id]);
+
+  useEffect(() => {
+    fetchFlashcards();
+  }, [fetchFlashcards, id]);
+
+  function onSubmit(front: string, back: string, index: number) {
+    const flashcardToUpdate = flashcards![index];
+    if (flashcardToUpdate) {
+      const updatedFlashcards = [...flashcards!];
+      updatedFlashcards[index] = { ...flashcardToUpdate, front, back };
+      updateFlashcardsWidget(id, updatedFlashcards);
+      fetchFlashcards();
+    }
+  }
 
   return (
     <Paper
@@ -44,7 +58,9 @@ const FlashcardsWidget = ({ id, thinkfolder_color }: FlashcardsWidgetProps) => {
               front={flashcard.front}
               back={flashcard.back}
               id={flashcard.id}
+              index={index}
               thinkfolder_color={thinkfolder_color}
+              onSubmitCallback={onSubmit}
             />
           );
         })}
