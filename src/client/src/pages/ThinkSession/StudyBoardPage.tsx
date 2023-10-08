@@ -83,14 +83,11 @@ const StudyBoardPage = () => {
           "No Think Folder Found. Please try again."
         );
       } else {
-        console.log("THE RESULT DATE", res.date as Date);
-        console.log(new Date(res.date));
         const thinkSessionWithFolder = {
           ...res,
           date: res.date as Date,
           thinkfolder_color: thinkFolderRes?.color,
         };
-        console.log(thinkSessionWithFolder);
         setThinkSession(thinkSessionWithFolder);
 
         // Get layout options
@@ -309,8 +306,10 @@ const StudyBoardPage = () => {
                     ) !== -1
                   ) {
                     showErrorNotification(
-                      "Error",
-                      "Action Items Widget already exists"
+                      "Action Items Widget already exists",
+                      `ID ${widgetLayout
+                        .findIndex((item) => item.type === "action-items")
+                        .toString()}`
                     );
                     return;
                   } else {
@@ -344,8 +343,10 @@ const StudyBoardPage = () => {
                       ) !== -1
                     ) {
                       showErrorNotification(
-                        "Error",
-                        "Flashcards Widget already exists"
+                        "Flashcards Widget already exists",
+                        `ID ${widgetLayout
+                          .findIndex((item) => item.type === "flashcards")
+                          .toString()}`
                       );
                       return;
                     } else {
@@ -381,8 +382,10 @@ const StudyBoardPage = () => {
                       ) !== -1
                     ) {
                       showErrorNotification(
-                        "Error",
-                        "Notes Widget already exists"
+                        "Notes Widget already exists",
+                        `ID ${widgetLayout
+                          .findIndex((item) => item.type === "notes")
+                          .toString()}`
                       );
                       return;
                     } else {

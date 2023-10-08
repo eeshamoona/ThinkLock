@@ -12,11 +12,11 @@ import "./flashcard.scss";
 interface FlashcardProps {
   front: string;
   back: string;
-  id: number;
+  id: string;
   index: number;
   thinkfolder_color: string;
   onSubmitCallback: (front: string, back: string, index: number) => void;
-  onDeleteCallback: (id: number) => void;
+  onDeleteCallback: (id: string) => void;
 }
 
 const Flashcard = ({
@@ -70,7 +70,7 @@ const Flashcard = ({
           ? "Edit Back"
           : "Edit Front"
         : actionItemHovered
-        ? ""
+        ? "Edit"
         : showBackText
         ? "Back"
         : "Front",
@@ -90,6 +90,7 @@ const Flashcard = ({
 
   function handleDeleteClick(event: React.MouseEvent): void {
     event.stopPropagation();
+    setEditable(false);
     onDeleteCallback(id);
   }
 
@@ -108,7 +109,7 @@ const Flashcard = ({
             ref={actionButtonRef}
             onMouseEnter={() => setActionItemHovered(true)}
             onMouseLeave={() => setActionItemHovered(false)}
-            onClick={editable ? handleSaveClick : handleEditClick}
+            onClick={editable ? undefined : handleEditClick}
             className={`flashcard-front-action-button ${
               editable ? "editable" : ""
             } `}
@@ -127,6 +128,7 @@ const Flashcard = ({
               <ActionIcon
                 variant={editable ? "light" : undefined}
                 color={editable ? "blue" : thinkfolder_color}
+                onClick={editable ? handleSaveClick : () => {}}
               >
                 {getIcon()}
               </ActionIcon>
@@ -150,7 +152,7 @@ const Flashcard = ({
             ref={actionButtonRef}
             onMouseEnter={() => setActionItemHovered(true)}
             onMouseLeave={() => setActionItemHovered(false)}
-            onClick={editable ? handleSaveClick : handleEditClick}
+            onClick={editable ? undefined : handleEditClick}
             variant="light"
             p={"xs"}
             fullWidth
@@ -160,7 +162,7 @@ const Flashcard = ({
             className={`flashcard-back-action-button ${
               editable ? "editable" : ""
             } `}
-            leftSection={
+            rightSection={
               editable ? (
                 <ActionIcon
                   variant="light"
@@ -171,10 +173,11 @@ const Flashcard = ({
                 </ActionIcon>
               ) : null
             }
-            rightSection={
+            leftSection={
               <ActionIcon
                 variant={editable ? "light" : undefined}
                 color={editable ? "blue" : thinkfolder_color}
+                onClick={editable ? handleSaveClick : () => {}}
               >
                 {getIcon()}
               </ActionIcon>

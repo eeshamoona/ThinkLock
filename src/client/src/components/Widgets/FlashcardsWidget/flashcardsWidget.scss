@@ -7,8 +7,11 @@
 
 .flashcards-widget-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-auto-rows: 6rem; /* Adjust this value based on your desired row height */
+  gap: 1rem;
+  max-height: 80vh; /* Adjust this value based on your preference */
+  overflow-y: auto; /* Enables vertical scrolling when content exceeds the container's height */
   padding: 0.5rem;
   height: inherit;
 }
@@ -30,7 +33,7 @@
 
 .flashcard-create-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   gap: 0.5rem;
   padding: 0.5rem 0;
 }

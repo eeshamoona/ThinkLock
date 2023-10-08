@@ -16,6 +16,8 @@ import Flashcard from "./Flashcard/Flashcard";
 import { IconPlus } from "@tabler/icons-react";
 import "./flashcardsWidget.scss";
 import { useForm } from "@mantine/form";
+import { v4 as uuidv4 } from "uuid";
+import { showErrorNotification } from "../../../utils/notifications";
 
 interface FlashcardsWidgetProps {
   id: number;
@@ -32,42 +34,63 @@ const FlashcardsWidget = ({ id, thinkfolder_color }: FlashcardsWidgetProps) => {
     },
   });
 
-  const fetchFlashcards = useCallback(async () => {
-    const res = await getFlashcards(id);
-    setFlashcards(res);
-  }, [id]);
-
-  useEffect(() => {
-    fetchFlashcards();
-  }, [fetchFlashcards, id]);
-
   function onSubmit(front: string, back: string, index: number) {
+    console.log("onSubmit");
     const flashcardToUpdate = flashcards![index];
+    console.log(flashcardToUpdate);
     if (flashcardToUpdate) {
       const updatedFlashcards = [...flashcards!];
       updatedFlashcards[index] = { ...flashcardToUpdate, front, back };
       updateFlashcardsWidget(id, updatedFlashcards);
-      fetchFlashcards();
+      setFlashcards(updatedFlashcards);
     }
   }
 
-  function onDelete(flashcardID: number) {
-    const index = flashcards!.findIndex(
-      (flashcard) => flashcard.id === flashcardID
-    );
-    if (index !== -1) {
-      const updatedFlashcards = [...flashcards!];
-      updatedFlashcards.splice(index, 1);
-      updateFlashcardsWidget(id, updatedFlashcards);
-      fetchFlashcards();
-    }
-  }
+  const onDelete = useCallback(
+    (flashcardID: string) => {
+      setFlashcards((prevFlashcards) => {
+        const updatedFlashcards = [...prevFlashcards!];
+        const indexOfDeletedFlashcard = updatedFlashcards.findIndex(
+          (flashcard) => flashcard.id === flashcardID
+        );
+        if (indexOfDeletedFlashcard === -1) {
+          showErrorNotification(
+            "Flashcard not found",
+            `Flashcard not found: ${flashcardID}`
+          );
+          return prevFlashcards;
+        }
+        updatedFlashcards.splice(indexOfDeletedFlashcard, 1);
+        updateFlashcardsWidget(id, updatedFlashcards);
+
+        return updatedFlashcards;
+      });
+      // showSuccessNotification("Flashcard deleted", `${flashcardID}`);
+    },
+    [id]
+  );
+
+  useEffect(() => {
+    const fetchFlashcards = async () => {
+      const res = await getFlashcards(id);
+      if (typeof res !== "string") {
+        setFlashcards(res as FlashcardData[]);
+      }
+    };
+    fetchFlashcards();
+  }, [setFlashcards, id]);
+
+  useEffect(() => {
+    console.log("FlashcardsWidget useEffect");
+    console.log(flashcards);
+  }, [flashcards]);
 
   function addFlashcard(front: string, back: string) {
     const updatedFlashcards = [...flashcards!];
-    updatedFlashcards.push({ front, back, id: updatedFlashcards.length });
+    const newId = uuidv4();
+    updatedFlashcards.push({ front, back, id: newId });
     updateFlashcardsWidget(id, updatedFlashcards);
-    fetchFlashcards();
+    setFlashcards(updatedFlashcards);
   }
 
   return (
@@ -83,7 +106,10 @@ const FlashcardsWidget = ({ id, thinkfolder_color }: FlashcardsWidgetProps) => {
       <div className="flashcards-widget-grid">
         {flashcards?.map((flashcard, index) => {
           return (
-            <div key={index} className="flashcard-widget-flashcard-container">
+            <div
+              key={flashcard.id}
+              className="flashcard-widget-flashcard-container"
+            >
               <Flashcard
                 front={flashcard.front}
                 back={flashcard.back}
@@ -137,11 +163,13 @@ const FlashcardsWidget = ({ id, thinkfolder_color }: FlashcardsWidgetProps) => {
             >
               <div className="flashcard-create-container">
                 <Textarea
+                  w={"100%"}
                   placeholder="Front of the flashcard..."
                   {...createFlashcard.getInputProps("front")}
                 />
 
                 <Textarea
+                  w={"100%"}
                   placeholder="Back of the flashcard..."
                   {...createFlashcard.getInputProps("back")}
                 />

@@ -3,7 +3,7 @@ import { Widget } from "./widget.model";
 class Flashcard {
   front!: string;
   back!: string;
-  id!: number;
+  id!: string;
 }
 export class Flashcards extends Widget {
   flashcards: Array<Flashcard>;
