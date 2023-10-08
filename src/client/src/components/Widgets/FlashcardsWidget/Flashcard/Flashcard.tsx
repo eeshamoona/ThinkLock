@@ -1,6 +1,12 @@
-import { Card, Textarea, ActionIcon, Group, Badge } from "@mantine/core";
+import { Card, Textarea, ActionIcon, Badge } from "@mantine/core";
 import React, { useCallback, useRef, useState } from "react";
-import { IconKey, IconCheck, IconEdit, IconLock } from "@tabler/icons-react";
+import {
+  IconKey,
+  IconCheck,
+  IconEdit,
+  IconLock,
+  IconTrash,
+} from "@tabler/icons-react";
 import "./flashcard.scss";
 
 interface FlashcardProps {
@@ -10,6 +16,7 @@ interface FlashcardProps {
   index: number;
   thinkfolder_color: string;
   onSubmitCallback: (front: string, back: string, index: number) => void;
+  onDeleteCallback: (id: number) => void;
 }
 
 const Flashcard = ({
@@ -19,6 +26,7 @@ const Flashcard = ({
   index,
   thinkfolder_color,
   onSubmitCallback,
+  onDeleteCallback,
 }: FlashcardProps) => {
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [editable, setEditable] = useState<boolean>(false);
@@ -37,20 +45,20 @@ const Flashcard = ({
       // After a short delay, change the text
       setTimeout(() => {
         setShowBackText(!showBackText);
-      }, 300); // Match the duration of half the flip transition
+      }, 200); // Match the duration of half the flip transition
     }
   };
 
   const getIcon = useCallback(
     () =>
       editable ? (
-        <IconCheck size={"0.85rem"} />
+        <IconCheck size={"0.75rem"} />
       ) : actionItemHovered ? (
-        <IconEdit size={"0.85rem"} />
+        <IconEdit size={"0.75rem"} />
       ) : showBackText ? (
-        <IconLock size={"0.85rem"} />
+        <IconLock size={"0.75rem"} />
       ) : (
-        <IconKey size={"0.85rem"} />
+        <IconKey size={"0.75rem"} />
       ),
     [editable, actionItemHovered, showBackText]
   );
@@ -58,9 +66,11 @@ const Flashcard = ({
   const getTooltipLabel = useCallback(
     () =>
       editable
-        ? "Save"
+        ? showBackText
+          ? "Edit Back"
+          : "Edit Front"
         : actionItemHovered
-        ? "Edit"
+        ? ""
         : showBackText
         ? "Back"
         : "Front",
@@ -78,28 +88,52 @@ const Flashcard = ({
     setEditable(true);
   }
 
+  function handleDeleteClick(event: React.MouseEvent): void {
+    event.stopPropagation();
+    onDeleteCallback(id);
+  }
+
   return (
     <div onClick={handleCardClick} className="flashcard-container">
       <div className={`flashcard ${isFlipped ? "flipped" : ""}`}>
         <Card withBorder={true} shadow="sm" className="flashcard-front">
-          <Group>
-            <Badge
-              variant="light"
-              color={thinkfolder_color}
-              p={"xs"}
-              pr={0}
-              size="sm"
-              radius="xs"
-              ref={actionButtonRef}
-              onMouseEnter={() => setActionItemHovered(true)}
-              onMouseLeave={() => setActionItemHovered(false)}
-              onClick={editable ? handleSaveClick : handleEditClick}
-              className={`flashcard-front-action-button `}
-              rightSection={<ActionIcon>{getIcon()}</ActionIcon>}
-            >
-              {getTooltipLabel()}
-            </Badge>
-          </Group>
+          <Badge
+            variant="light"
+            color={editable ? "gray" : thinkfolder_color}
+            p={"xs"}
+            pr={0}
+            size="xs"
+            radius="xs"
+            fullWidth
+            ref={actionButtonRef}
+            onMouseEnter={() => setActionItemHovered(true)}
+            onMouseLeave={() => setActionItemHovered(false)}
+            onClick={editable ? handleSaveClick : handleEditClick}
+            className={`flashcard-front-action-button ${
+              editable ? "editable" : ""
+            } `}
+            leftSection={
+              editable ? (
+                <ActionIcon
+                  variant="light"
+                  color={"red"}
+                  onClick={handleDeleteClick}
+                >
+                  {<IconTrash size={"0.75rem"} />}
+                </ActionIcon>
+              ) : null
+            }
+            rightSection={
+              <ActionIcon
+                variant={editable ? "light" : undefined}
+                color={editable ? "blue" : thinkfolder_color}
+              >
+                {getIcon()}
+              </ActionIcon>
+            }
+          >
+            {getTooltipLabel()}
+          </Badge>
           <Textarea
             variant="unstyled"
             value={frontContent}
@@ -112,24 +146,42 @@ const Flashcard = ({
           />
         </Card>
         <Card withBorder={true} shadow="sm" className="flashcard-back">
-          <Group>
-            <Badge
-              ref={actionButtonRef}
-              onMouseEnter={() => setActionItemHovered(true)}
-              onMouseLeave={() => setActionItemHovered(false)}
-              onClick={editable ? handleSaveClick : handleEditClick}
-              variant="light"
-              p={"xs"}
-              pr={0}
-              radius="xs"
-              size="sm"
-              color={thinkfolder_color}
-              className={`flashcard-back-action-button `}
-              rightSection={<ActionIcon>{getIcon()}</ActionIcon>}
-            >
-              {getTooltipLabel()}
-            </Badge>
-          </Group>
+          <Badge
+            ref={actionButtonRef}
+            onMouseEnter={() => setActionItemHovered(true)}
+            onMouseLeave={() => setActionItemHovered(false)}
+            onClick={editable ? handleSaveClick : handleEditClick}
+            variant="light"
+            p={"xs"}
+            fullWidth
+            radius="xs"
+            size="xs"
+            color={editable ? "gray" : thinkfolder_color}
+            className={`flashcard-back-action-button ${
+              editable ? "editable" : ""
+            } `}
+            leftSection={
+              editable ? (
+                <ActionIcon
+                  variant="light"
+                  color={"red"}
+                  onClick={handleDeleteClick}
+                >
+                  {<IconTrash size={"0.75rem"} />}
+                </ActionIcon>
+              ) : null
+            }
+            rightSection={
+              <ActionIcon
+                variant={editable ? "light" : undefined}
+                color={editable ? "blue" : thinkfolder_color}
+              >
+                {getIcon()}
+              </ActionIcon>
+            }
+          >
+            {getTooltipLabel()}
+          </Badge>
           <Textarea
             variant="unstyled"
             value={backContent}
