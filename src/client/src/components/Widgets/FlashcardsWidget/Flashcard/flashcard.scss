@@ -1,11 +1,17 @@
 .flashcard-container {
   perspective: 1000px;
+  transition: all 0.6s ease;
+}
+
+.flashcard-container:hover {
+  transform: scale3d(1.05, 1.05, 1.05);
 }
 
 .flashcard {
   position: relative;
   transform-style: preserve-3d;
   transition: transform 1000ms;
+
   &.flipped {
     transform: rotateY(180deg);
   }

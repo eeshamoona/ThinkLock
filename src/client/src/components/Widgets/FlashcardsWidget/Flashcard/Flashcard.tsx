@@ -1,4 +1,4 @@
-import { Card, Textarea, ActionIcon, Group } from "@mantine/core";
+import { Card, Textarea, ActionIcon, Group, Tooltip } from "@mantine/core";
 import React, { useCallback, useRef, useState } from "react";
 import { RiCheckboxLine } from "react-icons/ri";
 import { RiEdit2Line } from "react-icons/ri";
@@ -40,6 +40,18 @@ const Flashcard = ({ front, back, id }: FlashcardProps) => {
     [editable, actionItemHovered, isFlipped]
   );
 
+  const getTooltipLabel = useCallback(
+    () =>
+      isFlipped
+        ? editable
+          ? "Save Back"
+          : "Edit Back"
+        : editable
+        ? "Save Front"
+        : "Edit Front",
+    [editable, isFlipped]
+  );
+
   function handleSaveClick(event: React.MouseEvent): void {
     event.stopPropagation();
     setEditable(false);
@@ -53,18 +65,23 @@ const Flashcard = ({ front, back, id }: FlashcardProps) => {
   return (
     <div onClick={handleCardClick} className="flashcard-container">
       <div className={`flashcard ${isFlipped ? "flipped" : ""}`}>
-        <Card className="flashcard-front">
+        <Card withBorder={true} shadow="sm" className="flashcard-front">
           <Group>
-            <ActionIcon
-              ref={actionButtonRef}
-              onMouseEnter={() => setActionItemHovered(true)}
-              onMouseLeave={() => setActionItemHovered(false)}
-              onClick={editable ? handleSaveClick : handleEditClick}
-              aria-label={editable ? "Save" : "Edit"}
-              className="flashcard-front-action-button"
+            <Tooltip.Floating
+              key="front-tooltip"
+              offset={18}
+              label={getTooltipLabel()}
             >
-              {getIcon()}
-            </ActionIcon>
+              <ActionIcon
+                ref={actionButtonRef}
+                onMouseEnter={() => setActionItemHovered(true)}
+                onMouseLeave={() => setActionItemHovered(false)}
+                onClick={editable ? handleSaveClick : handleEditClick}
+                className="flashcard-front-action-button"
+              >
+                {getIcon()}
+              </ActionIcon>
+            </Tooltip.Floating>
           </Group>
           <Textarea
             variant="unstyled"
@@ -77,18 +94,25 @@ const Flashcard = ({ front, back, id }: FlashcardProps) => {
             className={`flashcard-textarea-front ${editable ? "" : "static"}`}
           />
         </Card>
-        <Card className="flashcard-back">
+        <Card withBorder={true} shadow="sm" className="flashcard-back">
           <Group>
-            <ActionIcon
-              ref={actionButtonRef}
-              onMouseEnter={() => setActionItemHovered(true)}
-              onMouseLeave={() => setActionItemHovered(false)}
-              onClick={editable ? handleSaveClick : handleEditClick}
-              aria-label={editable ? "Save" : "Edit"}
-              className="flashcard-back-action-button"
+            <Tooltip
+              key="back-tooltip"
+              color="blue"
+              position="right"
+              withArrow
+              label={getTooltipLabel()}
             >
-              {getIcon()}
-            </ActionIcon>
+              <ActionIcon
+                ref={actionButtonRef}
+                onMouseEnter={() => setActionItemHovered(true)}
+                onMouseLeave={() => setActionItemHovered(false)}
+                onClick={editable ? handleSaveClick : handleEditClick}
+                className="flashcard-back-action-button"
+              >
+                {getIcon()}
+              </ActionIcon>
+            </Tooltip>
           </Group>
           <Textarea
             variant="unstyled"

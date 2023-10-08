@@ -18,7 +18,7 @@ const FlashcardsWidget = ({ id }: FlashcardsWidgetProps) => {
       setFlashcards(res);
     };
     fetchFlashcards();
-  });
+  }, [id]);
 
   return (
     <Paper
@@ -32,13 +32,9 @@ const FlashcardsWidget = ({ id }: FlashcardsWidgetProps) => {
     >
       <SimpleGrid
         className="flashcards-widget-grid"
-        cols={2}
         p={"1rem"}
-        breakpoints={[
-          { maxWidth: "sm", cols: 1 },
-          { maxWidth: "md", cols: 2 },
-          { maxWidth: "xl", cols: 2 },
-        ]}
+        spacing="xs"
+        cols={1}
       >
         {flashcards?.map((flashcard, index) => {
           return (

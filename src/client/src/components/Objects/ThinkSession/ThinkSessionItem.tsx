@@ -60,8 +60,10 @@ const ThinkSessionItem = ({
     return `${formattedHours}:${formattedMinutes} ${ampm}`;
   }
 
+  console.log(date);
   // Convert date to local date
   date = new Date(date.toString().replace(/-/g, "/").replace(/T.+/, ""));
+  console.log(date);
 
   document.documentElement.style.setProperty(
     "--border-color",

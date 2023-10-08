@@ -7,7 +7,8 @@
 
 .grid-item-drag-handle {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  padding: 0 0.5rem;
   width: 100%;
   flex: none;
 }
@@ -28,3 +29,10 @@
   filter: invert(63%) sepia(9%) saturate(136%) hue-rotate(182deg)
     brightness(91%) contrast(85%);
 }
+
+// .add-action-item-button {
+//   display: block;
+// }
+// .add-action-item-button:hover {
+//   background-color: transparent;
+// }

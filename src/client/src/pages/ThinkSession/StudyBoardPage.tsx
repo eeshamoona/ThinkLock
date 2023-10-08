@@ -59,6 +59,12 @@ const StudyBoardPage = () => {
 
   const modals = useModals();
 
+  const typeToString: {} = {
+    "action-items": "Action Items",
+    flashcards: "Flashcards",
+    notes: "Notes",
+  };
+
   const fetchThinkSession = useCallback(async () => {
     if (!id) return;
     const res = await getThinkSessionById(parseInt(id));
@@ -75,10 +81,14 @@ const StudyBoardPage = () => {
           "No Think Folder Found. Please try again."
         );
       } else {
+        console.log("THE RESULT DATE", res.date as Date);
+        console.log(new Date(res.date));
         const thinkSessionWithFolder = {
           ...res,
+          date: res.date as Date,
           thinkfolder_color: thinkFolderRes?.color,
         };
+        console.log(thinkSessionWithFolder);
         setThinkSession(thinkSessionWithFolder);
 
         // Get layout options
@@ -94,6 +104,7 @@ const StudyBoardPage = () => {
               return {
                 type,
                 id,
+                width: layoutItem.w,
               };
             });
             setWidgetLayout(layoutOptions);
@@ -173,6 +184,10 @@ const StudyBoardPage = () => {
                     c="dimmed"
                     className="grid-item-drag grid-item-drag-handle"
                   >
+                    {
+                      // @ts-ignore
+                      typeToString[type]
+                    }
                     <IconEqual />
                   </ActionIcon>
                   <div className="grid-item-content">
@@ -187,6 +202,10 @@ const StudyBoardPage = () => {
                     c="dimmed"
                     className="grid-item-drag grid-item-drag-handle"
                   >
+                    {
+                      // @ts-ignore
+                      typeToString[type]
+                    }
                     <IconEqual />
                   </ActionIcon>
                   <div className="grid-item-content">
@@ -201,6 +220,10 @@ const StudyBoardPage = () => {
                     c="dimmed"
                     className="grid-item-drag grid-item-drag-handle"
                   >
+                    {
+                      // @ts-ignore
+                      typeToString[type]
+                    }
                     <IconEqual />
                   </ActionIcon>
                   <div
@@ -229,7 +252,19 @@ const StudyBoardPage = () => {
                       ))}
                       <Button
                         onClick={handleActionItemAdded}
-                        variant="default"
+                        variant="outline"
+                        color={theme.colorScheme === "dark" ? "gray" : "blue"}
+                        style={{
+                          color:
+                            theme.colorScheme === "light"
+                              ? theme.colors.dark[3]
+                              : theme.colors.gray[6],
+
+                          borderColor:
+                            theme.colorScheme === "light"
+                              ? theme.colors.gray[4]
+                              : theme.colors.dark[4],
+                        }}
                         h={"3rem"}
                         leftIcon={<IconPlus size={"1rem"} />}
                       >
