@@ -45,6 +45,7 @@ import AddActionItemModal from "../../components/Modals/AddActionItem/AddActionI
 import { showErrorNotification } from "../../utils/notifications";
 import FlashcardsWidget from "../../components/Widgets/FlashcardsWidget/FlashcardsWidget";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
+import StudyTimeline from "../../components/Widgets/StudyTimeline/StudyTimeline";
 
 /**
  * Study Board Page displays a reactive grid layout of widgets
@@ -281,10 +282,13 @@ const StudyBoardPage = () => {
               return null;
           }
         })}
-        <Card key="add-widget" className="grid-item-drag grid-item-container">
+        <Card
+          key="add-widget"
+          className="grid-item-drag grid-item-container think-session-system"
+        >
           <Menu shadow="md" trigger="hover" openDelay={100} closeDelay={400}>
             <Menu.Target>
-              <Button fullWidth h={"100%"} p={"0.5rem"}>
+              <Button fullWidth p={"0.5rem"} className="bottom-button">
                 <IconLayoutGridAdd size={"1rem"} />
                 <Space w={"0.5rem"} />
                 Add Widget
@@ -316,8 +320,8 @@ const StudyBoardPage = () => {
                     const actionItemsWidgetLayout = {
                       x: 0,
                       y: 0,
-                      w: 7,
-                      h: 7,
+                      w: 3,
+                      h: 5,
                       i: `action-items-${thinkSession.id}`,
                       moved: false,
                       static: false,
@@ -426,6 +430,12 @@ const StudyBoardPage = () => {
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
+          <div className="timeline-container">
+            <StudyTimeline thinkSessionID={thinkSession.id} />
+          </div>
+          <Button fullWidth variant="filled" className="top-button">
+            Take a Detour
+          </Button>
         </Card>
       </GridLayout>
     </div>

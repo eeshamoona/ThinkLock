@@ -32,6 +32,29 @@
     brightness(91%) contrast(85%);
 }
 
+.think-session-system {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.grid-item-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.top-button,
+.bottom-button {
+  flex-shrink: 0; /* Prevent buttons from shrinking */
+}
+
+.timeline-container {
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  flex-grow: 1; /* Allow timeline to grow and take up available space */
+}
+
 // .add-action-item-button {
 //   display: block;
 // }

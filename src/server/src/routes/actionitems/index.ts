@@ -7,6 +7,7 @@ import {
   getAllActionItemsByThinkFolderId,
   updateActionItem,
   getAllActionItemsByThinkSessionId,
+  toggleCompletedActionItem,
 } from "../../controllers/actionitem.controller";
 import { ActionItem } from "../../models/actionitem.model";
 
@@ -102,6 +103,22 @@ actionItemsRouter.put("/update/:id", async (req, res) => {
       res.status(actionItemId.status).send({ error: actionItemId.error });
     } else {
       res.status(200).send({ actionItemId: actionItemId });
+    }
+  } catch (error) {
+    res.status(500).send({ error: `${error}` });
+  }
+});
+
+actionItemsRouter.put("/complete/:id", async (req, res) => {
+  try {
+    const completedResponse: SuccessResponse | FailureResponse =
+      await toggleCompletedActionItem(parseInt(req.params.id));
+    if (completedResponse instanceof FailureResponse) {
+      res
+        .status(completedResponse.status)
+        .send({ error: completedResponse.error });
+    } else {
+      res.status(200).send({ message: completedResponse });
     }
   } catch (error) {
     res.status(500).send({ error: `${error}` });

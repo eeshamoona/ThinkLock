@@ -48,6 +48,23 @@ export async function createActionItem(
     if (!res.lastID) {
       return new FailureResponse(500, "failed to create action item");
     }
+
+    //Add a study event for the creation of this action item
+    const studyEventQuery =
+      "INSERT INTO studyevents (thinksession_id, event_type, timestamp, details, reference_id) VALUES (?, ?, ?, ?, ?)";
+    const currentTimestamp = new Date();
+    const studyEventParams = [
+      thinksession_id,
+      "actionitem_created",
+      currentTimestamp.toISOString(),
+      `${title}`,
+      res.lastID,
+    ];
+    const studyEvent = await db.run(studyEventQuery, studyEventParams);
+    if (!studyEvent.lastID) {
+      return new FailureResponse(500, "failed to create study event");
+    }
+
     return res.lastID;
   } catch (error) {
     return new FailureResponse(500, `${error}`);
@@ -120,6 +137,42 @@ export async function updateActionItem(
 
     await db.run(query, params);
     return new SuccessResponse(200, `Action item with id ${id} updated`);
+  } catch (error) {
+    return new FailureResponse(500, `${error}`);
+  }
+}
+
+export async function toggleCompletedActionItem(
+  id: number
+): Promise<SuccessResponse | FailureResponse> {
+  try {
+    const db = await dbPromise;
+    //Get the action item
+    const actionItem = await getActionItemById(id);
+    if (actionItem instanceof FailureResponse) {
+      return new FailureResponse(500, `${actionItem.error}`);
+    }
+    //Flip the completed flag
+    const query = `UPDATE actionitem SET completed = ? WHERE id = ?`;
+    const params = [!actionItem.completed, id];
+    await db.run(query, params);
+
+    //Add a study event wheter the action item was completed or uncompleted
+    const studyEventQuery =
+      "INSERT INTO studyevents (thinksession_id, event_type, timestamp, details, reference_id) VALUES (?, ?, ?, ?, ?)";
+    const currentTimestamp = new Date();
+    const studyEventParams = [
+      actionItem.thinksession_id,
+      actionItem.completed ? "actionitem_unfinished" : "actionitem_completed",
+      currentTimestamp.toISOString(),
+      `${actionItem.title}`,
+      id,
+    ];
+    const studyEvent = await db.run(studyEventQuery, studyEventParams);
+    if (!studyEvent.lastID) {
+      return new FailureResponse(500, "failed to create study event");
+    }
+    return new SuccessResponse(200, `Action item with id ${id} completed`);
   } catch (error) {
     return new FailureResponse(500, `${error}`);
   }

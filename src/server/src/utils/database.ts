@@ -71,6 +71,17 @@ const dbPromise = (async (): Promise<Database> => {
     )`);
     loggerInstance.success("Table created: flashcards");
 
+    await db.run(`CREATE TABLE IF NOT EXISTS studyevents (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        thinksession_id INTEGER NOT NULL,
+        event_type TEXT NOT NULL,
+        timestamp TEXT NOT NULL,
+        details TEXT,
+        reference_id INTEGER,
+        FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
+    )`);
+    loggerInstance.success("Table created: studyevents");
+
     return db;
   } catch (error) {
     loggerInstance.error(`Error opening database: ${error}`);

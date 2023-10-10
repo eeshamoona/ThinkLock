@@ -4,6 +4,7 @@ import { Card, Checkbox, Text } from "@mantine/core";
 import { RxDragHandleDots2 } from "react-icons/rx";
 import { hexToColorNameMap } from "../../../utils/constants/hexCodeToColor.constant";
 import { Draggable } from "react-beautiful-dnd";
+import { toggleCompletedActionItem } from "../../../services/actionItemAPICallerService";
 
 interface ActionItemProps {
   id: string;
@@ -44,6 +45,11 @@ const ActionItemCard = ({
       return hexToColorNameMap[thinkfolderColor];
     }
     return "blue";
+  }
+
+  function completeActionItem() {
+    toggleCompletedActionItem(id);
+    setIsCompleted(!isCompleted);
   }
 
   if (draggable) {
@@ -90,7 +96,7 @@ const ActionItemCard = ({
           size="md"
           color={getColorFromHex()}
           checked={isCompleted}
-          onChange={() => setIsCompleted(!isCompleted)}
+          onChange={completeActionItem}
         />
       </Card>
     );

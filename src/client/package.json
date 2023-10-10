@@ -38,6 +38,7 @@
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.8",
     "embla-carousel-react": "^7.0.0",
+    "moment": "^2.29.4",
     "next": "12.1.4",
     "prettier": "^3.0.3",
     "react": "^18.2.0",
