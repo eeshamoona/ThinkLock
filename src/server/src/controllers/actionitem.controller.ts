@@ -165,7 +165,7 @@ export async function toggleCompletedActionItem(
       actionItem.thinksession_id,
       actionItem.completed ? "actionitem_unfinished" : "actionitem_completed",
       currentTimestamp.toISOString(),
-      `${actionItem.title}`,
+      `${actionItem.description}`,
       id,
     ];
     const studyEvent = await db.run(studyEventQuery, studyEventParams);
