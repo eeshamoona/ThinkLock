@@ -1,18 +1,11 @@
 import express, { Router } from "express";
 import {
-  createNotesWidget,
   getNotes,
-  updateNotesWidget,
-  deleteNotesWidget,
-} from "../../controllers/noteswidget.controller";
-import { FailureResponse } from "../../utils/responses";
-import {
-  createFlashcardsWidget,
-  getFlashcards,
-  updateFlashcardsWidget,
-  deleteFlashcardsWidget,
-} from "../../controllers/flashcardswidget.controller";
-import { Flashcards } from "../../models/flashcards.model";
+  createNotes,
+  updateNotes,
+} from "../../controllers/notes.controller.";
+import { FailureResponse, SuccessResponse } from "../../utils/responses";
+import { Notes } from "../../models/notes.model";
 
 const widgetsRouter: Router = express.Router();
 
@@ -20,97 +13,47 @@ widgetsRouter.get("/", async (req, res) => {
   res.status(200).send({ message: "You have reached the widgets route" });
 });
 
-widgetsRouter.post("/notes/:thinksession_id", async (req, res) => {
+widgetsRouter.get("/notes/:thinksession_id", async (req, res) => {
   try {
-    const notesId: number | FailureResponse = await createNotesWidget(
+    const notes: Notes | FailureResponse = await getNotes(
       parseInt(req.params.thinksession_id)
     );
-    return res.status(200).send({ notesId: notesId });
-  } catch (error) {
-    res.status(500).send({ error: `${error}` });
-  }
-});
-
-widgetsRouter.get("/notes/:id", async (req, res) => {
-  try {
-    const notes: string | FailureResponse = await getNotes(
-      parseInt(req.params.id)
-    );
-    return res.status(200).send(notes);
-  } catch (error) {
-    res.status(500).send({ error: `${error}` });
-  }
-});
-
-widgetsRouter.put("/notes/:id", async (req, res) => {
-  try {
-    const notes: string | FailureResponse = await updateNotesWidget(
-      parseInt(req.params.id),
-      req.body.note
-    );
-    return res.status(200).send(`Updated notes ${req.params.id}: ${notes}`);
-  } catch (error) {
-    res.status(500).send({ error: `${error}` });
-  }
-});
-
-widgetsRouter.delete("/notes/:id", async (req, res) => {
-  try {
-    const notes: string | FailureResponse = await deleteNotesWidget(
-      parseInt(req.params.id)
-    );
-    return res.status(200).send(notes);
-  } catch (error) {
-    res.status(500).send({ error: `${error}` });
-  }
-});
-
-widgetsRouter.get("/flashcards/:id", async (req, res) => {
-  try {
-    const flashcards: any[] | FailureResponse = await getFlashcards(
-      parseInt(req.params.id)
-    );
-    if (flashcards instanceof FailureResponse) {
-      res.status(flashcards.status).send({ error: flashcards.error });
+    if (notes instanceof FailureResponse) {
+      res.status(notes.status).send({ error: notes.error });
     } else {
-      return res.status(200).send(flashcards);
+      res.status(200).send({ notes: notes.content });
     }
   } catch (error) {
     res.status(500).send({ error: `${error}` });
   }
 });
 
-widgetsRouter.post("/flashcards/:thinksession_id", async (req, res) => {
+widgetsRouter.post("/notes/:thinksession_id", async (req, res) => {
   try {
-    const flashcardsId: number | FailureResponse = await createFlashcardsWidget(
+    const notesId: number | FailureResponse = await createNotes(
       parseInt(req.params.thinksession_id)
     );
-    return res.status(200).send({ flashcardsId: flashcardsId });
+    if (notesId instanceof FailureResponse) {
+      res.status(notesId.status).send({ error: notesId.error });
+    } else {
+      res.status(200).send({ notesId: notesId });
+    }
   } catch (error) {
     res.status(500).send({ error: `${error}` });
   }
 });
 
-widgetsRouter.put("/flashcards/:id", async (req, res) => {
+widgetsRouter.put("/notes/:thinksession_id", async (req, res) => {
   try {
-    const flashcards: string | FailureResponse = await updateFlashcardsWidget(
-      parseInt(req.params.id),
-      JSON.stringify(req.body.flashcards)
-    );
-    return res
-      .status(200)
-      .send(`Updated flashcards ${req.params.id}: ${flashcards}`);
-  } catch (error) {
-    res.status(500).send({ error: `${error}` });
-  }
-});
-
-widgetsRouter.delete("/flashcards/:id", async (req, res) => {
-  try {
-    const flashcards: string | FailureResponse = await deleteFlashcardsWidget(
-      parseInt(req.params.id)
-    );
-    return res.status(200).send(flashcards);
+    const updateNotesResponse: SuccessResponse | FailureResponse =
+      await updateNotes(parseInt(req.params.thinksession_id), req.body.content);
+    if (updateNotesResponse instanceof FailureResponse) {
+      res.status(updateNotesResponse.status).send({
+        error: updateNotesResponse.error,
+      });
+    } else {
+      res.status(200).send({ message: updateNotesResponse.message });
+    }
   } catch (error) {
     res.status(500).send({ error: `${error}` });
   }
