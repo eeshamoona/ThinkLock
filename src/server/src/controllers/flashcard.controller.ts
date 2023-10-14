@@ -2,7 +2,7 @@ import dbPromise from "../utils/database";
 import { Flashcard } from "../models/flashcard.model";
 
 export async function getAllFlashcards(
-  thinksession_id: number
+  thinksession_id: number,
 ): Promise<Flashcard[]> {
   try {
     const db = await dbPromise;

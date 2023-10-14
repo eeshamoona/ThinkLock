@@ -3,7 +3,7 @@ import { StudyEvent } from "../models/studyevent.model";
 import { FailureResponse } from "../utils/responses";
 
 export async function getAllStudyEventsFromThinkSession(
-  thinksession_id: number
+  thinksession_id: number,
 ): Promise<StudyEvent[]> {
   try {
     const db = await dbPromise;
@@ -21,7 +21,7 @@ export async function addStudyEventToThinkSession(
   thinksession_id: number,
   event_type: string,
   details: string,
-  reference_id: number
+  reference_id: number,
 ): Promise<number | FailureResponse> {
   try {
     const db = await dbPromise;

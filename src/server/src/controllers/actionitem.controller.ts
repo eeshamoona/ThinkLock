@@ -17,7 +17,7 @@ export async function getAllActionItems(): Promise<
 }
 
 export async function getActionItemById(
-  id: number
+  id: number,
 ): Promise<ActionItem | FailureResponse> {
   try {
     const db = await dbPromise;
@@ -37,7 +37,7 @@ export async function createActionItem(
   thinksession_id: number | null,
   thinkfolder_id: number,
   description: string,
-  title: string
+  title: string,
 ): Promise<number | FailureResponse> {
   try {
     const db = await dbPromise;
@@ -72,7 +72,7 @@ export async function createActionItem(
 }
 
 export async function getAllActionItemsByThinkFolderId(
-  thinkfolder_id: string
+  thinkfolder_id: string,
 ): Promise<ActionItem[] | FailureResponse> {
   try {
     const db = await dbPromise;
@@ -86,7 +86,7 @@ export async function getAllActionItemsByThinkFolderId(
 }
 
 export async function getAllActionItemsByThinkSessionId(
-  thinksession_id: string
+  thinksession_id: string,
 ): Promise<ActionItem[] | FailureResponse> {
   try {
     const db = await dbPromise;
@@ -101,7 +101,7 @@ export async function getAllActionItemsByThinkSessionId(
 
 export async function updateActionItem(
   id: number,
-  request: Partial<ActionItem>
+  request: Partial<ActionItem>,
 ): Promise<SuccessResponse | FailureResponse> {
   try {
     const db = await dbPromise;
@@ -143,7 +143,7 @@ export async function updateActionItem(
 }
 
 export async function toggleCompletedActionItem(
-  id: number
+  id: number,
 ): Promise<SuccessResponse | FailureResponse> {
   try {
     const db = await dbPromise;

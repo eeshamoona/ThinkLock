@@ -67,7 +67,7 @@ const dbPromise = (async (): Promise<Database> => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         front TEXT,
         back TEXT,
-        status ENUM('new', 'review', 'learned') NOT NULL DEFAULT 'new',
+        status TEXT DEFAULT 'new',
         thinksession_id INTEGER NOT NULL,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)

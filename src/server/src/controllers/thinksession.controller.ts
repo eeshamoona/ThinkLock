@@ -2,12 +2,13 @@ import dbPromise from "../utils/database";
 import { ThinkSession } from "../models/thinksession.model";
 import { SuccessResponse, FailureResponse } from "../utils/responses";
 import { HeatmapData } from "../models/heatmapdata.model";
+import { Database } from "sqlite";
 
-export async function getAllThinkSessions(): Promise<
-  ThinkSession[] | FailureResponse
-> {
+async function getAllThinkSessions(
+  dbInstance?: Database,
+): Promise<ThinkSession[] | FailureResponse> {
   try {
-    const db = await dbPromise;
+    const db = dbInstance || (await dbPromise);
     const query = `SELECT * FROM thinksession`;
     const res = await db.all<ThinkSession[]>(query);
     return res;
@@ -16,11 +17,12 @@ export async function getAllThinkSessions(): Promise<
   }
 }
 
-export async function getThinkSessionById(
-  id: number
+async function getThinkSessionById(
+  id: number,
+  dbInstance?: Database,
 ): Promise<ThinkSession | FailureResponse> {
   try {
-    const db = await dbPromise;
+    const db = dbInstance || (await dbPromise);
     const query = `SELECT * FROM thinksession WHERE id = ?`;
     const params = [id];
     const res = await db.get<ThinkSession>(query, params);
@@ -33,8 +35,9 @@ export async function getThinkSessionById(
   }
 }
 
-export async function createThinkSession(
-  thinksession: Partial<ThinkSession>
+async function createThinkSession(
+  thinksession: Partial<ThinkSession>,
+  dbInstance?: Database,
 ): Promise<number | FailureResponse> {
   try {
     //Create a default layout for the thinksession
@@ -47,7 +50,7 @@ export async function createThinkSession(
       moved: false,
       static: false,
     };
-    const db = await dbPromise;
+    const db = dbInstance || (await dbPromise);
     const query =
       "INSERT INTO thinksession (thinkfolder_id, title, location, date, start_time, end_time, layout) VALUES (?, ?, ?, ?, ?, ?, ?)";
     const params = [
@@ -69,25 +72,36 @@ export async function createThinkSession(
   }
 }
 
-export async function getAllThinkSessionsByThinkFolderId(
-  thinkfolder_id: number
+async function getAllThinkSessionsByThinkFolderId(
+  thinkfolder_id: number,
+  dbInstance?: Database,
 ): Promise<ThinkSession[] | FailureResponse> {
   try {
-    const db = await dbPromise;
+    const db = dbInstance || (await dbPromise);
     const query = `SELECT * FROM thinksession WHERE thinkfolder_id = ?`;
     const params = [thinkfolder_id];
     const res = await db.all<ThinkSession[]>(query, params);
+    if (!res) {
+      return new FailureResponse(
+        404,
+        `thinksession with thinkfolder_id ${thinkfolder_id} not found`,
+      );
+    }
+    if (res.length === 0) {
+      return [];
+    }
     return res;
   } catch (error) {
     return new FailureResponse(500, `${error}`);
   }
 }
 
-export async function getAllThinkSessionsByDate(
-  date: Date
+async function getAllThinkSessionsByDate(
+  date: Date,
+  dbInstance?: Database,
 ): Promise<ThinkSession[] | FailureResponse> {
   try {
-    const db = await dbPromise;
+    const db = dbInstance || (await dbPromise);
     const query = `SELECT * FROM thinksession WHERE date(date) = ?`;
     const params = [date.toISOString().slice(0, 10)];
     const res = await db.all<ThinkSession[]>(query, params);
@@ -97,11 +111,12 @@ export async function getAllThinkSessionsByDate(
   }
 }
 
-export async function getThinkSessionHeatMapByYear(
+async function getThinkSessionHeatMapByYear(
   year: number,
-  thinkfolder_id: number
+  thinkfolder_id: number,
+  dbInstance?: Database,
 ): Promise<HeatmapData[]> {
-  const db = await dbPromise;
+  const db = dbInstance || (await dbPromise);
 
   const startDate = `${year}-01-01T00:00:00.000Z`;
   const endDate = `${year}-12-31T23:59:59.999Z`;
@@ -121,12 +136,13 @@ export async function getThinkSessionHeatMapByYear(
   return rows;
 }
 
-export async function updateThinkSession(
+async function updateThinkSession(
   id: number,
-  request: Partial<ThinkSession>
+  request: Partial<ThinkSession>,
+  dbInstance?: Database,
 ): Promise<SuccessResponse | FailureResponse> {
   try {
-    const db = await dbPromise;
+    const db = dbInstance || (await dbPromise);
     const {
       thinkfolder_id,
       title,
@@ -186,3 +202,13 @@ export async function updateThinkSession(
     return new FailureResponse(500, `${error}`);
   }
 }
+
+export {
+  getAllThinkSessions,
+  getThinkSessionById,
+  createThinkSession,
+  getAllThinkSessionsByThinkFolderId,
+  getAllThinkSessionsByDate,
+  getThinkSessionHeatMapByYear,
+  updateThinkSession,
+};

@@ -4,7 +4,7 @@ import { FailureResponse, SuccessResponse } from "../utils/responses";
 import { Notes } from "../models/notes.model";
 
 export async function getNotes(
-  thinksession_id: number
+  thinksession_id: number,
 ): Promise<Notes | FailureResponse> {
   try {
     const db = await dbPromise;
@@ -18,7 +18,7 @@ export async function getNotes(
 }
 
 export async function createNotes(
-  thinksession_id: number
+  thinksession_id: number,
 ): Promise<number | FailureResponse> {
   try {
     const db = await dbPromise;
@@ -45,7 +45,7 @@ export async function createNotes(
 
 export async function updateNotes(
   thinksession_id: number,
-  content: string
+  content: string,
 ): Promise<SuccessResponse | FailureResponse> {
   try {
     const db = await dbPromise;

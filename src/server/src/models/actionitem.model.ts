@@ -12,7 +12,7 @@ export class ActionItem {
     thinkfolder_id: number,
     title: string,
     description: string,
-    completed: boolean
+    completed: boolean,
   ) {
     this.id = id;
     this.thinksession_id = thinksession_id;

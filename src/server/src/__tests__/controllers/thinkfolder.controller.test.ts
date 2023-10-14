@@ -8,16 +8,18 @@ import { FailureResponse } from "../../utils/responses";
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 import { Logger } from "../../utils/logger";
-import { describe, beforeAll, it, expect, jest } from "@jest/globals";
+import { describe, beforeAll, afterAll, it, expect, jest } from "@jest/globals";
 
-const loggerInstance: Logger = new Logger();
+const thinkfolderLoggerInstance: Logger = new Logger();
 
 describe("thinkfolder.controller", () => {
   let db: any;
 
   beforeAll(async () => {
     db = await open({ filename: ":memory:", driver: sqlite3.Database });
-    loggerInstance.success(`Database opened in Controller Test File`);
+    thinkfolderLoggerInstance.success(
+      `Database opened in Controller Test File`
+    );
 
     await db.run(`CREATE TABLE IF NOT EXISTS thinkfolder (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,8 +39,14 @@ describe("thinkfolder.controller", () => {
       VALUES ("Test Controller ThinkFolder 2", "Another Router Description","test-icon-next", "#FFFFFF")
     `);
 
-    loggerInstance.success(`Database populated in Controller Test File`);
+    thinkfolderLoggerInstance.success(
+      `Database populated in Controller Test File`
+    );
     expect((await db.all(`SELECT * FROM thinkfolder`)).length).toBe(2);
+  });
+
+  afterAll(async () => {
+    await db.close();
   });
 
   describe("getAllThinkFolders", () => {
