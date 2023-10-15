@@ -36,16 +36,16 @@ describe("thinksession.controller", () => {
 
     await db.run(`
       INSERT INTO thinkfolder (name, description, icon, color)
-      VALUES ("Test Controller ThinkFolder 1", "Router Description", "test-icon-start", "#000000")
+      VALUES ("Test Controller ThinkFolder 1", "Controller Description", "test-icon-start", "#000000")
     `);
 
-    thinksessionLoggerInstance.success(
-      `Database populated ThinkFolder in Controller Test File`
-    );
+    await db.run(`
+      INSERT INTO thinkfolder (name, description, icon, color)
+      VALUES ("Test Controller ThinkFolder 2", "Another Controller Description","test-icon-next", "#FFFFFF")
+    `);
 
-    expect((await db.all(`SELECT * FROM thinkfolder`)).length).toBe(1);
-
-    await db.run(`CREATE TABLE IF NOT EXISTS thinksession (
+    await db.run(`
+    CREATE TABLE IF NOT EXISTS thinksession (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       thinkfolder_id INTEGER NOT NULL,
       title TEXT NOT NULL,
@@ -55,7 +55,7 @@ describe("thinksession.controller", () => {
       end_time TEXT NOT NULL,
       layout TEXT,
       FOREIGN KEY (thinkfolder_id) REFERENCES thinkfolder(id)
-    )`);
+      )`);
 
     await db.run(`
       INSERT INTO thinksession (thinkfolder_id, title, location, date, start_time, end_time, layout)
@@ -67,29 +67,28 @@ describe("thinksession.controller", () => {
       VALUES (1, "Test Controller ThinkSession 2", "Test Location B", "2023-11-11", "11:00", "13:00", "[]")
     `);
 
+    await db.run(`
+    INSERT INTO thinksession (thinkfolder_id, title, location, date, start_time, end_time, layout)
+    VALUES (2, "Test Controller ThinkSession 3", "Test Location C", "2023-12-12", "14:00", "16:00", "[]")
+    `);
+
     thinksessionLoggerInstance.success(
       `Database populated ThinkSessions in Controller Test File`
     );
 
-    expect((await db.all(`SELECT * FROM thinksession`)).length).toBe(2);
+    expect((await db.all(`SELECT * FROM thinksession`)).length).toBe(3);
   });
 
   afterAll(async () => {
     await db.close();
   });
 
-  describe("confirm ThinkFolder ID exists", () => {
+  describe("confirm ThinkFolders exists", () => {
     it("should return a thinkfolder ID", async () => {
       const result = await db.all(`SELECT * FROM thinkfolder`);
-      expect(result).toEqual([
-        {
-          id: 1,
-          name: "Test Controller ThinkFolder 1",
-          description: "Router Description",
-          icon: "test-icon-start",
-          color: "#000000",
-        },
-      ]);
+      expect(result.length).toBe(2);
+      expect(result[0].name).toBe("Test Controller ThinkFolder 1");
+      expect(result[1].name).toBe("Test Controller ThinkFolder 2");
     });
   });
 
@@ -97,7 +96,7 @@ describe("thinksession.controller", () => {
     it("should return an array of thinksessions", async () => {
       const result = await getAllThinkSessions(db);
       expect(Array.isArray(result)).toBe(true);
-      expect(result as Array<ThinkSession>).toHaveLength(2);
+      expect((result as Array<ThinkSession>).length).toBe(3);
       expect(result).toEqual([
         {
           id: 1,
@@ -117,6 +116,16 @@ describe("thinksession.controller", () => {
           date: "2023-11-11",
           start_time: "11:00",
           end_time: "13:00",
+          layout: "[]",
+        },
+        {
+          id: 3,
+          thinkfolder_id: 2,
+          title: "Test Controller ThinkSession 3",
+          location: "Test Location C",
+          date: "2023-12-12",
+          start_time: "14:00",
+          end_time: "16:00",
           layout: "[]",
         },
       ]);
@@ -175,7 +184,7 @@ describe("thinksession.controller", () => {
         },
         db
       );
-      expect(result).toEqual(3);
+      expect(result).toEqual(4);
     });
 
     it("should return a FailureResponse if it fails to create a thinksession", async () => {

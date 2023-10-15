@@ -81,15 +81,6 @@ async function getAllThinkSessionsByThinkFolderId(
     const query = `SELECT * FROM thinksession WHERE thinkfolder_id = ?`;
     const params = [thinkfolder_id];
     const res = await db.all<ThinkSession[]>(query, params);
-    if (!res) {
-      return new FailureResponse(
-        404,
-        `thinksession with thinkfolder_id ${thinkfolder_id} not found`,
-      );
-    }
-    if (res.length === 0) {
-      return [];
-    }
     return res;
   } catch (error) {
     return new FailureResponse(500, `${error}`);

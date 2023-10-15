@@ -5,8 +5,8 @@ import createThinkSessionsRouter from "./routes/thinksessions";
 import { Logger } from "./utils/logger";
 import dbPromise from "./utils/database";
 import { Router } from "express";
-import widgetsRouter from "./routes/widgets";
 import studyEventsRouter from "./routes/studyevents";
+import createWidgetsRouter from "./routes/widgets";
 
 const app: Express = express();
 
@@ -19,6 +19,8 @@ app.get("/", (req: Request, res: Response) => {
 (async () => {
   const thinkfolderRouter: Router = createThinkFoldersRouter(await dbPromise);
   const thinksessionRouter: Router = createThinkSessionsRouter(await dbPromise);
+  const widgetsRouter: Router = createWidgetsRouter(await dbPromise);
+  
   app.use("/thinkfolders", thinkfolderRouter);
   app.use("/actionitems", actionItemsRouter);
   app.use("/thinksessions", thinksessionRouter);
