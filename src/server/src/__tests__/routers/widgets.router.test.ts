@@ -110,4 +110,50 @@ describe("widgetsRouter", () => {
     expect(response.status).toBe(404);
     expect(response.body.error).toBe("ThinkSession not found");
   });
+
+  it("POST /widgets/notes/:thinksession_id should return a 200 status code and a message", async () => {
+    const response = await request(test_app)
+      .post("/widgets/notes/3")
+      .send({ content: "Test Note 3" });
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe("Notes created with id 3");
+  });
+
+  it("POST /widgets/notes/:thinksession_id should return a 200 status code and a message", async () => {
+    const response = await request(test_app)
+      .post("/widgets/notes/3")
+      .send({ content: "Test Note 3" });
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe("Notes exists already 3");
+  });
+
+  it("POST /widgets/notes/:thinksession_id should return a 404 status code if the thinksession is not found", async () => {
+    const response = await request(test_app)
+      .post("/widgets/notes/999")
+      .send({ content: "Test Note 3" });
+    expect(response.status).toBe(404);
+    expect(response.body.error).toBe("ThinkSession not found");
+  });
+
+  it("PUT /widgets/notes/:thinksession_id should return a 200 status code and a message", async () => {
+    const response = await request(test_app)
+      .put("/widgets/notes/1")
+      .send({ content: "Test Note 1 Updated" });
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe("Notes updated in thinksession 1");
+
+    // Check that the note was updated
+    const updatedResponse = await request(test_app).get("/widgets/notes/1");
+    expect(updatedResponse.status).toBe(200);
+    expect(typeof updatedResponse.body.notes).toBe("string");
+    expect(updatedResponse.body.notes).toBe("Test Note 1 Updated");
+  });
+
+  it("PUT /widgets/notes/:thinksession_id should return a 404 status code if the thinksession is not found", async () => {
+    const response = await request(test_app)
+      .put("/widgets/notes/999")
+      .send({ content: "Test Note 1 Updated" });
+    expect(response.status).toBe(404);
+    expect(response.body.error).toBe("ThinkSession not found");
+  });
 });

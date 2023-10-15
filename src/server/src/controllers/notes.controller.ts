@@ -22,7 +22,7 @@ export async function getNotes(
     const params = [thinksession_id];
     const res = await db.get<Notes>(query, params);
     if (!res) {
-      return new FailureResponse(404, "Notes not found");
+      return new FailureResponse(401, "Notes not found");
     }
     return res.content;
   } catch (error) {
@@ -72,13 +72,25 @@ export async function updateNotes(
 ): Promise<SuccessResponse | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
+
+    //check if thinksession exists
+    const thinksessionQuery = `SELECT * FROM thinksession WHERE id = ?`;
+    const thinksessionParams = [thinksession_id];
+    const thinksessionRes = await db.get(thinksessionQuery, thinksessionParams);
+    if (!thinksessionRes) {
+      return new FailureResponse(404, "ThinkSession not found");
+    }
+
     const query = `UPDATE notes SET content = ? WHERE thinksession_id = ?`;
     const params = [content, thinksession_id];
     const res = await db.run(query, params);
     if (res.changes === 0) {
       return new FailureResponse(500, "failed to update notes");
     }
-    return new SuccessResponse(200, "notes updated");
+    return new SuccessResponse(
+      200,
+      "Notes updated in thinksession " + thinksession_id,
+    );
   } catch (error) {
     return new FailureResponse(500, `${error}`);
   }

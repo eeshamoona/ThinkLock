@@ -33,14 +33,12 @@ function createWidgetsRouter(db: Database): Router {
 
   widgetsRouter.post("/notes/:thinksession_id", async (req, res) => {
     try {
-      const notesId: SuccessResponse | FailureResponse = await createNotes(
-        parseInt(req.params.thinksession_id),
-        db
-      );
-      if (notesId instanceof FailureResponse) {
-        res.status(notesId.status).send({ error: notesId.error });
+      const notesResponse: SuccessResponse | FailureResponse =
+        await createNotes(parseInt(req.params.thinksession_id), db);
+      if (notesResponse instanceof FailureResponse) {
+        res.status(notesResponse.status).send({ error: notesResponse.error });
       } else {
-        res.status(200).send({ notesId: notesId });
+        res.status(200).send({ message: notesResponse.message });
       }
     } catch (error) {
       res.status(500).send({ error: `${error}` });

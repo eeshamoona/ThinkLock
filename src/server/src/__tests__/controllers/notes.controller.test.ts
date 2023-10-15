@@ -113,7 +113,9 @@ describe("notes.controller", () => {
 
     it("should return a FailureResponse for an invalid thinksession_id", async () => {
       const result = await getNotes(123, db);
-      expect(result).toEqual(new FailureResponse(404, "ThinkSession not found"));
+      expect(result).toEqual(
+        new FailureResponse(404, "ThinkSession not found")
+      );
     });
   });
 
@@ -134,6 +136,22 @@ describe("notes.controller", () => {
 
     it("should return a FailureResponse for an invalid thinksession_id", async () => {
       const result = await createNotes(123, db);
+      expect(result).toEqual(
+        new FailureResponse(404, "ThinkSession not found")
+      );
+    });
+  });
+
+  describe("updateNotes", () => {
+    it("should return a SuccessResponse for a valid thinksession_id", async () => {
+      const result = await updateNotes(1, "Test Notes Content 1 Updated", db);
+      expect(result).toEqual(
+        new SuccessResponse(200, "Notes updated in thinksession 1")
+      );
+    });
+
+    it("should return a FailureResponse for an invalid thinksession_id", async () => {
+      const result = await updateNotes(123, "Test Notes Content 1 Updated", db);
       expect(result).toEqual(
         new FailureResponse(404, "ThinkSession not found")
       );
