@@ -1,33 +1,24 @@
 import dbPromise from "../utils/database";
 import { ActionItem } from "../models/actionitem.model";
 import { SuccessResponse, FailureResponse } from "../utils/responses";
-import e from "express";
-
-export async function getAllActionItems(): Promise<
-  ActionItem[] | FailureResponse
-> {
-  try {
-    const db = await dbPromise;
-    const query = `SELECT * FROM actionitem`;
-    const res = await db.all<ActionItem[]>(query);
-    return res;
-  } catch (error) {
-    return new FailureResponse(500, `${error}`);
-  }
-}
+import { Database } from "sqlite";
+import { ThinkFolder } from "../models/thinkfolder.model";
+import { ThinkSession } from "../models/thinksession.model";
+import { getThinkSessionById } from "./thinksession.controller";
 
 export async function getActionItemById(
   id: number,
+  dbInstance?: Database,
 ): Promise<ActionItem | FailureResponse> {
   try {
-    const db = await dbPromise;
+    const db = dbInstance || (await dbPromise);
     const query = `SELECT * FROM actionitem WHERE id = ?`;
     const params = [id];
     const res = await db.get<ActionItem>(query, params);
     if (!res) {
-      return new FailureResponse(404, `action item with id ${id} not found`);
+      return new FailureResponse(404, `ActionItem ${id} not found`);
     }
-    return res;
+    return res as ActionItem;
   } catch (error) {
     return new FailureResponse(500, `${error}`);
   }
@@ -38,9 +29,10 @@ export async function createActionItem(
   thinkfolder_id: number,
   description: string,
   title: string,
+  dbInstance?: Database,
 ): Promise<number | FailureResponse> {
   try {
-    const db = await dbPromise;
+    const db = dbInstance || (await dbPromise);
     const query =
       "INSERT INTO actionitem (thinksession_id, thinkfolder_id, title, description) VALUES (?, ?, ?, ?)";
     const params = [thinksession_id, thinkfolder_id, description, title];
@@ -72,10 +64,21 @@ export async function createActionItem(
 }
 
 export async function getAllActionItemsByThinkFolderId(
-  thinkfolder_id: string,
+  thinkfolder_id: number,
+  dbInstance?: Database,
 ): Promise<ActionItem[] | FailureResponse> {
   try {
-    const db = await dbPromise;
+    const db = dbInstance || (await dbPromise);
+    // check if thinkfolder exists
+    const thinkfolderQuery = `SELECT * FROM thinkfolder WHERE id = ?`;
+    const thinkfolderParams = [thinkfolder_id];
+    const thinkfolderRes = await db.get<ThinkFolder>(
+      thinkfolderQuery,
+      thinkfolderParams,
+    );
+    if (!thinkfolderRes) {
+      return new FailureResponse(404, "ThinkFolder not found");
+    }
     const query = `SELECT * FROM actionitem WHERE thinkfolder_id = ?`;
     const params = [thinkfolder_id];
     const res = await db.all<ActionItem[]>(query, params);
@@ -86,10 +89,21 @@ export async function getAllActionItemsByThinkFolderId(
 }
 
 export async function getAllActionItemsByThinkSessionId(
-  thinksession_id: string,
+  thinksession_id: number,
+  dbInstance?: Database,
 ): Promise<ActionItem[] | FailureResponse> {
   try {
-    const db = await dbPromise;
+    const db = dbInstance || (await dbPromise);
+    // check if thinksession exists
+    const thinksessionQuery = `SELECT * FROM thinksession WHERE id = ?`;
+    const thinksessionParams = [thinksession_id];
+    const thinksessionRes = await db.get<ThinkSession>(
+      thinksessionQuery,
+      thinksessionParams,
+    );
+    if (!thinksessionRes) {
+      return new FailureResponse(404, "ThinkSession not found");
+    }
     const query = `SELECT * FROM actionitem WHERE thinksession_id = ?`;
     const params = [thinksession_id];
     const res = await db.all<ActionItem[]>(query, params);
@@ -102,9 +116,10 @@ export async function getAllActionItemsByThinkSessionId(
 export async function updateActionItem(
   id: number,
   request: Partial<ActionItem>,
+  dbInstance?: Database,
 ): Promise<SuccessResponse | FailureResponse> {
   try {
-    const db = await dbPromise;
+    const db = dbInstance || (await dbPromise);
     const { thinksession_id, thinkfolder_id, description, title } = request;
     const params = [];
     let query = "UPDATE actionitem SET ";
@@ -144,9 +159,10 @@ export async function updateActionItem(
 
 export async function toggleCompletedActionItem(
   id: number,
+  dbInstance?: Database,
 ): Promise<SuccessResponse | FailureResponse> {
   try {
-    const db = await dbPromise;
+    const db = dbInstance || (await dbPromise);
     //Get the action item
     const actionItem = await getActionItemById(id);
     if (actionItem instanceof FailureResponse) {
