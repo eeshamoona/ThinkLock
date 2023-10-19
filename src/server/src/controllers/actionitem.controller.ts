@@ -8,7 +8,7 @@ import { getThinkSessionById } from "./thinksession.controller";
 
 export async function getActionItemById(
   id: number,
-  dbInstance?: Database,
+  dbInstance?: Database
 ): Promise<ActionItem | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -25,17 +25,19 @@ export async function getActionItemById(
 }
 
 export async function createActionItem(
-  thinksession_id: number | null,
-  thinkfolder_id: number,
-  description: string,
-  title: string,
-  dbInstance?: Database,
+  actionItem: Partial<ActionItem>,
+  dbInstance?: Database
 ): Promise<number | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
     const query =
       "INSERT INTO actionitem (thinksession_id, thinkfolder_id, title, description) VALUES (?, ?, ?, ?)";
-    const params = [thinksession_id, thinkfolder_id, description, title];
+    const params = [
+      actionItem.thinksession_id,
+      actionItem.thinkfolder_id,
+      actionItem.description,
+      actionItem.title,
+    ];
     const res = await db.run(query, params);
     if (!res.lastID) {
       return new FailureResponse(500, "failed to create action item");
@@ -46,10 +48,10 @@ export async function createActionItem(
       "INSERT INTO studyevents (thinksession_id, event_type, timestamp, details, reference_id) VALUES (?, ?, ?, ?, ?)";
     const currentTimestamp = new Date();
     const studyEventParams = [
-      thinksession_id,
+      actionItem.thinksession_id,
       "actionitem_created",
       currentTimestamp.toISOString(),
-      `${title}`,
+      `${actionItem.title}`,
       res.lastID,
     ];
     const studyEvent = await db.run(studyEventQuery, studyEventParams);
@@ -65,7 +67,7 @@ export async function createActionItem(
 
 export async function getAllActionItemsByThinkFolderId(
   thinkfolder_id: number,
-  dbInstance?: Database,
+  dbInstance?: Database
 ): Promise<ActionItem[] | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -74,7 +76,7 @@ export async function getAllActionItemsByThinkFolderId(
     const thinkfolderParams = [thinkfolder_id];
     const thinkfolderRes = await db.get<ThinkFolder>(
       thinkfolderQuery,
-      thinkfolderParams,
+      thinkfolderParams
     );
     if (!thinkfolderRes) {
       return new FailureResponse(404, "ThinkFolder not found");
@@ -90,7 +92,7 @@ export async function getAllActionItemsByThinkFolderId(
 
 export async function getAllActionItemsByThinkSessionId(
   thinksession_id: number,
-  dbInstance?: Database,
+  dbInstance?: Database
 ): Promise<ActionItem[] | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -99,7 +101,7 @@ export async function getAllActionItemsByThinkSessionId(
     const thinksessionParams = [thinksession_id];
     const thinksessionRes = await db.get<ThinkSession>(
       thinksessionQuery,
-      thinksessionParams,
+      thinksessionParams
     );
     if (!thinksessionRes) {
       return new FailureResponse(404, "ThinkSession not found");
@@ -116,7 +118,7 @@ export async function getAllActionItemsByThinkSessionId(
 export async function updateActionItem(
   id: number,
   request: Partial<ActionItem>,
-  dbInstance?: Database,
+  dbInstance?: Database
 ): Promise<SuccessResponse | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -159,7 +161,7 @@ export async function updateActionItem(
 
 export async function toggleCompletedActionItem(
   id: number,
-  dbInstance?: Database,
+  dbInstance?: Database
 ): Promise<SuccessResponse | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
