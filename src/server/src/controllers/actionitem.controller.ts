@@ -123,6 +123,13 @@ export async function updateActionItem(
   try {
     const db = dbInstance || (await dbPromise);
     const { thinksession_id, thinkfolder_id, description, title } = request;
+
+    // Check if the action item exists
+    const actionItem = await getActionItemById(id);
+    if (actionItem instanceof FailureResponse) {
+      return new FailureResponse(404, `${actionItem.error}`);
+    }
+
     const params = [];
     let query = "UPDATE actionitem SET ";
 

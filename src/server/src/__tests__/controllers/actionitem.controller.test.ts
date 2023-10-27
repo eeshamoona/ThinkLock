@@ -3,8 +3,9 @@ import { FailureResponse } from "../../utils/responses";
 import {
   getAllActionItemsByThinkFolderId,
   getActionItemById,
-  getAllActionItemsByThinkSessionId,
   createActionItem,
+  updateActionItem,
+  toggleCompletedActionItem,
 } from "../../controllers/actionitem.controller";
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
@@ -103,6 +104,38 @@ describe("actionitem.controller", () => {
     );
 
     expect((await db.all(`SELECT * FROM actionitem`)).length).toBe(3);
+
+    await db.run(`
+      CREATE TABLE IF NOT EXISTS studyevents (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        thinksession_id INTEGER NOT NULL,
+        event_type TEXT NOT NULL,
+        timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
+        details TEXT,
+        reference_id INTEGER,
+        FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
+        )`);
+
+    await db.run(`
+      INSERT INTO studyevents (thinksession_id, event_type, timestamp, details, reference_id)
+      VALUES (1, "actionitem_created", "2023-10-10 10:00:00", "Test Controller ActionItem 1", 1)
+    `);
+
+    await db.run(`
+      INSERT INTO studyevents (thinksession_id, event_type, timestamp, details, reference_id)
+      VALUES (2, "actionitem_created", "2023-11-11 11:00:00", "Test Controller ActionItem 2", 2)
+    `);
+
+    await db.run(`
+      INSERT INTO studyevents (thinksession_id, event_type, timestamp, details, reference_id)
+      VALUES (2, "actionitem_created", "2023-11-11 11:00:00", "Test Controller ActionItem 3", 3)
+    `);
+
+    actionItemLoggerInstance.success(
+      `Database populated StudyEvents in Controller Test File`
+    );
+
+    expect((await db.all(`SELECT * FROM studyevents`)).length).toBe(3);
   });
 
   afterAll(async () => {
@@ -190,6 +223,73 @@ describe("actionitem.controller", () => {
       const actionItem = await getActionItemById(1, db);
       expect(actionItem).toEqual(
         new FailureResponse(500, "Error: Database error")
+      );
+    });
+  });
+
+  describe("createActionItem", () => {
+    it("should return the id of the created action item", async () => {
+      const actionItem = await createActionItem(
+        {
+          thinksession_id: 1,
+          thinkfolder_id: 1,
+          title: "Test Controller ActionItem 4",
+          description: "Test Description D",
+        },
+        db
+      );
+      expect(actionItem).toEqual(4);
+    });
+
+    it("should return a failure response when there is an error", async () => {
+      db.run = jest
+        .fn()
+        .mockRejectedValueOnce(new Error("Database error") as never);
+      const actionItem = await createActionItem(
+        {
+          thinksession_id: 1,
+          thinkfolder_id: 1,
+          title: "Test Controller ActionItem 4",
+          description: "Test Description D",
+        },
+        db
+      );
+      expect(actionItem).toEqual(
+        new FailureResponse(500, "Error: Database error")
+      );
+    });
+  });
+
+  describe("updateActionItem", () => {
+    it("should update an action item", async () => {
+      const actionItem = await updateActionItem(
+        1,
+        {
+          thinksession_id: 1,
+          thinkfolder_id: 1,
+          title: "Test Controller ActionItem 1",
+          description: "Test Description A",
+        },
+        db
+      );
+      expect(actionItem).toEqual(
+        new SuccessResponse(200, "Action item with id 1 updated")
+      );
+    });
+
+    it("should return a failure response when the action item id does not exist", async () => {
+      const actionItem = await updateActionItem(
+        100,
+        {
+          thinksession_id: 1,
+          thinkfolder_id: 1,
+          title: "Test Controller ActionItem 1",
+          description: "Test Description A",
+        },
+        db
+      );
+      expect(actionItem).toEqual(
+        new FailureResponse(404, "ActionItem 100 not found")
       );
     });
   });
