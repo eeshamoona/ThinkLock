@@ -3,7 +3,14 @@ import { Database } from "sqlite";
 import { FailureResponse, SuccessResponse } from "../utils/responses";
 import { Notes } from "../models/notes.model";
 
-export async function getNotes(
+/**
+ * getNotes(): returns notes for a given thinksession
+ * Use case: Showing notes on the study page
+ * @param thinksession_id - id of thinksession to return notes from
+ * @param dbInstance [optional] - database instance to use
+ * @returns Notes or FailureResponse
+ */
+async function getNotes(
   thinksession_id: number,
   dbInstance?: Database,
 ): Promise<string | FailureResponse> {
@@ -30,7 +37,14 @@ export async function getNotes(
   }
 }
 
-export async function createNotes(
+/**
+ * createNotes(): creates a new notes
+ * Use case: Creating a new notes for a thinksession if it doesn't exist or returning the existing notes
+ * @param thinksession_id - id of thinksession to create notes for
+ * @param dbInstance [optional] - database instance to use
+ * @returns SuccessResponse with id of note or FailureResponse
+ */
+async function createNotes(
   thinksession_id: number,
   dbInstance?: Database,
 ): Promise<SuccessResponse | FailureResponse> {
@@ -65,7 +79,15 @@ export async function createNotes(
   }
 }
 
-export async function updateNotes(
+/**
+ * updateNotes(): updates the notes for a given thinksession
+ * Use case: Updating notes on the study page
+ * @param thinksession_id - id of thinksession to update notes for
+ * @param content - new content of notes
+ * @param dbInstance [optional] - database instance to use
+ * @returns SuccessResponse or FailureResponse
+ */
+async function updateNotes(
   thinksession_id: number,
   content: string,
   dbInstance?: Database,
@@ -95,3 +117,5 @@ export async function updateNotes(
     return new FailureResponse(500, `${error}`);
   }
 }
+
+export { getNotes, createNotes, updateNotes };

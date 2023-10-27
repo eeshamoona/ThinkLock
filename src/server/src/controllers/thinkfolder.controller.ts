@@ -3,8 +3,13 @@ import { ThinkFolder } from "../models/thinkfolder.model";
 import { SuccessResponse, FailureResponse } from "../utils/responses";
 import { Database } from "sqlite";
 
-// Optional testing parameter: database instance
-export async function getAllThinkFolders(
+/**
+ * getAllThinkFolders(): returns all thinkfolders
+ * Use case: Showing all thinkfolders on the plan page
+ * @param dbInstance [optional] - database instance to use
+ * @returns List of thinkfolders or FailureResponse
+ */
+async function getAllThinkFolders(
   dbInstance?: Database,
 ): Promise<ThinkFolder[] | FailureResponse> {
   try {
@@ -17,7 +22,14 @@ export async function getAllThinkFolders(
   }
 }
 
-export async function getThinkFolderById(
+/**
+ * getThinkFolderById(): returns thinkfolder with given id
+ * Use case: Showing a specific thinkfolder on the plan page
+ * @param id  - id of thinkfolder to return
+ * @param dbInstance [optional] - database instance to use
+ * @returns ThinkFolder or FailureResponse
+ */
+async function getThinkFolderById(
   id: number,
   dbInstance?: Database,
 ): Promise<ThinkFolder | FailureResponse> {
@@ -35,7 +47,14 @@ export async function getThinkFolderById(
   }
 }
 
-export async function createThinkFolder(
+/**
+ * createThinkFolder(): creates a new thinkfolder
+ * Use case: Creating a new thinkfolder
+ * @param thinkfolder - thinkfolder information to create
+ * @param dbInstance [optional] - database instance to use
+ * @returns id of created thinkfolder or FailureResponse
+ */
+async function createThinkFolder(
   thinkfolder: Partial<ThinkFolder>,
   dbInstance?: Database,
 ): Promise<number | FailureResponse> {
@@ -58,3 +77,5 @@ export async function createThinkFolder(
     return new FailureResponse(500, `${error}`);
   }
 }
+
+export { getAllThinkFolders, getThinkFolderById, createThinkFolder };

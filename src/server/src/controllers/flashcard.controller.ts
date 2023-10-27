@@ -4,7 +4,14 @@ import { Database } from "sqlite";
 import { FailureResponse, SuccessResponse } from "../utils/responses";
 import { ThinkFolder } from "../models/thinkfolder.model";
 
-export async function getAllFlashcards(
+/**
+ * getAllFlashcards(): returns all flashcards for a given thinksession
+ * Use case: Showing flashcards on the study page
+ * @param thinksession_id - id of thinksession to return flashcards from
+ * @param dbInstance [optional] - database instance to use
+ * @returns List of Flashcards or FailureResponse
+ */
+async function getAllFlashcards(
   thinksession_id: number,
   dbInstance?: Database,
 ): Promise<Flashcard[] | FailureResponse> {
@@ -19,7 +26,16 @@ export async function getAllFlashcards(
   }
 }
 
-export async function createFlashcard(
+/**
+ * createFlashcard(): creates a new flashcard
+ * Use case: Creating a new flashcard
+ * @param thinksession_id - id of thinksession to create flashcard for
+ * @param flashcard - flashcard information to create
+ * @param dbInstance [optional] - database instance to use
+ * @returns SuccessResponse with id of created flashcard or FailureResponse
+ */
+async function createFlashcard(
+  thinksession_id: number,
   flashcard: Partial<Flashcard>,
   dbInstance?: Database,
 ): Promise<SuccessResponse | FailureResponse> {
@@ -28,7 +44,7 @@ export async function createFlashcard(
 
     //check if thinksession exists
     const thinksessionQuery = `SELECT * FROM thinksession WHERE id = ?`;
-    const thinksessionParams = [flashcard.thinksession_id];
+    const thinksessionParams = [thinksession_id];
     const thinksessionRes = await db.get(thinksessionQuery, thinksessionParams);
     if (!thinksessionRes) {
       return new FailureResponse(404, "ThinkSession not found");
@@ -47,7 +63,7 @@ export async function createFlashcard(
 
     const query = `INSERT INTO flashcard (thinksession_id, thinkfolder_id, front, back) VALUES (?, ?, ?, ?)`;
     const params = [
-      flashcard.thinksession_id,
+      thinksession_id,
       thinkfolderRes.id,
       flashcard.front,
       flashcard.back,
@@ -59,7 +75,14 @@ export async function createFlashcard(
   }
 }
 
-export async function deleteFlashcard(
+/**
+ * deleteFlashcard(): deletes a flashcard
+ * Use case: Deleting a flashcard
+ * @param flashcard_id - id of flashcard to delete
+ * @param dbInstance [optional] - database instance to use
+ * @returns SuccessResponse or FailureResponse
+ */
+async function deleteFlashcard(
   flashcard_id: number,
   dbInstance?: Database,
 ): Promise<SuccessResponse | FailureResponse> {
@@ -85,3 +108,5 @@ export async function deleteFlashcard(
     return new FailureResponse(500, `${error}`);
   }
 }
+
+export { getAllFlashcards, createFlashcard, deleteFlashcard };

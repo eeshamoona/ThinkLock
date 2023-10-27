@@ -4,6 +4,13 @@ import { SuccessResponse, FailureResponse } from "../utils/responses";
 import { HeatmapData } from "../models/heatmapdata.model";
 import { Database } from "sqlite";
 
+//TODO: Not used so remove or replace with a better useCase
+/**
+ * getAllThinkSessions(): returns all thinksessions
+ * Use case: ...
+ * @param dbInstance [optional] - database instance to use
+ * @returns List of thinksessions or FailureResponse
+ */
 async function getAllThinkSessions(
   dbInstance?: Database,
 ): Promise<ThinkSession[] | FailureResponse> {
@@ -17,6 +24,13 @@ async function getAllThinkSessions(
   }
 }
 
+/**
+ * getThinkSessionById(): returns thinksession with given id
+ * Use case: Showing a specific thinksession on the study page
+ * @param id  - id of thinksession to return
+ * @param dbInstance [optional] - database instance to use
+ * @returns ThinkSession or FailureResponse
+ */
 async function getThinkSessionById(
   id: number,
   dbInstance?: Database,
@@ -35,6 +49,13 @@ async function getThinkSessionById(
   }
 }
 
+/**
+ * createThinkSession(): creates a new thinksession
+ * Use case: Creating a new thinksession
+ * @param thinksession - thinksession information to create
+ * @param dbInstance [optional] - database instance to use
+ * @returns id of created thinksession or FailureResponse
+ */
 async function createThinkSession(
   thinksession: Partial<ThinkSession>,
   dbInstance?: Database,
@@ -72,6 +93,13 @@ async function createThinkSession(
   }
 }
 
+/**
+ * getAllThinkSessionsByThinkFolderId(): returns all thinksessions with given thinkfolder_id
+ * Use case: Showing all thinksessions for a specific thinkfolder on the thinkfolder details page
+ * @param thinkfolder_id  - id of thinkfolder to return thinksessions for
+ * @param dbInstance [optional] - database instance to use
+ * @returns List of thinksessions or FailureResponse
+ */
 async function getAllThinkSessionsByThinkFolderId(
   thinkfolder_id: number,
   dbInstance?: Database,
@@ -87,6 +115,13 @@ async function getAllThinkSessionsByThinkFolderId(
   }
 }
 
+/**
+ * getAllThinkSessionsByDate(): returns all thinksessions with given date
+ * Use case: Showing all thinksessions for a specific date on the study page
+ * @param date  - date of thinksession to return thinksessions for
+ * @param dbInstance [optional] - database instance to use
+ * @returns List of thinksessions or FailureResponse
+ */
 async function getAllThinkSessionsByDate(
   date: Date,
   dbInstance?: Database,
@@ -102,6 +137,14 @@ async function getAllThinkSessionsByDate(
   }
 }
 
+//TODO: Move this to thinkfolder.controller.ts
+/**
+ * getThinkSessionHeatMapByYear(): returns all thinksessions with given thinkfolder_id
+ * Use case: Getting heatmap data for a specific thinkfolder
+ * @param thinkfolder_id  - id of thinkfolder to return thinksessions for
+ * @param dbInstance [optional] - database instance to use
+ * @returns List of thinksessions or FailureResponse
+ */
 async function getThinkSessionHeatMapByYear(
   year: number,
   thinkfolder_id: number,
@@ -127,6 +170,14 @@ async function getThinkSessionHeatMapByYear(
   return rows;
 }
 
+/**
+ * updateThinkSession(): updates thinksession with given id
+ * Use case: Updating a specific thinksession
+ * @param id - id of thinksession to update
+ * @param request - updated thinksession information
+ * @param dbInstance [optional] - database instance to use
+ * @returns SuccessResponse or FailureResponse
+ */
 async function updateThinkSession(
   id: number,
   request: Partial<ThinkSession>,

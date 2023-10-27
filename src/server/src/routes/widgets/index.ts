@@ -90,12 +90,15 @@ function createWidgetsRouter(db: Database): Router {
   widgetsRouter.post("/flashcards/:thinksession_id", async (req, res) => {
     try {
       const flashcardToCreate: Partial<Flashcard> = {
-        thinksession_id: parseInt(req.params.thinksession_id),
         front: req.body.front,
         back: req.body.back,
       };
       const flashcardResponse: SuccessResponse | FailureResponse =
-        await createFlashcard(flashcardToCreate, db);
+        await createFlashcard(
+          parseInt(req.params.thinksession_id),
+          flashcardToCreate,
+          db
+        );
       if (flashcardResponse instanceof FailureResponse) {
         res.status(flashcardResponse.status).send({
           error: flashcardResponse.error,

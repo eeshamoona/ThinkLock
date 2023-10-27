@@ -145,8 +145,8 @@ describe("flashcard.controller", () => {
   describe("createFlashcard", () => {
     it("should return a SuccessResponse for a valid thinksession_id", async () => {
       const result = await createFlashcard(
+        1,
         {
-          thinksession_id: 1,
           front: "Test Flashcard Front 2",
           back: "Test Flashcard Back 2",
         },
@@ -159,8 +159,8 @@ describe("flashcard.controller", () => {
 
     it("should return a FailureResponse for an invalid thinksession_id", async () => {
       const result = await createFlashcard(
+        123,
         {
-          thinksession_id: 123,
           front: "Test Flashcard Front 2",
           back: "Test Flashcard Back 2",
         },
@@ -176,8 +176,8 @@ describe("flashcard.controller", () => {
         .fn()
         .mockRejectedValueOnce(new Error("Database error") as never);
       const result = await createFlashcard(
+        1,
         {
-          thinksession_id: 1,
           front: "Test Flashcard Front 2",
           back: "Test Flashcard Back 2",
         },

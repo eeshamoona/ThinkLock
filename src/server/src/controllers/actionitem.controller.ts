@@ -6,9 +6,16 @@ import { ThinkFolder } from "../models/thinkfolder.model";
 import { ThinkSession } from "../models/thinksession.model";
 import { getThinkSessionById } from "./thinksession.controller";
 
-export async function getActionItemById(
+/**
+ * getActionItemById(): returns action item with given id
+ * Use case: Showing a specific action item on the study or plan page
+ * @param id - id of action item to return
+ * @param dbInstance [optional] - database instance to use
+ * @returns ActionItem or FailureResponse
+ */
+async function getActionItemById(
   id: number,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<ActionItem | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -24,9 +31,16 @@ export async function getActionItemById(
   }
 }
 
-export async function createActionItem(
+/**
+ * createActionItem(): creates a new action item
+ * Use case: Creating a new action item
+ * @param actionItem - action item information to create
+ * @param dbInstance [optional] - database instance to use
+ * @returns id of created action item or FailureResponse
+ */
+async function createActionItem(
   actionItem: Partial<ActionItem>,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<number | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -65,9 +79,16 @@ export async function createActionItem(
   }
 }
 
-export async function getAllActionItemsByThinkFolderId(
+/**
+ * getAllActionItemsByThinkFolderId(): returns all action items with given thinkfolder_id
+ * Use case: Showing all action items on the thinkfolder details page
+ * @param thinkfolder_id - id of thinkfolder to return action items for
+ * @param dbInstance [optional] - database instance to use
+ * @returns List of action items or FailureResponse
+ */
+async function getAllActionItemsByThinkFolderId(
   thinkfolder_id: number,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<ActionItem[] | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -76,7 +97,7 @@ export async function getAllActionItemsByThinkFolderId(
     const thinkfolderParams = [thinkfolder_id];
     const thinkfolderRes = await db.get<ThinkFolder>(
       thinkfolderQuery,
-      thinkfolderParams
+      thinkfolderParams,
     );
     if (!thinkfolderRes) {
       return new FailureResponse(404, "ThinkFolder not found");
@@ -90,9 +111,16 @@ export async function getAllActionItemsByThinkFolderId(
   }
 }
 
-export async function getAllActionItemsByThinkSessionId(
+/**
+ * getAllActionItemsByThinkSessionId(): returns all action items with given thinksession_id
+ * Use case: Showing all action items on the thinksession page
+ * @param thinksession_id - id of thinksession to return action items for
+ * @param dbInstance [optional] - database instance to use
+ * @returns List of action items or FailureResponse
+ */
+async function getAllActionItemsByThinkSessionId(
   thinksession_id: number,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<ActionItem[] | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -101,7 +129,7 @@ export async function getAllActionItemsByThinkSessionId(
     const thinksessionParams = [thinksession_id];
     const thinksessionRes = await db.get<ThinkSession>(
       thinksessionQuery,
-      thinksessionParams
+      thinksessionParams,
     );
     if (!thinksessionRes) {
       return new FailureResponse(404, "ThinkSession not found");
@@ -115,10 +143,18 @@ export async function getAllActionItemsByThinkSessionId(
   }
 }
 
-export async function updateActionItem(
+/**
+ * updateActionItem(): updates an action item
+ * Use case: Updating an action item
+ * @param id - id of action item to update
+ * @param request - action item information to update
+ * @param dbInstance [optional] - database instance to use
+ * @returns SuccessResponse or FailureResponse
+ */
+async function updateActionItem(
   id: number,
   request: Partial<ActionItem>,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<SuccessResponse | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -166,9 +202,16 @@ export async function updateActionItem(
   }
 }
 
-export async function toggleCompletedActionItem(
+/**
+ * toggleCompletedActionItem(): toggles the completed flag of an action item
+ * Use case: Toggling the checkbox of an action item
+ * @param id - id of action item to toggle completed flag for
+ * @param dbInstance [optional] - database instance to use
+ * @returns SuccessResponse or FailureResponse
+ */
+async function toggleCompletedActionItem(
   id: number,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<SuccessResponse | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -202,3 +245,12 @@ export async function toggleCompletedActionItem(
     return new FailureResponse(500, `${error}`);
   }
 }
+
+export {
+  getActionItemById,
+  createActionItem,
+  getAllActionItemsByThinkFolderId,
+  getAllActionItemsByThinkSessionId,
+  updateActionItem,
+  toggleCompletedActionItem,
+};
