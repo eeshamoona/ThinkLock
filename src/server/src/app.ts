@@ -4,7 +4,7 @@ import createThinkSessionsRouter from "./routes/thinksessions";
 import { Logger } from "./utils/logger";
 import dbPromise from "./utils/database";
 import { Router } from "express";
-import studyEventsRouter from "./routes/studyevents";
+import createStudyEventRouter from "./routes/studyevents";
 import createWidgetsRouter from "./routes/widgets";
 import createActionItemRouter from "./routes/actionitems";
 
@@ -21,11 +21,12 @@ app.get("/", (req: Request, res: Response) => {
   const thinksessionRouter: Router = createThinkSessionsRouter(await dbPromise);
   const widgetsRouter: Router = createWidgetsRouter(await dbPromise);
   const actionItemsRouter: Router = createActionItemRouter(await dbPromise);
+  const studyEventsRouter: Router = createStudyEventRouter(await dbPromise);
 
   app.use("/thinkfolders", thinkfolderRouter);
-  app.use("/actionitems", actionItemsRouter);
   app.use("/thinksessions", thinksessionRouter);
   app.use("/widgets", widgetsRouter);
+  app.use("/actionitems", actionItemsRouter);
   app.use("/studyevents", studyEventsRouter);
 })();
 
