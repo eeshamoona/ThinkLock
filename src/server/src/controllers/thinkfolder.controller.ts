@@ -55,9 +55,9 @@ async function getThinkFolderById(
  * @returns id of created thinkfolder or FailureResponse
  */
 async function createThinkFolder(
-  thinkfolder: Partial<ThinkFolder>,
+  thinkfolder: ThinkFolder,
   dbInstance?: Database,
-): Promise<number | FailureResponse> {
+): Promise<ThinkFolder | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
     const query =
@@ -72,7 +72,13 @@ async function createThinkFolder(
     if (!res.lastID) {
       return new FailureResponse(500, "failed to create thinkfolder");
     }
-    return res.lastID;
+    return {
+      id: res.lastID,
+      name: thinkfolder.name,
+      description: thinkfolder.description,
+      color: thinkfolder.color,
+      icon: thinkfolder.icon,
+    };
   } catch (error) {
     return new FailureResponse(500, `${error}`);
   }

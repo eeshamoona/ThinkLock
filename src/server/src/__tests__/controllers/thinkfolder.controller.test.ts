@@ -120,20 +120,25 @@ describe("thinkfolder.controller", () => {
 
   describe("createThinkFolder", () => {
     it("should return the ID of the created thinkfolder", async () => {
-      const newThinkFolder: Partial<ThinkFolder> = {
+      const newThinkFolder: ThinkFolder = {
         name: "New ThinkFolder",
         description: "This is a new thinkfolder",
         icon: "new-test-icon",
         color: "#123456",
       };
       const result = await createThinkFolder(newThinkFolder, db);
-      expect(typeof result).toBe("number");
-      expect(result).toBeGreaterThan(0);
+      expect(result).toEqual({
+        id: 3,
+        name: "New ThinkFolder",
+        description: "This is a new thinkfolder",
+        icon: "new-test-icon",
+        color: "#123456",
+      });
     });
 
     it("should return a FailureResponse if the thinkfolder is not created", async () => {
       db.run = jest.fn().mockResolvedValueOnce({} as never);
-      const newThinkFolder: Partial<ThinkFolder> = {
+      const newThinkFolder: ThinkFolder = {
         name: "New ThinkFolder",
         description: "This is a new thinkfolder",
         icon: "new-test-icon",
@@ -151,7 +156,7 @@ describe("thinkfolder.controller", () => {
       db.run = jest
         .fn()
         .mockRejectedValueOnce(new Error("Database error") as never);
-      const newThinkFolder: Partial<ThinkFolder> = {
+      const newThinkFolder: ThinkFolder = {
         name: "New ThinkFolder",
         description: "This is a new thinkfolder",
         icon: "new-test-icon",

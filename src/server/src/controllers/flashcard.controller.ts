@@ -3,6 +3,7 @@ import { Flashcard } from "../models/flashcard.model";
 import { Database } from "sqlite";
 import { FailureResponse, SuccessResponse } from "../utils/responses";
 import { ThinkFolder } from "../models/thinkfolder.model";
+import { getThinkSessionById } from "./thinksession.controller";
 
 /**
  * getAllFlashcards(): returns all flashcards for a given thinksession
@@ -13,10 +14,15 @@ import { ThinkFolder } from "../models/thinkfolder.model";
  */
 async function getAllFlashcards(
   thinksession_id: number,
-  dbInstance?: Database,
+  dbInstance?: Database
 ): Promise<Flashcard[] | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
+    //check if thinksession exists
+    const thinkSession = await getThinkSessionById(thinksession_id);
+    if (thinkSession instanceof FailureResponse) {
+      return new FailureResponse(404, "ThinkSession not found");
+    }
     const query = `SELECT * FROM flashcard WHERE thinksession_id = ?`;
     const params = [thinksession_id];
     const res = await db.all<Flashcard[]>(query, params);
@@ -37,16 +43,14 @@ async function getAllFlashcards(
 async function createFlashcard(
   thinksession_id: number,
   flashcard: Partial<Flashcard>,
-  dbInstance?: Database,
+  dbInstance?: Database
 ): Promise<SuccessResponse | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
 
     //check if thinksession exists
-    const thinksessionQuery = `SELECT * FROM thinksession WHERE id = ?`;
-    const thinksessionParams = [thinksession_id];
-    const thinksessionRes = await db.get(thinksessionQuery, thinksessionParams);
-    if (!thinksessionRes) {
+    const thinksessionRes = await getThinkSessionById(thinksession_id);
+    if (thinksessionRes instanceof FailureResponse) {
       return new FailureResponse(404, "ThinkSession not found");
     }
 
@@ -55,7 +59,7 @@ async function createFlashcard(
     const thinkfolderParams = [thinksessionRes.thinkfolder_id];
     const thinkfolderRes = await db.get<ThinkFolder>(
       thinkfolderQuery,
-      thinkfolderParams,
+      thinkfolderParams
     );
     if (!thinkfolderRes) {
       return new FailureResponse(404, "ThinkFolder not found");
@@ -84,7 +88,7 @@ async function createFlashcard(
  */
 async function deleteFlashcard(
   flashcard_id: number,
-  dbInstance?: Database,
+  dbInstance?: Database
 ): Promise<SuccessResponse | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -102,11 +106,55 @@ async function deleteFlashcard(
     const res = await db.run(query, params);
     return new SuccessResponse(
       200,
-      `Flashcard deleted with id ${flashcard_id}`,
+      `Flashcard deleted with id ${flashcard_id}`
     );
   } catch (error) {
     return new FailureResponse(500, `${error}`);
   }
 }
 
-export { getAllFlashcards, createFlashcard, deleteFlashcard };
+/**
+ * updateFlashcard(): updates a flashcard
+ * Use case: Updating a flashcard
+ * @param flashcard_id - id of flashcard to update
+ * @param flashcard - new flashcard information
+ * @param dbInstance [optional] - database instance to use
+ * @returns SuccessResponse or FailureResponse
+ */
+
+async function updateFlashcard(
+  flashcard_id: number,
+  flashcard: Partial<Flashcard>,
+  dbInstance?: Database
+): Promise<SuccessResponse | FailureResponse> {
+  try {
+    const db = dbInstance || (await dbPromise);
+
+    //check if flashcard exists
+    const flashcardQuery = `SELECT * FROM flashcard WHERE id = ?`;
+    const flashcardParams = [flashcard_id];
+    const flashcardRes = await db.get(flashcardQuery, flashcardParams);
+    if (!flashcardRes) {
+      return new FailureResponse(404, "Flashcard not found");
+    }
+
+    const query = `UPDATE flashcard SET front = ?, back = ? WHERE id = ?`;
+    const params = [
+      flashcard.front as string,
+      flashcard.back as string,
+      flashcard_id,
+    ];
+    const res = await db.run(query, params);
+    if (res.changes === 0) {
+      return new FailureResponse(500, "failed to update notes");
+    }
+    return new SuccessResponse(
+      200,
+      "Flashcard updated with id " + flashcard_id
+    );
+  } catch (error) {
+    return new FailureResponse(500, `${error}`);
+  }
+}
+
+export { getAllFlashcards, createFlashcard, deleteFlashcard, updateFlashcard };

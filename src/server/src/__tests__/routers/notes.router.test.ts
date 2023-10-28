@@ -3,9 +3,9 @@ import express from "express";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
 import { describe, beforeAll, afterAll, it, expect, jest } from "@jest/globals";
-import createWidgetsRouter from "../../routes/widgets";
+import createNotesRouter from "../../routes/notes";
 
-describe("widgetsRouter", () => {
+describe("notesRouter", () => {
   let test_db: any;
   let test_app: any;
 
@@ -84,26 +84,9 @@ describe("widgetsRouter", () => {
 
     expect((await test_db.all(`SELECT * FROM notes`)).length).toBe(2);
 
-    await test_db.run(`CREATE TABLE IF NOT EXISTS flashcard (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      front TEXT,
-      back TEXT,
-      status TEXT DEFAULT 'new',
-      thinksession_id INTEGER NOT NULL,
-      thinkfolder_id INTEGER NOT NULL,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
-      )`);
-
-    await test_db.run(`
-      INSERT INTO flashcard (front, back, thinksession_id, thinkfolder_id)
-      VALUES ("Test Flashcard Front 1", "Test Flashcard Back 1", 1, 1)
-    `);
-    expect((await test_db.all(`SELECT * FROM flashcard`)).length).toBe(1);
-
     test_app = express();
     test_app.use(express.json());
-    test_app.use("/widgets", createWidgetsRouter(test_db));
+    test_app.use("/notes", createNotesRouter(test_db));
   });
 
   afterAll(async () => {
@@ -111,80 +94,69 @@ describe("widgetsRouter", () => {
   });
 
   describe("Notes Widget", () => {
-    it("GET /widgets should return a 200 status code and a message", async () => {
-      const response = await request(test_app).get("/widgets");
+    it("GET /notes should return a 200 status code and a message", async () => {
+      const response = await request(test_app).get("/notes");
       expect(response.status).toBe(200);
-      expect(response.body.message).toBe("You have reached the widgets route");
+      expect(response.body.message).toBe("You have reached the notes route");
     });
 
-    it("GET /widgets/notes/:thinksession_id should return a 200 status code and Notes object ", async () => {
-      const response = await request(test_app).get("/widgets/notes/1");
+    it("GET /notes/:thinksession_id should return a 200 status code and Notes object ", async () => {
+      const response = await request(test_app).get("/notes/1");
       expect(response.status).toBe(200);
       expect(typeof response.body.notes).toBe("string");
       expect(response.body.notes).toBe("Test Note 1");
     });
 
-    it("GET /widgets/notes/:thinksession_id should return a 404 status code if the note is not found", async () => {
-      const response = await request(test_app).get("/widgets/notes/999");
+    it("GET /notes/:thinksession_id should return a 404 status code if the note is not found", async () => {
+      const response = await request(test_app).get("/notes/999");
       expect(response.status).toBe(404);
       expect(response.body.error).toBe("ThinkSession not found");
     });
 
-    it("POST /widgets/notes/:thinksession_id should return a 200 status code and a message", async () => {
+    it("POST /notes/:thinksession_id should return a 200 status code and a message", async () => {
       const response = await request(test_app)
-        .post("/widgets/notes/3")
+        .post("/notes/3")
         .send({ content: "Test Note 3" });
       expect(response.status).toBe(200);
       expect(response.body.message).toBe("Notes created with id 3");
     });
 
-    it("POST /widgets/notes/:thinksession_id should return a 200 status code and a message", async () => {
+    it("POST /notes/:thinksession_id should return a 200 status code and a message", async () => {
       const response = await request(test_app)
-        .post("/widgets/notes/3")
+        .post("/notes/3")
         .send({ content: "Test Note 3" });
       expect(response.status).toBe(200);
       expect(response.body.message).toBe("Notes exists already 3");
     });
 
-    it("POST /widgets/notes/:thinksession_id should return a 404 status code if the thinksession is not found", async () => {
+    it("POST /notes/:thinksession_id should return a 404 status code if the thinksession is not found", async () => {
       const response = await request(test_app)
-        .post("/widgets/notes/999")
+        .post("/notes/999")
         .send({ content: "Test Note 3" });
       expect(response.status).toBe(404);
       expect(response.body.error).toBe("ThinkSession not found");
     });
 
-    it("PUT /widgets/notes/:thinksession_id should return a 200 status code and a message", async () => {
+    it("PUT /notes/:thinksession_id should return a 200 status code and a message", async () => {
       const response = await request(test_app)
-        .put("/widgets/notes/1")
+        .put("/notes/1")
         .send({ content: "Test Note 1 Updated" });
       expect(response.status).toBe(200);
       expect(response.body.message).toBe("Notes updated in thinksession 1");
 
       // Check that the note was updated
-      const updatedResponse = await request(test_app).get("/widgets/notes/1");
+      const updatedResponse = await request(test_app).get("/notes/1");
       expect(updatedResponse.status).toBe(200);
       expect(typeof updatedResponse.body.notes).toBe("string");
       expect(updatedResponse.body.notes).toBe("Test Note 1 Updated");
     });
 
-    it("PUT /widgets/notes/:thinksession_id should return a 404 status code if the thinksession is not found", async () => {
+    it("PUT /notes/:thinksession_id should return a 404 status code if the thinksession is not found", async () => {
       const response = await request(test_app)
-        .put("/widgets/notes/999")
+        .put("/notes/999")
         .send({ content: "Test Note 1 Updated" });
       expect(response.status).toBe(404);
       expect(response.body.error).toBe("ThinkSession not found");
-    });
-  });
-
-  describe("Flashcards Widget", () => {
-    it("GET /widgets/flashcards/:thinksession_id should return a 200 status code and an array of flashcards", async () => {
-      const response = await request(test_app).get("/widgets/flashcards/1");
-      expect(response.status).toBe(200);
-      expect(Array.isArray(response.body.flashcards)).toBe(true);
-      expect(response.body.flashcards.length).toBe(1);
-      expect(response.body.flashcards[0].front).toBe("Test Flashcard Front 1");
-      expect(response.body.flashcards[0].back).toBe("Test Flashcard Back 1");
     });
   });
 });
