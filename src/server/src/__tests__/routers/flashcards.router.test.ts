@@ -4,7 +4,7 @@ import { open } from "sqlite";
 import sqlite3 from "sqlite3";
 import { describe, beforeAll, afterAll, it, expect, jest } from "@jest/globals";
 import createFlashcardsRouter from "../../routes/flashcards";
-import { getAllFlashcards } from "../../controllers/flashcard.controller";
+import { getAllFlashcards } from "../../controllers/flashcards.controller";
 
 describe("flashcardsRouter", () => {
   let test_db: any;

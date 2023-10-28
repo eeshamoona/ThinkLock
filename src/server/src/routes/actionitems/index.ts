@@ -7,7 +7,7 @@ import {
   updateActionItem,
   getAllActionItemsByThinkSessionId,
   toggleCompletedActionItem,
-} from "../../controllers/actionitem.controller";
+} from "../../controllers/actionitems.controller";
 import { ActionItem } from "../../models/actionitem.model";
 import { Database } from "sqlite";
 
@@ -15,22 +15,24 @@ const actionItemsRouter: Router = express.Router();
 
 function createActionItemRouter(db: Database): Router {
   actionItemsRouter.get("/", async (req, res) => {
-    res.status(200).send({ message: "You have reached the action item route" });
+    res
+      .status(200)
+      .send({ message: "You have reached the action items route" });
   });
 
   actionItemsRouter.get(
-    "/all/thinkfolder/:think_folder_id",
+    "/all/thinkfolder/:thinkfolder_id",
     async (req, res) => {
       try {
-        const actionItems: ActionItem[] | FailureResponse =
+        const actionitems: ActionItem[] | FailureResponse =
           await getAllActionItemsByThinkFolderId(
-            parseInt(req.params.think_folder_id),
+            parseInt(req.params.thinkfolder_id),
             db
           );
-        if (actionItems instanceof FailureResponse) {
-          res.status(actionItems.status).send({ error: actionItems.error });
+        if (actionitems instanceof FailureResponse) {
+          res.status(actionitems.status).send({ error: actionitems.error });
         } else {
-          res.status(200).send({ actionItems: actionItems });
+          res.status(200).send({ actionitems: actionitems });
         }
       } catch (error) {
         res.status(500).send({ error: `${error}` });
@@ -42,15 +44,15 @@ function createActionItemRouter(db: Database): Router {
     "/all/thinksession/:thinksession_id",
     async (req, res) => {
       try {
-        const actionItems: ActionItem[] | FailureResponse =
+        const actionitems: ActionItem[] | FailureResponse =
           await getAllActionItemsByThinkSessionId(
             parseInt(req.params.thinksession_id),
             db
           );
-        if (actionItems instanceof FailureResponse) {
-          res.status(actionItems.status).send({ error: actionItems.error });
+        if (actionitems instanceof FailureResponse) {
+          res.status(actionitems.status).send({ error: actionitems.error });
         } else {
-          res.status(200).send({ actionItems: actionItems });
+          res.status(200).send({ actionitems: actionitems });
         }
       } catch (error) {
         res.status(500).send({ error: `${error}` });
@@ -60,14 +62,14 @@ function createActionItemRouter(db: Database): Router {
 
   actionItemsRouter.get("/:id", async (req, res) => {
     try {
-      const actionItem: ActionItem | FailureResponse = await getActionItemById(
+      const actionitem: ActionItem | FailureResponse = await getActionItemById(
         parseInt(req.params.id),
         db
       );
-      if (actionItem instanceof FailureResponse) {
-        res.status(actionItem.status).send({ error: actionItem.error });
+      if (actionitem instanceof FailureResponse) {
+        res.status(actionitem.status).send({ error: actionitem.error });
       } else {
-        res.status(200).send({ actionItem: actionItem });
+        res.status(200).send({ actionitem: actionitem });
       }
     } catch (error) {
       res.status(500).send({ error: `${error}` });
@@ -77,14 +79,14 @@ function createActionItemRouter(db: Database): Router {
   actionItemsRouter.post("/create", async (req, res) => {
     try {
       const createInfo: Partial<ActionItem> = req.body;
-      const actionItemId: number | FailureResponse = await createActionItem(
+      const actionitem: ActionItem | FailureResponse = await createActionItem(
         createInfo,
         db
       );
-      if (actionItemId instanceof FailureResponse) {
-        res.status(actionItemId.status).send({ error: actionItemId.error });
+      if (actionitem instanceof FailureResponse) {
+        res.status(actionitem.status).send({ error: actionitem.error });
       } else {
-        res.status(200).send({ actionItemId: actionItemId });
+        res.status(200).send({ actionitem: actionitem });
       }
     } catch (error) {
       res.status(500).send({ error: `${error}` });
@@ -107,14 +109,14 @@ function createActionItemRouter(db: Database): Router {
 
   actionItemsRouter.put("/complete/:id", async (req, res) => {
     try {
-      const completedResponse: SuccessResponse | FailureResponse =
+      const actionItemResponse: SuccessResponse | FailureResponse =
         await toggleCompletedActionItem(parseInt(req.params.id), db);
-      if (completedResponse instanceof FailureResponse) {
+      if (actionItemResponse instanceof FailureResponse) {
         res
-          .status(completedResponse.status)
-          .send({ error: completedResponse.error });
+          .status(actionItemResponse.status)
+          .send({ error: actionItemResponse.error });
       } else {
-        res.status(200).send({ message: completedResponse });
+        res.status(200).send({ actionItemResponse: actionItemResponse.message });
       }
     } catch (error) {
       res.status(500).send({ error: `${error}` });

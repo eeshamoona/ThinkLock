@@ -6,7 +6,7 @@ import {
   createActionItem,
   updateActionItem,
   toggleCompletedActionItem,
-} from "../../controllers/actionitem.controller";
+} from "../../controllers/actionitems.controller";
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 import { Logger } from "../../utils/logger";
@@ -197,7 +197,10 @@ describe("actionitem.controller", () => {
 
   describe("getActionItemById", () => {
     it("should return the action item by id", async () => {
-      const actionItem = await getActionItemById(1, db);
+      const actionItem: ActionItem | FailureResponse = await getActionItemById(
+        1,
+        db
+      );
       expect(actionItem).toEqual({
         id: 1,
         thinksession_id: 1,
@@ -229,7 +232,7 @@ describe("actionitem.controller", () => {
 
   describe("createActionItem", () => {
     it("should return the id of the created action item", async () => {
-      const actionItem = await createActionItem(
+      const actionItem: ActionItem | FailureResponse = await createActionItem(
         {
           thinksession_id: 1,
           thinkfolder_id: 1,
@@ -238,7 +241,11 @@ describe("actionitem.controller", () => {
         },
         db
       );
-      expect(actionItem).toEqual(4);
+      expect((actionItem as ActionItem).id).toBe(4);
+      expect((actionItem as ActionItem).title).toBe(
+        "Test Controller ActionItem 4"
+      );
+      expect((actionItem as ActionItem).description).toBe("Test Description D");
     });
 
     it("should return a failure response when there is an error", async () => {

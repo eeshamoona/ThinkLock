@@ -4,7 +4,7 @@ import {
   createFlashcard,
   deleteFlashcard,
   getAllFlashcards,
-} from "../../controllers/flashcard.controller";
+} from "../../controllers/flashcards.controller";
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 import { Logger } from "../../utils/logger";

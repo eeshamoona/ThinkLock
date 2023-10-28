@@ -4,7 +4,7 @@ import {
   deleteFlashcard,
   createFlashcard,
   updateFlashcard,
-} from "../../controllers/flashcard.controller";
+} from "../../controllers/flashcards.controller";
 import { FailureResponse, SuccessResponse } from "../../utils/responses";
 import { Notes } from "../../models/notes.model";
 import { Database } from "sqlite";
