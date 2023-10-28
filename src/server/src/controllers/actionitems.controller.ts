@@ -15,7 +15,7 @@ import { getThinkSessionById } from "./thinksession.controller";
  */
 async function getActionItemById(
   id: number,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<ActionItem | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -40,7 +40,7 @@ async function getActionItemById(
  */
 async function createActionItem(
   actionItem: Partial<ActionItem>,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<ActionItem | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -96,7 +96,7 @@ async function createActionItem(
  */
 async function getAllActionItemsByThinkFolderId(
   thinkfolder_id: number,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<ActionItem[] | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -105,7 +105,7 @@ async function getAllActionItemsByThinkFolderId(
     const thinkfolderParams = [thinkfolder_id];
     const thinkfolderRes = await db.get<ThinkFolder>(
       thinkfolderQuery,
-      thinkfolderParams
+      thinkfolderParams,
     );
     if (!thinkfolderRes) {
       return new FailureResponse(404, "ThinkFolder not found");
@@ -128,7 +128,7 @@ async function getAllActionItemsByThinkFolderId(
  */
 async function getAllActionItemsByThinkSessionId(
   thinksession_id: number,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<ActionItem[] | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -137,7 +137,7 @@ async function getAllActionItemsByThinkSessionId(
     const thinksessionParams = [thinksession_id];
     const thinksessionRes = await db.get<ThinkSession>(
       thinksessionQuery,
-      thinksessionParams
+      thinksessionParams,
     );
     if (!thinksessionRes) {
       return new FailureResponse(404, "ThinkSession not found");
@@ -162,7 +162,7 @@ async function getAllActionItemsByThinkSessionId(
 async function updateActionItem(
   id: number,
   request: Partial<ActionItem>,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<SuccessResponse | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -219,7 +219,7 @@ async function updateActionItem(
  */
 async function toggleCompletedActionItem(
   id: number,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<SuccessResponse | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);

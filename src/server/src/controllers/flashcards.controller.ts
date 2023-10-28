@@ -14,7 +14,7 @@ import { getThinkSessionById } from "./thinksession.controller";
  */
 async function getAllFlashcards(
   thinksession_id: number,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<Flashcard[] | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -43,7 +43,7 @@ async function getAllFlashcards(
 async function createFlashcard(
   thinksession_id: number,
   flashcard: Partial<Flashcard>,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<SuccessResponse | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -59,7 +59,7 @@ async function createFlashcard(
     const thinkfolderParams = [thinksessionRes.thinkfolder_id];
     const thinkfolderRes = await db.get<ThinkFolder>(
       thinkfolderQuery,
-      thinkfolderParams
+      thinkfolderParams,
     );
     if (!thinkfolderRes) {
       return new FailureResponse(404, "ThinkFolder not found");
@@ -88,7 +88,7 @@ async function createFlashcard(
  */
 async function deleteFlashcard(
   flashcard_id: number,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<SuccessResponse | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -106,7 +106,7 @@ async function deleteFlashcard(
     const res = await db.run(query, params);
     return new SuccessResponse(
       200,
-      `Flashcard deleted with id ${flashcard_id}`
+      `Flashcard deleted with id ${flashcard_id}`,
     );
   } catch (error) {
     return new FailureResponse(500, `${error}`);
@@ -125,7 +125,7 @@ async function deleteFlashcard(
 async function updateFlashcard(
   flashcard_id: number,
   flashcard: Partial<Flashcard>,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<SuccessResponse | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -150,7 +150,7 @@ async function updateFlashcard(
     }
     return new SuccessResponse(
       200,
-      "Flashcard updated with id " + flashcard_id
+      "Flashcard updated with id " + flashcard_id,
     );
   } catch (error) {
     return new FailureResponse(500, `${error}`);

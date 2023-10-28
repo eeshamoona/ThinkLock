@@ -13,7 +13,7 @@ import { getThinkSessionById } from "./thinksession.controller";
  */
 async function getAllStudyEventsFromThinkSession(
   thinksession_id: number,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<StudyEvent[] | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
@@ -47,7 +47,7 @@ async function getAllStudyEventsFromThinkSession(
 async function addStudyEventToThinkSession(
   thinksession_id: number,
   studyevent: Partial<StudyEvent>,
-  dbInstance?: Database
+  dbInstance?: Database,
 ): Promise<StudyEvent | FailureResponse> {
   try {
     const db = dbInstance || (await dbPromise);
