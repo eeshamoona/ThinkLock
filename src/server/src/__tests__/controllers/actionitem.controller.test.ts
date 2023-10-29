@@ -79,7 +79,6 @@ describe("actionitem.controller", () => {
         title TEXT NOT NULL,
         description TEXT,
         completed BOOLEAN NOT NULL DEFAULT 0,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (thinkfolder_id) REFERENCES thinkfolder(id)
         FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
         )`);
@@ -151,7 +150,6 @@ describe("actionitem.controller", () => {
           id: 1,
           thinksession_id: 1,
           thinkfolder_id: 1,
-          created_at: new Date().toISOString().slice(0, 19).replace("T", " "),
           title: "Test Controller ActionItem 1",
           description: "Test Description A",
           completed: 0,
@@ -160,7 +158,6 @@ describe("actionitem.controller", () => {
           id: 2,
           thinksession_id: 2,
           thinkfolder_id: 1,
-          created_at: new Date().toISOString().slice(0, 19).replace("T", " "),
           title: "Test Controller ActionItem 2",
           description: "Test Description B",
           completed: 0,
@@ -169,7 +166,6 @@ describe("actionitem.controller", () => {
           id: 3,
           thinksession_id: 2,
           thinkfolder_id: 1,
-          created_at: new Date().toISOString().slice(0, 19).replace("T", " "),
           title: "Test Controller ActionItem 3",
           description: "Test Description C",
           completed: 0,
@@ -205,7 +201,6 @@ describe("actionitem.controller", () => {
         id: 1,
         thinksession_id: 1,
         thinkfolder_id: 1,
-        created_at: new Date().toISOString().slice(0, 19).replace("T", " "),
         title: "Test Controller ActionItem 1",
         description: "Test Description A",
         completed: 0,

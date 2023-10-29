@@ -1,5 +1,5 @@
 export interface ActionItem {
-  id: number;
+  id?: number;
   thinksession_id: number;
   thinkfolder_id: number;
   title: string;

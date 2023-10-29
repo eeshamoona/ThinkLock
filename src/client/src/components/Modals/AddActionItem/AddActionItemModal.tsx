@@ -6,10 +6,12 @@ import { closeAllModals } from "@mantine/modals";
 import { IconFolder } from "@tabler/icons-react";
 import { getAllThinkFolders } from "../../../services/thinkFolderAPICallerService";
 import { ThinkFolder } from "../../../utils/models/thinkfolder.model";
-import { addActionItem } from "../../../services/actionItemAPICallerService";
+import { createActionItem } from "../../../services/actionItemAPICallerService";
 import { showSuccessNotification } from "../../../utils/notifications";
 import { showErrorNotification } from "../../../utils/notifications";
 import ThinkFolderSelectItem from "../../Objects/ThinkFolder/ThinkFolderSelectItem";
+import { FailureResponse } from "../../../utils/models/responses.model";
+import { ActionItem } from "../../../utils/models/actionitem.model";
 
 interface AddActionItemModalProps {
   thinkSessionId?: string;
@@ -63,7 +65,7 @@ const AddActionItemModal = ({
     description: string;
   }[] {
     return thinkFolders.map(({ id, name, color, icon, description }) => ({
-      value: id.toString(),
+      value: (id as number).toString(),
       label: name,
       color,
       icon,
@@ -75,17 +77,18 @@ const AddActionItemModal = ({
     <div id="add-action-item-modal-container">
       <form
         onSubmit={newActionItemForm.onSubmit(async (values) => {
-          const actionItemId = await addActionItem({
-            title: values.title,
-            description: values.description,
-            thinkfolder_id: parseInt(values.thinkfolderId),
-            thinksession_id: parseInt(values.thinksessionId),
-          });
+          const actionItem: FailureResponse | ActionItem =
+            await createActionItem({
+              title: values.title,
+              description: values.description,
+              thinkfolder_id: parseInt(values.thinkfolderId),
+              thinksession_id: parseInt(values.thinksessionId),
+            });
 
-          if (actionItemId !== null) {
+          if (typeof actionItem !== "string") {
             showSuccessNotification(
-              "Success",
-              `Action Item Created ID:${actionItemId as string} `
+              "Action Item Created",
+              `TODO: ${(actionItem as ActionItem).title}`
             );
             if (successCallback) await successCallback();
             closeAllModals();

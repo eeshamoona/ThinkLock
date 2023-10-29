@@ -72,7 +72,6 @@ describe("flashcardsRouter", () => {
       status TEXT DEFAULT 'new',
       thinksession_id INTEGER NOT NULL,
       thinkfolder_id INTEGER NOT NULL,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
       )`);
 

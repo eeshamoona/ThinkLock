@@ -14,10 +14,9 @@ const StudyTimeline = ({ thinkSessionID }: StudyTimelineProps) => {
 
   const fetchStudyEvents = useCallback(async () => {
     const studyEvents = await getAllStudyEventsFromThinkSession(thinkSessionID);
-    if (typeof studyEvents !== "string") {
+    if (typeof studyEvents === "string") {
       setStudyEvents(studyEvents);
     }
-    setStudyEvents(studyEvents as StudyEvent[]);
   }, [thinkSessionID]);
 
   useEffect(() => {

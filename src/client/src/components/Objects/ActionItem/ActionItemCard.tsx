@@ -48,7 +48,7 @@ const ActionItemCard = ({
   }
 
   function completeActionItem() {
-    toggleCompletedActionItem(id);
+    toggleCompletedActionItem(parseInt(id));
     setIsCompleted(!isCompleted);
   }
 

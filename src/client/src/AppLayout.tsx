@@ -5,14 +5,23 @@ import { AppShell } from "@mantine/core";
 import CustomHeader from "./components/Header/CustomHeader";
 import { Header } from "@mantine/core";
 import { Tabs } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
 import { IconChecklist, IconBulb, IconCheckbox } from "@tabler/icons-react";
 import StudyOverviewPage from "./pages/Study/StudyOverviewPage";
 
-const AppLayout = () => {
-  const [activeTab, setActiveTab] = useState<string | null>("plan");
+interface AppLayoutProps {
+  active_tab: string;
+}
+
+const AppLayout = ({ active_tab }: AppLayoutProps) => {
+  const [activeTab, setActiveTab] = useState<string | null>(
+    active_tab || "plan"
+  );
+  const navigate = useNavigate();
 
   const changeTab = (tab: string) => {
-    setActiveTab(tab);
+    //go to route
+    navigate("/" + tab);
   };
 
   return (

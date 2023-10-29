@@ -36,7 +36,6 @@ const dbPromise = (async (): Promise<Database> => {
         title TEXT NOT NULL,
         description TEXT,
         completed BOOLEAN NOT NULL DEFAULT 0,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (thinkfolder_id) REFERENCES thinkfolder(id)
         FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
     )`);
@@ -71,7 +70,6 @@ const dbPromise = (async (): Promise<Database> => {
         status TEXT DEFAULT 'new',
         thinksession_id INTEGER NOT NULL,
         thinkfolder_id INTEGER NOT NULL,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
     )`);
     loggerInstance.success("Table created: flashcard");

@@ -1,5 +1,5 @@
-import { Widget } from "./widget.model";
-
-export interface Notes extends Widget {
-  notes: string;
+export interface Notes {
+  id: number;
+  thinksession_id: number;
+  content: string;
 }

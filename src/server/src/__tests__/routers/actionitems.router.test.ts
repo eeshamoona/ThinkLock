@@ -73,7 +73,6 @@ describe("actionItemsRouter", () => {
       title TEXT NOT NULL,
       description TEXT,
       completed BOOLEAN NOT NULL DEFAULT 0,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (thinkfolder_id) REFERENCES thinkfolder(id)
       FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
       )`);

@@ -1,101 +1,136 @@
 import axios from "axios";
+import {
+  FailureResponse,
+  SuccessResponse,
+} from "../utils/models/responses.model";
 import { ActionItem } from "../utils/models/actionitem.model";
-
-export async function addActionItem(
-  actionItem: Pick<
-    ActionItem,
-    "title" | "description" | "thinkfolder_id" | "thinksession_id"
-  >
-): Promise<number | string> {
-  try {
-    const response = await axios.post("/actionitems/create", actionItem);
-    return response.data.actionItemId as string;
-  } catch (err) {
-    return `${err}`;
-  }
-}
-
-export async function getAllActionItems(): Promise<ActionItem[] | string> {
-  try {
-    const response = await axios.get("/actionitems/all");
-    return response.data.actionitems;
-  } catch (err) {
-    return `${err}`;
-  }
-}
-
-export async function getActionItemById(
-  actionItemId: number
-): Promise<ActionItem | string> {
-  try {
-    const response = await axios.get(`/actionitems/${actionItemId}`);
-    return response.data.actionitem;
-  } catch (err) {
-    return `${err}`;
-  }
-}
+const API_URL = "http://localhost:3000/actionitems";
 
 export async function getAllActionItemsByThinkFolderId(
-  thinkFolderId: number
-): Promise<ActionItem[] | string> {
+  thinkfolder_id: number,
+): Promise<ActionItem[] | FailureResponse> {
   try {
-    const response = await axios.get(`/actionitems/all/${thinkFolderId}`);
-    return response.data.actionItems;
-  } catch (err) {
-    return `${err}`;
-  }
-}
-
-//TODO: Determine if this function should live in the backend only...
-export async function getActionItemsWithNullThinkSessionId(
-  thinkFolderId: number
-): Promise<ActionItem[] | string> {
-  try {
-    const actionItems = await getAllActionItemsByThinkFolderId(thinkFolderId);
-    if (typeof actionItems === "string") return actionItems;
-    return actionItems.filter(
-      (actionItem) => actionItem.thinksession_id === null
+    const response = await axios.get(
+      `${API_URL}/all/thinkfolder/${thinkfolder_id}`,
     );
-  } catch (err) {
-    return `${err}`;
+    return response.data.actionitems;
+  } catch (error: any) {
+    if (error.response) {
+      return new FailureResponse(
+        error.response.status,
+        error.response.data.error,
+      );
+    } else {
+      return new FailureResponse(500, error.message);
+    }
   }
 }
 
 export async function getAllActionItemsByThinkSessionId(
-  thinkSessionId: number
-): Promise<ActionItem[] | string> {
+  thinksession_id: number,
+): Promise<ActionItem[] | FailureResponse> {
   try {
     const response = await axios.get(
-      `/actionitems/all/thinksession/${thinkSessionId}`
+      `${API_URL}/all/thinksession/${thinksession_id}`,
     );
-    return response.data.actionItems;
-  } catch (err) {
-    return `${err}`;
+    return response.data.actionitems;
+  } catch (error: any) {
+    if (error.response) {
+      return new FailureResponse(
+        error.response.status,
+        error.response.data.error,
+      );
+    } else {
+      return new FailureResponse(500, error.message);
+    }
+  }
+}
+
+export async function getActionItemById(
+  id: number,
+): Promise<ActionItem | FailureResponse> {
+  try {
+    const response = await axios.get(`${API_URL}/${id}`);
+    return response.data.actionitem;
+  } catch (error: any) {
+    if (error.response) {
+      return new FailureResponse(
+        error.response.status,
+        error.response.data.error,
+      );
+    } else {
+      return new FailureResponse(500, error.message);
+    }
+  }
+}
+
+export async function createActionItem(
+  createInfo: Partial<ActionItem>,
+): Promise<ActionItem | FailureResponse> {
+  try {
+    const response = await axios.post(`${API_URL}/create`, createInfo);
+    return response.data.actionitem;
+  } catch (error: any) {
+    if (error.response) {
+      return new FailureResponse(
+        error.response.status,
+        error.response.data.error,
+      );
+    } else {
+      return new FailureResponse(500, error.message);
+    }
   }
 }
 
 export async function updateActionItem(
-  actionItemId: number,
-  actionItem: Partial<ActionItem>
-): Promise<string> {
+  id: number,
+  updateInfo: Partial<ActionItem>,
+): Promise<SuccessResponse | FailureResponse> {
   try {
-    const response = await axios.put(
-      `/actionitems/update/${actionItemId}`,
-      actionItem
-    );
-    return response.data.message;
-  } catch (err) {
-    return `${err}`;
+    const response = await axios.put(`${API_URL}/update/${id}`, updateInfo);
+    return response.data.actionItemId;
+  } catch (error: any) {
+    if (error.response) {
+      return new FailureResponse(
+        error.response.status,
+        error.response.data.error,
+      );
+    } else {
+      return new FailureResponse(500, error.message);
+    }
   }
 }
 
 export async function toggleCompletedActionItem(
-  actionItemId: string
-): Promise<string> {
+  id: number,
+): Promise<SuccessResponse | FailureResponse> {
   try {
-    const response = await axios.put(`/actionitems/complete/${actionItemId}`);
-    return response.data.message;
+    const response = await axios.put(`${API_URL}/complete/${id}`);
+    return response.data.actionItemResponse;
+  } catch (error: any) {
+    if (error.response) {
+      return new FailureResponse(
+        error.response.status,
+        error.response.data.error,
+      );
+    } else {
+      return new FailureResponse(500, error.message);
+    }
+  }
+}
+
+export async function getActionItemsWithNoThinkSession(
+  thinkfolder_id: number,
+): Promise<ActionItem[] | FailureResponse> {
+  try {
+    const actionItems = await getAllActionItemsByThinkFolderId(thinkfolder_id);
+    if (typeof actionItems === "string")
+      return new FailureResponse(500, actionItems);
+
+    return (actionItems as ActionItem[]).filter(
+      (actionItem) => actionItem.thinksession_id === null,
+    );
   } catch (err) {
-    return `${err}`;
+    return new FailureResponse(500, `${err}`);
   }
 }

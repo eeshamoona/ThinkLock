@@ -35,17 +35,13 @@ import { getAllActionItemsByThinkSessionId } from "../../services/actionItemAPIC
 import { ActionItem } from "../../utils/models/actionitem.model";
 import { getThinkFolderById } from "../../services/thinkFolderAPICallerService";
 import NotesWidget from "../../components/Widgets/NotesWidget/NotesWidget";
-import {
-  createFlashcardsWidget,
-  createNotesWidget,
-} from "../../services/widgetsAPICallerService";
 import { useModals } from "@mantine/modals";
-
 import AddActionItemModal from "../../components/Modals/AddActionItem/AddActionItemModal";
 import { showErrorNotification } from "../../utils/notifications";
 import FlashcardsWidget from "../../components/Widgets/FlashcardsWidget/FlashcardsWidget";
 import { hexToColorNameMap } from "../../utils/constants/hexCodeToColor.constant";
 import StudyTimeline from "../../components/Widgets/StudyTimeline/StudyTimeline";
+import { ThinkFolder } from "../../utils/models/thinkfolder.model";
 
 /**
  * Study Board Page displays a reactive grid layout of widgets
@@ -77,7 +73,9 @@ const StudyBoardPage = () => {
         "No Think Session Found. Please try again."
       );
     } else {
-      const thinkFolderRes = await getThinkFolderById(res.thinkfolder_id);
+      const thinkFolderRes = await getThinkFolderById(
+        (res as ThinkSession).thinkfolder_id
+      );
       if (typeof thinkFolderRes === "string") {
         showErrorNotification(
           "Error",
@@ -86,15 +84,15 @@ const StudyBoardPage = () => {
       } else {
         const thinkSessionWithFolder = {
           ...res,
-          date: res.date as Date,
-          thinkfolder_color: thinkFolderRes?.color,
+          date: (res as ThinkSession).date as Date,
+          thinkfolder_color: (thinkFolderRes as ThinkFolder).color,
         };
-        setThinkSession(thinkSessionWithFolder);
+        setThinkSession(thinkSessionWithFolder as ThinkSession);
 
         // Get layout options
-        if (res.layout !== undefined) {
+        if ((res as ThinkSession).layout !== undefined) {
           // Add a check to make sure that the res.layout property is not undefined
-          const layout = JSON.parse(res.layout as string);
+          const layout = JSON.parse((res as ThinkSession).layout as string);
           if (layout.length > 0) {
             const layoutOptions = layout.map((layoutItem: any) => {
               const lastDashIndex = layoutItem.i.lastIndexOf("-");
@@ -118,7 +116,7 @@ const StudyBoardPage = () => {
     if (!id) return;
     const actionItems = await getAllActionItemsByThinkSessionId(parseInt(id));
     if (typeof actionItems !== "string") {
-      setActionItems(actionItems);
+      setActionItems(actionItems as ActionItem[]);
     }
   }, [id]);
 
@@ -188,7 +186,7 @@ const StudyBoardPage = () => {
                     <IconEqual />
                   </ActionIcon>
                   <div className="grid-item-content">
-                    <NotesWidget id={id} />
+                    <NotesWidget thinksession_id={thinkSession.id} />
                   </div>
                 </Card>
               );
@@ -207,7 +205,7 @@ const StudyBoardPage = () => {
                   </ActionIcon>
                   <div className="grid-item-content">
                     <FlashcardsWidget
-                      id={id}
+                      thinksession_id={id}
                       thinkfolder_color={
                         hexToColorNameMap[
                           thinkSession.thinkfolder_color as string
@@ -338,84 +336,8 @@ const StudyBoardPage = () => {
               >
                 Action Items
               </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  createFlashcardsWidget(thinkSession.id).then((res) => {
-                    if (
-                      widgetLayout.findIndex(
-                        (item) => item.type === "flashcards"
-                      ) !== -1
-                    ) {
-                      showErrorNotification(
-                        "Flashcards Widget already exists",
-                        `ID ${widgetLayout
-                          .findIndex((item) => item.type === "flashcards")
-                          .toString()}`
-                      );
-                      return;
-                    } else {
-                      const flashcardsWidgetLayout = {
-                        x: 0,
-                        y: 0,
-                        w: 7,
-                        h: 7,
-                        i: `flashcards-${res}`,
-                        moved: false,
-                        static: false,
-                      };
-                      updateThinkSession(thinkSession.id, {
-                        layout: JSON.stringify([
-                          ...JSON.parse(thinkSession.layout as string),
-                          flashcardsWidgetLayout,
-                        ]),
-                      });
-                      fetchThinkSession();
-                    }
-                  });
-                }}
-                icon={<IconCards size={14} />}
-              >
-                Flashcards
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => {
-                  createNotesWidget(thinkSession.id).then((res) => {
-                    if (
-                      widgetLayout.findIndex(
-                        (item) => item.type === "notes"
-                      ) !== -1
-                    ) {
-                      showErrorNotification(
-                        "Notes Widget already exists",
-                        `ID ${widgetLayout
-                          .findIndex((item) => item.type === "notes")
-                          .toString()}`
-                      );
-                      return;
-                    } else {
-                      const notesWidgetLayout = {
-                        x: 0,
-                        y: 0,
-                        w: 7,
-                        h: 7,
-                        i: `notes-${res}`,
-                        moved: false,
-                        static: false,
-                      };
-                      updateThinkSession(thinkSession.id, {
-                        layout: JSON.stringify([
-                          ...JSON.parse(thinkSession.layout as string),
-                          notesWidgetLayout,
-                        ]),
-                      });
-                      fetchThinkSession();
-                    }
-                  });
-                }}
-                icon={<IconNotes size={14} />}
-              >
-                Notes
-              </Menu.Item>
+              <Menu.Item icon={<IconCards size={14} />}>Flashcards</Menu.Item>
+              <Menu.Item icon={<IconNotes size={14} />}>Notes</Menu.Item>
               <Menu.Item icon={<IconFileTypePdf size={14} />}>PDF</Menu.Item>
               <Menu.Item icon={<IconAlarm size={14} />}>Timer</Menu.Item>
 

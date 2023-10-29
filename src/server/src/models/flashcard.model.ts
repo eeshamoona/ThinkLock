@@ -10,5 +10,4 @@ export class Flashcard {
   status: Status;
   thinksession_id: number;
   thinkfolder_id: number;
-  created_at: string;
 }

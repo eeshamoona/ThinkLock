@@ -12,11 +12,11 @@ import "./flashcard.scss";
 interface FlashcardProps {
   front: string;
   back: string;
-  id: string;
+  id: number;
   index: number;
   thinkfolder_color: string;
   onSubmitCallback: (front: string, back: string, index: number) => void;
-  onDeleteCallback: (id: string) => void;
+  onDeleteCallback: (id: number) => void;
 }
 
 const Flashcard = ({

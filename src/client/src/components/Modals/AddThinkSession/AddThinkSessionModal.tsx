@@ -16,7 +16,7 @@ import {
 import { IconFolder } from "@tabler/icons-react";
 import { getAllThinkFolders } from "../../../services/thinkFolderAPICallerService";
 import { ThinkFolder } from "../../../utils/models/thinkfolder.model";
-import { addThinkSession } from "../../../services/thinkSessionAPICallerService";
+import { createThinkSession } from "../../../services/thinkSessionAPICallerService";
 import { showSuccessNotification } from "../../../utils/notifications";
 import { showErrorNotification } from "../../../utils/notifications";
 import ThinkFolderSelectItem from "../../Objects/ThinkFolder/ThinkFolderSelectItem";
@@ -67,7 +67,7 @@ const AddThinkSessionModal = ({
   useEffect(() => {
     getAllThinkFolders().then((res) => {
       if (typeof res !== "string") {
-        setThinkFolders(res);
+        setThinkFolders(res as ThinkFolder[]);
       }
     });
   }, []);
@@ -80,7 +80,7 @@ const AddThinkSessionModal = ({
     description: string;
   }[] {
     return thinkFolders.map(({ id, name, color, icon, description }) => ({
-      value: id.toString(),
+      value: (id as number).toString(),
       label: name,
       color,
       icon,
@@ -103,7 +103,7 @@ const AddThinkSessionModal = ({
     const startTimeString = dateString + "T" + values.start_time + ":00";
     const endTimeString = dateString + "T" + values.end_time + ":00";
 
-    const thinkSessionId = await addThinkSession({
+    const thinkSessionId = await createThinkSession({
       title: values.title,
       location: values.location,
       start_time: new Date(startTimeString),
@@ -115,7 +115,7 @@ const AddThinkSessionModal = ({
     if (thinkSessionId !== null) {
       showSuccessNotification(
         "Success",
-        `Think Session Created ID:${thinkSessionId as string} `
+        `Think Session Created ID: ${thinkSessionId}`
       );
       if (successCallback) await successCallback();
       closeAllModals();

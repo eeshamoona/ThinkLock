@@ -79,7 +79,6 @@ async function createActionItem(
       thinkfolder_id: actionItem.thinkfolder_id as number,
       title: actionItem.title as string,
       description: actionItem.description as string,
-      created_at: new Date(currentTimestamp.toISOString()),
       completed: false,
     };
   } catch (error) {

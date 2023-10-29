@@ -1,10 +1,13 @@
-import { Widget } from "./widget.model";
-
-export interface FlashcardData {
+export enum Status {
+  New = "new",
+  Review = "review",
+  Learned = "learned",
+}
+export interface Flashcard {
+  id: number;
   front: string;
   back: string;
-  id: string;
-}
-export interface Flashcards extends Widget {
-  flashcards: Array<FlashcardData>;
+  status: Status;
+  thinksession_id: number;
+  thinkfolder_id: number;
 }

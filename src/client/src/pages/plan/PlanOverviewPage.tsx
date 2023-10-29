@@ -5,10 +5,10 @@ import { getAllThinkFolders } from "../../services/thinkFolderAPICallerService";
 import { ActionIcon, Paper, Text } from "@mantine/core";
 import { ArrowLeft, Plus } from "tabler-icons-react";
 import ActionItemCard from "../../components/Objects/ActionItem/ActionItemCard";
-import { getActionItemsWithNullThinkSessionId } from "../../services/actionItemAPICallerService";
+import { getActionItemsWithNoThinkSession } from "../../services/actionItemAPICallerService";
 import {
   getAllThinkSessionsByThinkFolderId,
-  getThinkSessionHeatmapData,
+  getThinkSessionHeatMapByYear,
 } from "../../services/thinkSessionAPICallerService";
 import { updateActionItem } from "../../services/actionItemAPICallerService";
 import ThinkSessionItem from "../../components/Objects/ThinkSession/ThinkSessionItem";
@@ -65,8 +65,8 @@ const PlanOverviewPage = () => {
 
   const refreshActionItems = useCallback(async () => {
     if (!selectedFolder) return;
-    const actionItemsRes = await getActionItemsWithNullThinkSessionId(
-      selectedFolder?.id
+    const actionItemsRes = await getActionItemsWithNoThinkSession(
+      selectedFolder.id as number
     );
     if (typeof actionItemsRes !== "string") {
       setActionItems(actionItemsRes as any[]);
@@ -76,7 +76,7 @@ const PlanOverviewPage = () => {
   const refreshThinkSessions = useCallback(async () => {
     if (!selectedFolder) return;
     const thinkSessionsRes = await getAllThinkSessionsByThinkFolderId(
-      selectedFolder?.id
+      selectedFolder.id as number
     );
     if (typeof thinkSessionsRes !== "string") {
       setThinkSessions(thinkSessionsRes as any[]);
@@ -87,6 +87,7 @@ const PlanOverviewPage = () => {
     const fetchData = async () => {
       if (selectedFolder === null) {
         const res = await getAllThinkFolders();
+        console.log("HELOOOOOO", res);
         if (typeof res !== "string") {
           setFolders(res as ThinkFolder[]);
         }
@@ -100,15 +101,14 @@ const PlanOverviewPage = () => {
   useEffect(() => {
     //Get all heatmap data and save it to state
     folders.forEach((folder) => {
-      getThinkSessionHeatmapData(folder.id, 2023).then((res) => {
+      getThinkSessionHeatMapByYear(
+        folder.id as number,
+        new Date().getFullYear()
+      ).then((res) => {
         if (typeof res !== "string") {
           setHeatmapData((prevState) => ({
             ...prevState,
-            [folder.id]: res.heatmapData as HeatmapData[],
-          }));
-          setHeatmapMax((prevState) => ({
-            ...prevState,
-            [folder.id]: res.max_hours as number,
+            [folder.id as number]: res as HeatmapData[],
           }));
         }
       });
@@ -117,7 +117,7 @@ const PlanOverviewPage = () => {
 
   const memoizedHeatmapData = useMemo(() => {
     if (!selectedFolder) return [];
-    return heatmapData[selectedFolder.id] || [];
+    return heatmapData[selectedFolder.id as number] || [];
   }, [heatmapData, selectedFolder]);
 
   const openModal = useCallback(
@@ -137,7 +137,7 @@ const PlanOverviewPage = () => {
             {content === ModalOptions.ThinkSession ? (
               selectedFolder ? (
                 <AddThinkSessionModal
-                  thinkFolderId={selectedFolder.id.toString()}
+                  thinkFolderId={(selectedFolder.id as number).toString()}
                   successCallback={refreshThinkSessions}
                 />
               ) : (
@@ -145,7 +145,7 @@ const PlanOverviewPage = () => {
               )
             ) : selectedFolder ? (
               <AddActionItemModal
-                thinkFolderId={selectedFolder.id.toString()}
+                thinkFolderId={(selectedFolder.id as number).toString()}
                 successCallback={refreshActionItems}
               />
             ) : (
@@ -210,7 +210,7 @@ const PlanOverviewPage = () => {
           )
         ) : (
           <Paper p="md" className="container">
-            {folders?.map((folder) => (
+            {folders.map((folder) => (
               <ThinkFolderCard
                 key={folder.id}
                 folderColor={folder.color}
@@ -336,7 +336,7 @@ const PlanOverviewPage = () => {
             <Heatmap
               numOfShades={6}
               heatmapData={memoizedHeatmapData}
-              max={heatmapMax[selectedFolder.id] || 0}
+              max={heatmapMax[selectedFolder.id as number] || 0}
               thinkfolder_color={selectedFolder ? selectedFolder.color : "red"}
             />
           )
