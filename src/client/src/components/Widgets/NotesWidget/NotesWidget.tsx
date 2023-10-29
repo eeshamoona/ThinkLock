@@ -11,30 +11,37 @@ import Placeholder from "@tiptap/extension-placeholder";
 import "./notesWidget.scss";
 import { useMantineTheme } from "@mantine/core";
 import {
-  getNotes,
-  updateNotesWidget,
-} from "../../../services/widgetsAPICallerService";
+  getNotesByThinkSessionId,
+  updateNotesByThinkSessionId,
+  createNotesByThinkSessionId,
+} from "../../../services/notesAPICallerService";
+import { FailureResponse } from "../../../utils/models/responses.model";
+import { showErrorNotification } from "../../../utils/notifications";
 
 interface NotesWidgetProps {
-  id: number;
+  thinksession_id: number;
 }
 /**
  * Notes Widget component that displays a rich text editor
  * @param id - id of the widget
  * @returns
  */
-const NotesWidget = ({ id }: NotesWidgetProps) => {
+const NotesWidget = ({ thinksession_id }: NotesWidgetProps) => {
   const theme = useMantineTheme();
 
   const [content, setContent] = React.useState<string>("");
 
   useEffect(() => {
     const fetchNotes = async () => {
-      const res = await getNotes(id);
-      setContent(res);
+      const response = await getNotesByThinkSessionId(thinksession_id);
+      if (typeof response === "string") {
+        setContent(response);
+      } else {
+        showErrorNotification("Error", (response as FailureResponse).error);
+      }
     };
     fetchNotes();
-  }, [id]);
+  }, [thinksession_id]);
 
   const editor = useEditor(
     {
@@ -50,10 +57,14 @@ const NotesWidget = ({ id }: NotesWidgetProps) => {
       ],
       content: content,
       onBlur({ editor }) {
-        const updatedContent = editor.getHTML().toString();
-        updateNotesWidget(id, updatedContent).then(() => {
-          setContent(updatedContent);
-        });
+        const notes = editor.getHTML();
+        updateNotesByThinkSessionId(thinksession_id, notes)
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            showErrorNotification("Error", "Failed to update notes");
+          });
       },
     },
     [content]

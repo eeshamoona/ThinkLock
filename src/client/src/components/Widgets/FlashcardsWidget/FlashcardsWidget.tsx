@@ -8,23 +8,28 @@ import {
 } from "@mantine/core";
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  getFlashcards,
-  updateFlashcardsWidget,
-} from "../../../services/widgetsAPICallerService";
-import { FlashcardData } from "../../../utils/models/flashcard.model";
-import Flashcard from "./Flashcard/Flashcard";
+  getAllFlashcardsByThinkSessionId,
+  createFlashcardByThinkSessionId,
+  deleteFlashcardById,
+  updateFlashcardById,
+} from "../../../services/flashcardsAPICallerService";
 import { IconPlus } from "@tabler/icons-react";
 import "./flashcardsWidget.scss";
 import { useForm } from "@mantine/form";
 import { v4 as uuidv4 } from "uuid";
 import { showErrorNotification } from "../../../utils/notifications";
+import { Flashcard } from "../../../utils/models/flashcard.model";
+import FlashcardComponent from "./Flashcard/Flashcard";
 
 interface FlashcardsWidgetProps {
-  id: number;
+  thinksession_id: number;
   thinkfolder_color: string;
 }
-const FlashcardsWidget = ({ id, thinkfolder_color }: FlashcardsWidgetProps) => {
-  const [flashcards, setFlashcards] = useState<FlashcardData[]>();
+const FlashcardsWidget = ({
+  thinksession_id,
+  thinkfolder_color,
+}: FlashcardsWidgetProps) => {
+  const [flashcards, setFlashcards] = useState<Flashcard[]>();
   const theme = useMantineTheme();
 
   const createFlashcard = useForm({
@@ -34,63 +39,56 @@ const FlashcardsWidget = ({ id, thinkfolder_color }: FlashcardsWidgetProps) => {
     },
   });
 
-  function onSubmit(front: string, back: string, index: number) {
-    console.log("onSubmit");
-    const flashcardToUpdate = flashcards![index];
-    console.log(flashcardToUpdate);
-    if (flashcardToUpdate) {
-      const updatedFlashcards = [...flashcards!];
-      updatedFlashcards[index] = { ...flashcardToUpdate, front, back };
-      updateFlashcardsWidget(id, updatedFlashcards);
-      setFlashcards(updatedFlashcards);
-    }
+  function addFlashcard(front: string, back: string, index: number) {
+    console.log("FlashcardsWidget onCreateSubmit");
+    console.log(front);
+    console.log(back);
+    console.log(index);
+
+    createFlashcardByThinkSessionId(thinksession_id, {
+      front: front,
+      back: back,
+    })
+      .then((response) => {
+        console.log(response);
+        // Update flashcards
+      })
+      .catch((error) => {
+        showErrorNotification("Error", "Failed to create flashcard");
+      });
   }
 
-  const onDelete = useCallback(
-    (flashcardID: string) => {
-      setFlashcards((prevFlashcards) => {
-        const updatedFlashcards = [...prevFlashcards!];
-        const indexOfDeletedFlashcard = updatedFlashcards.findIndex(
-          (flashcard) => flashcard.id === flashcardID
-        );
-        if (indexOfDeletedFlashcard === -1) {
-          showErrorNotification(
-            "Flashcard not found",
-            `Flashcard not found: ${flashcardID}`
-          );
-          return prevFlashcards;
-        }
-        updatedFlashcards.splice(indexOfDeletedFlashcard, 1);
-        updateFlashcardsWidget(id, updatedFlashcards);
+  function onDelete(index: number) {
+    console.log("FlashcardsWidget onDelete");
+    console.log(index);
 
-        return updatedFlashcards;
+    deleteFlashcardById(index)
+      .then((response) => {
+        console.log(response);
+        // Update flashcards
+      })
+      .catch((error) => {
+        showErrorNotification("Error", "Failed to delete flashcard");
       });
-      // showSuccessNotification("Flashcard deleted", `${flashcardID}`);
-    },
-    [id]
-  );
+  }
+
+  function getFlashcards() {
+    getAllFlashcardsByThinkSessionId(thinksession_id)
+      .then((response) => {
+        console.log(response);
+        setFlashcards(response as Flashcard[]);
+      })
+      .catch((error) => {
+        showErrorNotification("Error", "Failed to get flashcards");
+      });
+  }
 
   useEffect(() => {
-    const fetchFlashcards = async () => {
-      const res = await getFlashcards(id);
-      if (typeof res !== "string") {
-        setFlashcards(res as FlashcardData[]);
-      }
-    };
-    fetchFlashcards();
-  }, [setFlashcards, id]);
+    getFlashcards();
+  }, []);
 
-  useEffect(() => {
-    console.log("FlashcardsWidget useEffect");
-    console.log(flashcards);
-  }, [flashcards]);
-
-  function addFlashcard(front: string, back: string) {
-    const updatedFlashcards = [...flashcards!];
-    const newId = uuidv4();
-    updatedFlashcards.push({ front, back, id: newId });
-    updateFlashcardsWidget(id, updatedFlashcards);
-    setFlashcards(updatedFlashcards);
+  function updateFlashcardById() {
+    console.log("FlashcardsWidget onUpdateSubmit");
   }
 
   return (
@@ -110,13 +108,13 @@ const FlashcardsWidget = ({ id, thinkfolder_color }: FlashcardsWidgetProps) => {
               key={flashcard.id}
               className="flashcard-widget-flashcard-container"
             >
-              <Flashcard
+              <FlashcardComponent
                 front={flashcard.front}
                 back={flashcard.back}
                 id={flashcard.id}
                 index={index}
                 thinkfolder_color={thinkfolder_color}
-                onSubmitCallback={onSubmit}
+                onSubmitCallback={updateFlashcardById}
                 onDeleteCallback={onDelete}
               />
             </div>
@@ -155,7 +153,8 @@ const FlashcardsWidget = ({ id, thinkfolder_color }: FlashcardsWidgetProps) => {
                 e.preventDefault();
                 addFlashcard(
                   createFlashcard.values.front,
-                  createFlashcard.values.back
+                  createFlashcard.values.back,
+                  0
                 );
                 createFlashcard.reset();
               }}

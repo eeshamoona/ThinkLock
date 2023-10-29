@@ -55,27 +55,30 @@ const dbPromise = (async (): Promise<Database> => {
     )`);
     loggerInstance.success("Table created: thinksession");
 
-    await db.run(`CREATE TABLE IF NOT EXISTS notesWidget (
+    await db.run(`CREATE TABLE IF NOT EXISTS notes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         thinksession_id INTEGER NOT NULL,
-        note TEXT NOT NULL,
+        content TEXT NOT NULL,
         FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
     )`);
     loggerInstance.success("Table created: notes");
 
-    await db.run(`CREATE TABLE IF NOT EXISTS flashcardsWidget(
+    await db.run(`CREATE TABLE IF NOT EXISTS flashcard(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        front TEXT,
+        back TEXT,
+        status TEXT DEFAULT 'new',
         thinksession_id INTEGER NOT NULL,
-        flashcards TEXT NOT NULL,
+        thinkfolder_id INTEGER NOT NULL,
         FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)
     )`);
-    loggerInstance.success("Table created: flashcards");
+    loggerInstance.success("Table created: flashcard");
 
     await db.run(`CREATE TABLE IF NOT EXISTS studyevents (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         thinksession_id INTEGER NOT NULL,
         event_type TEXT NOT NULL,
-        timestamp TEXT NOT NULL,
+        timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
         details TEXT,
         reference_id INTEGER,
         FOREIGN KEY (thinksession_id) REFERENCES thinksession(id)

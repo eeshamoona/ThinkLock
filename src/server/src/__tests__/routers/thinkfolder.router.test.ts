@@ -92,7 +92,13 @@ describe("thinkFoldersRouter", () => {
       .post("/thinkfolders/create")
       .send(newThinkFolder);
     expect(response.status).toBe(200);
-    expect(response.body.thinkfolder).toBe(3);
+    expect(response.body.thinkfolder.name).toBe("Test Routing ThinkFolder");
+    expect(response.body.thinkfolder.description).toBe(
+      "This is a test thinkfolder in router test file"
+    );
+    expect(response.body.thinkfolder.icon).toBe("test-icon");
+    expect(response.body.thinkfolder.color).toBe("#000000");
+    expect(response.body.thinkfolder.id).toBe(3);
   });
 
   it("POST /thinkfolders/create should return a 500 status code if the request body is missing required fields", async () => {

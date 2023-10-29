@@ -53,7 +53,7 @@ const StudyOverviewPage = () => {
   const getThinkSessionsOnDate = useCallback(async () => {
     const thinkSessions = await getAllThinkSessionsByDate(selectedDate);
     if (typeof thinkSessions !== "string") {
-      setThinkSessions(thinkSessions);
+      setThinkSessions(thinkSessions as ThinkSession[]);
     }
   }, [selectedDate]);
 
@@ -62,7 +62,7 @@ const StudyOverviewPage = () => {
       selectedThinkSession?.id as number
     );
     if (typeof actionItems !== "string") {
-      setSelectedThinkSessionActionItems(actionItems);
+      setSelectedThinkSessionActionItems(actionItems as ActionItem[]);
     }
   }, [selectedThinkSession]);
 
@@ -79,7 +79,7 @@ const StudyOverviewPage = () => {
         thinkSession.id
       );
       if (typeof actionItems !== "string") {
-        setSelectedThinkSessionActionItems(actionItems);
+        setSelectedThinkSessionActionItems(actionItems as ActionItem[]);
       }
     },
     [thinkSessions]

@@ -1,128 +1,129 @@
 import express, { Router } from "express";
 import { FailureResponse, SuccessResponse } from "../../utils/responses";
 import {
-  getAllActionItems,
   getActionItemById,
   createActionItem,
   getAllActionItemsByThinkFolderId,
   updateActionItem,
   getAllActionItemsByThinkSessionId,
   toggleCompletedActionItem,
-} from "../../controllers/actionitem.controller";
+} from "../../controllers/actionitems.controller";
 import { ActionItem } from "../../models/actionitem.model";
+import { Database } from "sqlite";
 
 const actionItemsRouter: Router = express.Router();
 
-actionItemsRouter.get("/", async (req, res) => {
-  res.status(200).send({ message: "You have reached the action item route" });
-});
+function createActionItemRouter(db: Database): Router {
+  actionItemsRouter.get("/", async (req, res) => {
+    res
+      .status(200)
+      .send({ message: "You have reached the action items route" });
+  });
 
-actionItemsRouter.get("/all", async (req, res) => {
-  try {
-    const actionItems: ActionItem[] | FailureResponse =
-      await getAllActionItems();
-    if (actionItems instanceof FailureResponse) {
-      res.status(actionItems.status).send({ error: actionItems.error });
-    } else {
-      res.status(200).send({ actionItems: actionItems });
+  actionItemsRouter.get(
+    "/all/thinkfolder/:thinkfolder_id",
+    async (req, res) => {
+      try {
+        const actionitems: ActionItem[] | FailureResponse =
+          await getAllActionItemsByThinkFolderId(
+            parseInt(req.params.thinkfolder_id),
+            db
+          );
+        if (actionitems instanceof FailureResponse) {
+          res.status(actionitems.status).send({ error: actionitems.error });
+        } else {
+          res.status(200).send({ actionitems: actionitems });
+        }
+      } catch (error) {
+        res.status(500).send({ error: `${error}` });
+      }
     }
-  } catch (error) {
-    res.status(500).send({ error: `${error}` });
-  }
-});
+  );
 
-actionItemsRouter.get("/all/:think_folder_id", async (req, res) => {
-  try {
-    const actionItems: ActionItem[] | FailureResponse =
-      await getAllActionItemsByThinkFolderId(req.params.think_folder_id);
-    if (actionItems instanceof FailureResponse) {
-      res.status(actionItems.status).send({ error: actionItems.error });
-    } else {
-      res.status(200).send({ actionItems: actionItems });
+  actionItemsRouter.get(
+    "/all/thinksession/:thinksession_id",
+    async (req, res) => {
+      try {
+        const actionitems: ActionItem[] | FailureResponse =
+          await getAllActionItemsByThinkSessionId(
+            parseInt(req.params.thinksession_id),
+            db
+          );
+        if (actionitems instanceof FailureResponse) {
+          res.status(actionitems.status).send({ error: actionitems.error });
+        } else {
+          res.status(200).send({ actionitems: actionitems });
+        }
+      } catch (error) {
+        res.status(500).send({ error: `${error}` });
+      }
     }
-  } catch (error) {
-    res.status(500).send({ error: `${error}` });
-  }
-});
+  );
 
-actionItemsRouter.get(
-  "/all/thinksession/:thinksession_id",
-  async (req, res) => {
+  actionItemsRouter.get("/:id", async (req, res) => {
     try {
-      const actionItems: ActionItem[] | FailureResponse =
-        await getAllActionItemsByThinkSessionId(req.params.thinksession_id);
-      if (actionItems instanceof FailureResponse) {
-        res.status(actionItems.status).send({ error: actionItems.error });
+      const actionitem: ActionItem | FailureResponse = await getActionItemById(
+        parseInt(req.params.id),
+        db
+      );
+      if (actionitem instanceof FailureResponse) {
+        res.status(actionitem.status).send({ error: actionitem.error });
       } else {
-        res.status(200).send({ actionItems: actionItems });
+        res.status(200).send({ actionitem: actionitem });
       }
     } catch (error) {
       res.status(500).send({ error: `${error}` });
     }
-  }
-);
+  });
 
-actionItemsRouter.get("/:id", async (req, res) => {
-  try {
-    const actionItem: ActionItem | FailureResponse = await getActionItemById(
-      parseInt(req.params.id)
-    );
-    if (actionItem instanceof FailureResponse) {
-      res.status(actionItem.status).send({ error: actionItem.error });
-    } else {
-      res.status(200).send({ actionItem: actionItem });
+  actionItemsRouter.post("/create", async (req, res) => {
+    try {
+      const createInfo: Partial<ActionItem> = req.body;
+      const actionitem: ActionItem | FailureResponse = await createActionItem(
+        createInfo,
+        db
+      );
+      if (actionitem instanceof FailureResponse) {
+        res.status(actionitem.status).send({ error: actionitem.error });
+      } else {
+        res.status(200).send({ actionitem: actionitem });
+      }
+    } catch (error) {
+      res.status(500).send({ error: `${error}` });
     }
-  } catch (error) {
-    res.status(500).send({ error: `${error}` });
-  }
-});
+  });
 
-actionItemsRouter.post("/create", async (req, res) => {
-  try {
-    const actionItemId: number | FailureResponse = await createActionItem(
-      req.body.thinksession_id,
-      req.body.thinkfolder_id,
-      req.body.description,
-      req.body.title
-    );
-    if (actionItemId instanceof FailureResponse) {
-      res.status(actionItemId.status).send({ error: actionItemId.error });
-    } else {
-      res.status(200).send({ actionItemId: actionItemId });
+  actionItemsRouter.put("/update/:id", async (req, res) => {
+    try {
+      const actionItemId: SuccessResponse | FailureResponse =
+        await updateActionItem(parseInt(req.params.id), req.body, db);
+      if (actionItemId instanceof FailureResponse) {
+        res.status(actionItemId.status).send({ error: actionItemId.error });
+      } else {
+        res.status(200).send({ actionItemId: actionItemId });
+      }
+    } catch (error) {
+      res.status(500).send({ error: `${error}` });
     }
-  } catch (error) {
-    res.status(500).send({ error: `${error}` });
-  }
-});
+  });
 
-actionItemsRouter.put("/update/:id", async (req, res) => {
-  try {
-    const actionItemId: SuccessResponse | FailureResponse =
-      await updateActionItem(parseInt(req.params.id), req.body);
-    if (actionItemId instanceof FailureResponse) {
-      res.status(actionItemId.status).send({ error: actionItemId.error });
-    } else {
-      res.status(200).send({ actionItemId: actionItemId });
+  actionItemsRouter.put("/complete/:id", async (req, res) => {
+    try {
+      const actionItemResponse: SuccessResponse | FailureResponse =
+        await toggleCompletedActionItem(parseInt(req.params.id), db);
+      if (actionItemResponse instanceof FailureResponse) {
+        res
+          .status(actionItemResponse.status)
+          .send({ error: actionItemResponse.error });
+      } else {
+        res.status(200).send({ actionItemResponse: actionItemResponse.message });
+      }
+    } catch (error) {
+      res.status(500).send({ error: `${error}` });
     }
-  } catch (error) {
-    res.status(500).send({ error: `${error}` });
-  }
-});
+  });
 
-actionItemsRouter.put("/complete/:id", async (req, res) => {
-  try {
-    const completedResponse: SuccessResponse | FailureResponse =
-      await toggleCompletedActionItem(parseInt(req.params.id));
-    if (completedResponse instanceof FailureResponse) {
-      res
-        .status(completedResponse.status)
-        .send({ error: completedResponse.error });
-    } else {
-      res.status(200).send({ message: completedResponse });
-    }
-  } catch (error) {
-    res.status(500).send({ error: `${error}` });
-  }
-});
+  return actionItemsRouter;
+}
 
-export default actionItemsRouter;
+export default createActionItemRouter;

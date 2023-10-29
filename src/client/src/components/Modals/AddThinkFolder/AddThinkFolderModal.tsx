@@ -13,7 +13,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { closeAllModals } from "@mantine/modals";
-import { addThinkFolder } from "../../../services/thinkFolderAPICallerService";
+import { createThinkFolder } from "../../../services/thinkFolderAPICallerService";
 import { hexToColorNameMap } from "../../../utils/constants/hexCodeToColor.constant";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
 import IconSelector from "../../IconSelector/IconSelector";
@@ -44,7 +44,7 @@ const AddThinkFolderModal = () => {
     <div id="add-think-folder-modal-container">
       <form
         onSubmit={newThinkFolderForm.onSubmit((values) => {
-          addThinkFolder(values)
+          createThinkFolder(values)
             .then((res) => {
               if (typeof res !== "string") {
                 showSuccessNotification(

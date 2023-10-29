@@ -1,5 +1,5 @@
 export class ThinkFolder {
-  id!: number;
+  id?: number;
   name!: string;
   description!: string;
   color!: string;

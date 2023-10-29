@@ -1,90 +1,141 @@
 import axios from "axios";
+import {
+  FailureResponse,
+  SuccessResponse,
+} from "../utils/models/responses.model";
 import { ThinkSession } from "../utils/models/thinksession.model";
-import { getThinkFolderById } from "./thinkFolderAPICallerService";
-import { HeatmapDataResponse } from "../utils/models/heatmapdata.model";
+import { HeatmapData } from "../utils/models/heatmapdata.model";
 
-export const addThinkSession = async (
-  thinkSession: Pick<
-    ThinkSession,
-    "thinkfolder_id" | "title" | "location" | "date" | "start_time" | "end_time"
-  >,
-): Promise<number | string> =>
-  axios
-    .post("/thinksessions/create", thinkSession)
-    .then((response) => response.data.thinksession_id)
-    .catch((err) => `${err}`);
+const API_URL = "http://localhost:3000/thinksessions";
 
-export const getAllThinkSessions = async (): Promise<ThinkSession[] | string> =>
-  axios
-    .get("/thinksessions/all")
-    .then((response) => response.data.thinksessions)
-    .catch((err) => `${err}`);
-
-export const getThinkSessionHeatmapData = async (
-  thinkFolderId: number,
-  year: number,
-): Promise<HeatmapDataResponse | string> =>
-  axios
-    .get(`/thinksessions/heatmap/${thinkFolderId}/${year}`)
-    .then((response) => response.data)
-    .catch((err) => `${err}`);
-
-export const getThinkSessionById = async (
-  thinkSessionId: number,
-): Promise<ThinkSession | string> =>
-  axios
-    .get(`/thinksessions/${thinkSessionId}`)
-    .then((response) => response.data.thinksession)
-    .catch((err) => `${err}`);
-
-export const getAllThinkSessionsByThinkFolderId = async (
-  thinkFolderId: number,
-): Promise<ThinkSession[] | string> =>
-  axios
-    .get(`/thinksessions/all/${thinkFolderId}`)
-    .then((response) => {
-      const thinkSessions: ThinkSession[] = response.data.thinksessions;
-      return thinkSessions.sort(
-        (a, b) =>
-          new Date(a.start_time).getUTCDate() -
-          new Date(b.start_time).getUTCDate(),
+export async function getAllThinkSessions(): Promise<
+  ThinkSession[] | FailureResponse
+> {
+  try {
+    const response = await axios.get(`${API_URL}/all`);
+    return response.data.thinksessions;
+  } catch (error: any) {
+    if (error.response) {
+      return new FailureResponse(
+        error.response.status,
+        error.response.data.error
       );
-    })
-    .catch((err) => `${err}`);
+    } else {
+      return new FailureResponse(500, error.message);
+    }
+  }
+}
 
-export const getAllThinkSessionsByDate = async (
-  date: Date,
-): Promise<ThinkSession[] | string> => {
-  const response = await axios.get(`/thinksessions/all/date/${date}`);
-  const thinkSessions: ThinkSession[] = response.data.thinksessions;
-  const thinkSessionsWithFolderInfo: ThinkSession[] = await Promise.all(
-    thinkSessions.map(async (thinkSession) => {
-      const thinkFolder = await getThinkFolderById(thinkSession.thinkfolder_id);
-      if (typeof thinkFolder === "string")
-        return {
-          ...thinkSession,
-          thinkfolder_color: "",
-          thinkfolder_icon: "",
-        };
-      return {
-        ...thinkSession,
-        thinkfolder_color: thinkFolder.color,
-        thinkfolder_icon: thinkFolder.icon,
-      };
-    }),
-  );
-  thinkSessionsWithFolderInfo.sort(
-    (a, b) =>
-      new Date(a.start_time).getTime() - new Date(b.start_time).getTime(),
-  );
-  return thinkSessionsWithFolderInfo;
-};
+export async function getThinkSessionById(
+  id: number
+): Promise<ThinkSession | FailureResponse> {
+  try {
+    const response = await axios.get(`${API_URL}/${id}`);
+    return response.data.thinksession;
+  } catch (error: any) {
+    if (error.response) {
+      return new FailureResponse(
+        error.response.status,
+        error.response.data.error
+      );
+    } else {
+      return new FailureResponse(500, error.message);
+    }
+  }
+}
 
-export const updateThinkSession = async (
-  thinkSessionId: number,
-  thinkSession: Partial<ThinkSession>,
-): Promise<string> =>
-  axios
-    .put(`/thinksessions/update/${thinkSessionId}`, thinkSession)
-    .then((response) => response.data.response)
-    .catch((err) => `${err}`);
+export async function getAllThinkSessionsByThinkFolderId(
+  thinkFolderId: number
+): Promise<ThinkSession[] | FailureResponse> {
+  try {
+    const response = await axios.get(`${API_URL}/all/${thinkFolderId}`);
+    return response.data.thinksessions;
+  } catch (error: any) {
+    if (error.response) {
+      return new FailureResponse(
+        error.response.status,
+        error.response.data.error
+      );
+    } else {
+      return new FailureResponse(500, error.message);
+    }
+  }
+}
+
+export async function getThinkSessionHeatMapByYear(
+  year: number,
+  thinkFolderId: number
+): Promise<HeatmapData[] | FailureResponse> {
+  try {
+    const response = await axios.get(
+      `${API_URL}/heatmap/${thinkFolderId}/${year}`
+    );
+    return response.data.heatmapData;
+  } catch (error: any) {
+    if (error.response) {
+      return new FailureResponse(
+        error.response.status,
+        error.response.data.error
+      );
+    } else {
+      return new FailureResponse(500, error.message);
+    }
+  }
+}
+
+export async function getAllThinkSessionsByDate(
+  date: Date
+): Promise<ThinkSession[] | FailureResponse> {
+  try {
+    const response = await axios.get(
+      `${API_URL}/all/date/${date.toISOString()}`
+    );
+    return response.data.thinksessions;
+  } catch (error: any) {
+    if (error.response) {
+      return new FailureResponse(
+        error.response.status,
+        error.response.data.error
+      );
+    } else {
+      return new FailureResponse(500, error.message);
+    }
+  }
+}
+
+export async function createThinkSession(
+  thinkSession: Partial<ThinkSession>
+): Promise<number | FailureResponse> {
+  try {
+    const response = await axios.post(`${API_URL}/create`, thinkSession);
+    return response.data.thinksession_id;
+  } catch (error: any) {
+    if (error.response) {
+      return new FailureResponse(
+        error.response.status,
+        error.response.data.error
+      );
+    } else {
+      return new FailureResponse(500, error.message);
+    }
+  }
+}
+
+export async function updateThinkSession(
+  id: number,
+  thinkSession: Partial<ThinkSession>
+): Promise<SuccessResponse | FailureResponse> {
+  try {
+    const response = await axios.put(`${API_URL}/update/${id}`, thinkSession);
+    return response.data.response;
+  } catch (error: any) {
+    if (error.response) {
+      return new FailureResponse(
+        error.response.status,
+        error.response.data.error
+      );
+    } else {
+      return new FailureResponse(500, error.message);
+    }
+  }
+}

@@ -45,11 +45,9 @@ function createThinkFoldersRouter(db: Database): Router {
 
   thinkFoldersRouter.post("/create", async (req, res) => {
     try {
-      const createInfo: Partial<ThinkFolder> = req.body;
-      const thinkfolder: number | FailureResponse = await createThinkFolder(
-        createInfo,
-        db
-      );
+      const createInfo: ThinkFolder = req.body;
+      const thinkfolder: ThinkFolder | FailureResponse =
+        await createThinkFolder(createInfo, db);
       if (thinkfolder instanceof FailureResponse) {
         res.status(thinkfolder.status).send({ error: thinkfolder.error });
       } else {

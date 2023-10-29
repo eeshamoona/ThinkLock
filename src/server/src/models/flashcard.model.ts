@@ -3,7 +3,7 @@ export enum Status {
   Review = "review",
   Learned = "learned",
 }
-export interface Flashcard {
+export class Flashcard {
   id: number;
   front: string;
   back: string;

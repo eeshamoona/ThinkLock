@@ -1,12 +1,12 @@
 import express, { Express, Request, Response } from "express";
 import createThinkFoldersRouter from "./routes/thinkfolders";
-import actionItemsRouter from "./routes/actionitems";
-import thinkSessionsRouter from "./routes/thinksessions";
-import { Logger } from "./utils/logger";
+import createThinkSessionsRouter from "./routes/thinksessions";
 import dbPromise from "./utils/database";
 import { Router } from "express";
-import widgetsRouter from "./routes/widgets";
-import studyEventsRouter from "./routes/studyevents";
+import createStudyEventRouter from "./routes/studyevents";
+import createActionItemRouter from "./routes/actionitems";
+import createNotesRouter from "./routes/notes";
+import createFlashcardsRouter from "./routes/flashcards";
 
 const app: Express = express();
 
@@ -17,12 +17,19 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 (async () => {
-  const router: Router = createThinkFoldersRouter(await dbPromise);
-  app.use("/thinkfolders", router);
+  const thinkfolderRouter: Router = createThinkFoldersRouter(await dbPromise);
+  const thinksessionRouter: Router = createThinkSessionsRouter(await dbPromise);
+  const actionItemsRouter: Router = createActionItemRouter(await dbPromise);
+  const studyEventsRouter: Router = createStudyEventRouter(await dbPromise);
+  const notesRouter: Router = createNotesRouter(await dbPromise);
+  const flashcardRouter: Router = createFlashcardsRouter(await dbPromise);
+
+  app.use("/thinkfolders", thinkfolderRouter);
+  app.use("/thinksessions", thinksessionRouter);
   app.use("/actionitems", actionItemsRouter);
-  app.use("/thinksessions", thinkSessionsRouter);
-  app.use("/widgets", widgetsRouter);
   app.use("/studyevents", studyEventsRouter);
+  app.use("/notes", notesRouter);
+  app.use("/flashcards", flashcardRouter);
 })();
 
 export default app;
